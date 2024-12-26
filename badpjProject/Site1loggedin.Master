@@ -43,11 +43,7 @@
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
                     </ul>
                     <!-- Sign Up Button -->
-                    <div class="d-flex">
-                        <asp:LinkButton ID="SignUpLink" runat="server" CssClass="btn btn-primary signup-button" PostBackUrl="~/SignUp.aspx">
-                            Sign Up
-                        </asp:LinkButton>
-                    </div>
+                    
                 </div>
             </div>
         </nav>

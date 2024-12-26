@@ -11,16 +11,25 @@ namespace badpjProject
 {
 
 
-    public partial class SiteMaster
+    public partial class OtpConfirmation
     {
 
         /// <summary>
-        /// MainContent control.
+        /// TextBoxOtp control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.TextBox TextBoxOtp;
+
+        /// <summary>
+        /// ButtonVerify control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button ButtonVerify;
     }
 }
