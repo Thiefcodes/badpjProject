@@ -11,7 +11,7 @@ namespace badpjProject
 {
 
 
-    public partial class Site1loggedin
+    public partial class ProfilePage
     {
 
         /// <summary>
@@ -24,21 +24,30 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.Image ProfilePicture;
 
         /// <summary>
-        /// LogoutLink control.
+        /// lblUsername control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LogoutLink;
+        protected global::System.Web.UI.WebControls.Label lblUsername;
 
         /// <summary>
-        /// MainContent control.
+        /// lblDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.Label lblDescription;
+
+        /// <summary>
+        /// EditProfileButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button EditProfileButton;
     }
 }

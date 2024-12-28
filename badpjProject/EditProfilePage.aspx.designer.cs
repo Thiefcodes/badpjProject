@@ -11,34 +11,43 @@ namespace badpjProject
 {
 
 
-    public partial class Site1loggedin
+    public partial class EditProfilePage
     {
 
         /// <summary>
-        /// ProfilePicture control.
+        /// CurrentProfilePicture control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image ProfilePicture;
+        protected global::System.Web.UI.WebControls.Image CurrentProfilePicture;
 
         /// <summary>
-        /// LogoutLink control.
+        /// ProfilePictureUpload control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LogoutLink;
+        protected global::System.Web.UI.WebControls.FileUpload ProfilePictureUpload;
 
         /// <summary>
-        /// MainContent control.
+        /// DescriptionTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.TextBox DescriptionTextBox;
+
+        /// <summary>
+        /// SaveButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button SaveButton;
     }
 }

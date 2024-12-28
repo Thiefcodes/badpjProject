@@ -11,34 +11,43 @@ namespace badpjProject
 {
 
 
-    public partial class Site1loggedin
+    public partial class StaffPage
     {
 
         /// <summary>
-        /// ProfilePicture control.
+        /// StaffUsernameTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image ProfilePicture;
+        protected global::System.Web.UI.WebControls.TextBox StaffUsernameTextBox;
 
         /// <summary>
-        /// LogoutLink control.
+        /// StaffPasswordTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LogoutLink;
+        protected global::System.Web.UI.WebControls.TextBox StaffPasswordTextBox;
 
         /// <summary>
-        /// MainContent control.
+        /// AddStaffButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.Button AddStaffButton;
+
+        /// <summary>
+        /// StaffGridView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView StaffGridView;
     }
 }

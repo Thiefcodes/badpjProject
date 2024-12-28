@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="badpjProject.SiteMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site1loggedin.master.cs" Inherits="badpjProject.Site1loggedin" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,13 +13,6 @@
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-
-    <style>
-        /* Custom styling for the Sign Up button */
-        .signup-button {
-            margin-left: 10px;
-        }
-    </style>
 </head>
 <body>
     <form runat="server">
@@ -39,11 +32,15 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/UserPage.aspx">Profile</a></li>
                     </ul>
-                    <!-- Sign Up Button -->
-                    
+                    <!-- User Profile Picture -->
+                    <div class="d-flex align-items-center">
+                        <asp:Image ID="ProfilePicture" runat="server" CssClass="rounded-circle" Width="40px" Height="40px" />
+                       <asp:LinkButton ID="LogoutLink" runat="server" CssClass="btn btn-danger ms-3" OnClick="Logout_Click">
+    Logout
+</asp:LinkButton>
+                    </div>
                 </div>
             </div>
         </nav>
