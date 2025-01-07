@@ -6,6 +6,11 @@ namespace badpjProject
 {
     public partial class Login : System.Web.UI.Page
     {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            // Optionally add page load logic here
+        }
+
         protected void Button1_Click1(object sender, EventArgs e)
         {
             string username = TextBox1.Text.Trim();
@@ -19,7 +24,7 @@ namespace badpjProject
                 {
                     conn.Open();
 
-                    // Retrieve user details
+                    // Query to validate user login
                     string query = "SELECT Id, Role FROM [Table] WHERE Login_Name = @Login_Name AND Password = @Password";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -33,7 +38,7 @@ namespace badpjProject
                                 int userId = Convert.ToInt32(reader["Id"]);
                                 string role = reader["Role"].ToString();
 
-                                // Store user details in session
+                                // Store user information in Session
                                 Session["UserId"] = userId;
                                 Session["Username"] = username;
                                 Session["Role"] = role;
@@ -50,7 +55,7 @@ namespace badpjProject
                             }
                             else
                             {
-                                Response.Write("<script>alert('Invalid Username or Password');</script>");
+                                Response.Write("<script>alert('Invalid username or password.');</script>");
                             }
                         }
                     }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using System.Configuration;
 using System.Data.SqlClient;
-using System.Configuration;
+using System.Net.Mail;
+using System.Net;
+using System;
 
 namespace badpjProject
 {
@@ -41,17 +43,21 @@ namespace badpjProject
                         }
                     }
 
-                    // Insert new user with default role "User"
-                    string insertQuery = "INSERT INTO [Table] (Login_Name, Password, Email) VALUES (@Login_Name, @Password, @Email)";
-                    using (SqlCommand cmd = new SqlCommand(insertQuery, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Login_Name", username);
-                        cmd.Parameters.AddWithValue("@Password", password);
-                        cmd.Parameters.AddWithValue("@Email", email);
+                    // Generate OTP
+                    string otpCode = GenerateOTP();
+                    Session["OTP"] = otpCode; // Store OTP in session
+                    Session["Username"] = username;
+                    Session["Password"] = password;
+                    Session["Email"] = email;
 
-                        cmd.ExecuteNonQuery();
-                        Response.Write("<script>alert('Account created successfully!');</script>");
-                        Response.Redirect("Login.aspx");
+                    // Send OTP to email
+                    if (SendOTP(email, otpCode))
+                    {
+                        Response.Redirect("OtpConfirmation.aspx");
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Failed to send OTP. Please try again.');</script>");
                     }
                 }
                 catch (Exception ex)
@@ -60,5 +66,39 @@ namespace badpjProject
                 }
             }
         }
+
+        private string GenerateOTP()
+        {
+            Random random = new Random();
+            return random.Next(100000, 999999).ToString();
+        }
+
+        private bool SendOTP(string email, string otp)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+
+                mail.From = new MailAddress("ruihernh@gmail.com"); // Replace with your email
+                mail.To.Add(email);
+                mail.Subject = "Your OTP Code";
+                mail.Body = $"Your OTP code is: {otp}";
+
+                smtpServer.Port = 587; // Use 465 for SSL
+                smtpServer.Credentials = new NetworkCredential("ruihernh@gmail.com", "yqqh pwcr byeq sseo"); // Replace with your Gmail password or App Password
+                smtpServer.EnableSsl = true;
+
+                smtpServer.Send(mail);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the error to debug the issue
+                Console.WriteLine($"Error: {ex.Message}");
+                return false;
+            }
+        }
+
     }
 }

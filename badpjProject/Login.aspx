@@ -11,11 +11,15 @@
                 <asp:TextBox ID="TextBox2" runat="server" CssClass="form-control" placeholder="Password" TextMode="Password"></asp:TextBox>
             </div>
             <div class="form-group text-end">
-                <asp:LinkButton ID="LinkButton1" runat="server" CssClass="text-decoration-none text-primary">Forgot Password?</asp:LinkButton>
+                <asp:LinkButton ID="LinkButton1" runat="server" CssClass="text-decoration-none text-primary" PostBackUrl="ForgetPassword.aspx">
+    Forgot Password?
+</asp:LinkButton>
+
             </div>
             <div class="text-center">
                 <asp:Button ID="Button1" runat="server" Text="Login" CssClass="btn btn-primary w-100" OnClick="Button1_Click1" />
             </div>
+
         </div>
     </div>
 </asp:Content>
