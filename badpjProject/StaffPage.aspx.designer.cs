@@ -15,39 +15,21 @@ namespace badpjProject
     {
 
         /// <summary>
-        /// StaffUsernameTextBox control.
+        /// ManageStaffButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox StaffUsernameTextBox;
+        protected global::System.Web.UI.WebControls.Button ManageStaffButton;
 
         /// <summary>
-        /// StaffPasswordTextBox control.
+        /// ManageUsersButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox StaffPasswordTextBox;
-
-        /// <summary>
-        /// AddStaffButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button AddStaffButton;
-
-        /// <summary>
-        /// StaffGridView control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView StaffGridView;
+        protected global::System.Web.UI.WebControls.Button ManageUsersButton;
     }
 }
