@@ -19,12 +19,6 @@
         .signup-button {
             margin-left: 10px;
         }
-        .auto-style1 {
-            font-size: 12pt;
-            vertical-align: middle;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
     </style>
 </head>
 <body>
@@ -38,7 +32,7 @@
 
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
             <div class="container">
-                <span class="auto-style1">GymLeague</span>
+                <a class="navbar-brand" runat="server" href="~/">Application Name</a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -50,9 +44,6 @@
                     </ul>
                     <!-- Sign Up Button -->
                     <div class="d-flex">
-                        <asp:LinkButton ID="LoginLink" runat="server" CssClass="btn btn-primary login-button" PostBackUrl="~/Login.aspx">
-                            Login
-                        </asp:LinkButton>
                         <asp:LinkButton ID="SignUpLink" runat="server" CssClass="btn btn-primary signup-button" PostBackUrl="~/SignUp.aspx">
                             Sign Up
                         </asp:LinkButton>
