@@ -4,7 +4,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <h2 class="mt-4">Shop</h2>
-
+        <a href="Shoppingcart.aspx" class="btn btn-warning mb-3">View Cart</a>
         <asp:Repeater ID="rptProducts" runat="server">
             <HeaderTemplate>
                 <table class="table table-hover">

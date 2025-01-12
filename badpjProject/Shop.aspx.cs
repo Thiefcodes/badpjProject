@@ -56,11 +56,51 @@ namespace badpjProject
             rptProducts.DataBind();
         }
 
-        protected void AddToCart_Command(object sender, System.Web.UI.WebControls.CommandEventArgs e)
+        protected void AddToCart_Command(object sender, CommandEventArgs e)
         {
             int productId = Convert.ToInt32(e.CommandArgument);
-            // For now, just redirect to cart. In practice, you'd store productId in session or DB.
-            Response.Redirect("Shoppingcart.aspx");
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        CartItem newItem = new CartItem
+                        {
+                            ProductID = (int)reader["ProductID"],
+                            ProductName = reader["ProductName"].ToString(),
+                            Description = reader["Description"].ToString(),
+                            ImageUrl = reader["ImageUrl"].ToString(),
+                            Price = Convert.ToDecimal(reader["Price"]),
+                            Quantity = 1
+                        };
+                        List<CartItem> cart = (List<CartItem>)Session["Cart"];
+
+                        if (cart == null)
+                        {
+                            cart = new List<CartItem>();
+                        }
+                        CartItem existingItem = cart.Find(item => item.ProductID == newItem.ProductID);
+
+                        if (existingItem != null)
+                        {
+                            existingItem.Quantity++;
+                        }
+                        else
+                        {
+                            cart.Add(newItem);
+                        }
+                        Session["Cart"] = cart;
+                    }
+                }
+            }
         }
     }
 }

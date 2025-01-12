@@ -11,34 +11,25 @@ namespace badpjProject
 {
 
 
-    public partial class ShoppingCart
+    public partial class Checkout
     {
 
         /// <summary>
-        /// gvCart control.
+        /// gvOrderSummary control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvCart;
+        protected global::System.Web.UI.WebControls.GridView gvOrderSummary;
 
         /// <summary>
-        /// lblTotal control.
+        /// lblTotalAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotal;
-
-        /// <summary>
-        /// btnCheckout control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCheckout;
+        protected global::System.Web.UI.WebControls.Label lblTotalAmount;
     }
 }
