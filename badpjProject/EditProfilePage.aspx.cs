@@ -70,7 +70,44 @@ namespace badpjProject
                     cmd.Parameters.AddWithValue("@UserId", userId);
 
                     cmd.ExecuteNonQuery();
-                    Response.Redirect("ProfilePage.aspx");
+                }
+            }
+
+            // Redirect user based on role
+            RedirectBasedOnRole(userId);
+        }
+
+        private void RedirectBasedOnRole(string userId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT Role FROM [Table] WHERE Id = @UserId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string role = reader["Role"].ToString();
+
+                            if (role.Equals("Staff", StringComparison.OrdinalIgnoreCase))
+                            {
+                                Response.Redirect("StaffPage.aspx");
+                            }
+                            else if (role.Equals("User", StringComparison.OrdinalIgnoreCase))
+                            {
+                                Response.Redirect("UserPage.aspx");
+                            }
+                            else
+                            {
+                                Response.Redirect("ErrorPage.aspx"); // Default for unknown roles
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -50,7 +50,7 @@ namespace badpjProject
                                 }
                                 else
                                 {
-                                    Response.Redirect("ProfilePage.aspx");
+                                    Response.Redirect("UserPage.aspx");
                                 }
                             }
                             else

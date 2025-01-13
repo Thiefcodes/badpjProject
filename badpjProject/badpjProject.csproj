@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="AllProfiles.aspx" />
     <Content Include="App_Data\Database1.mdf" />
     <Content Include="App_Data\Database1_log.ldf">
       <DependentUpon>Database1.mdf</DependentUpon>
@@ -182,11 +183,19 @@
     <Content Include="UserPage.aspx" />
     <Content Include="ViewCoaches.aspx" />
     <Content Include="ViewSwitcher.ascx" />
+    <Content Include="VisitingProfile.aspx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllProfiles.aspx.cs">
+      <DependentUpon>AllProfiles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AllProfiles.aspx.designer.cs">
+      <DependentUpon>AllProfiles.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
       <DependentUpon>About.aspx</DependentUpon>
@@ -418,6 +427,13 @@
     </Compile>
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="VisitingProfile.aspx.cs">
+      <DependentUpon>VisitingProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VisitingProfile.aspx.designer.cs">
+      <DependentUpon>VisitingProfile.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
