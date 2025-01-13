@@ -8,7 +8,7 @@ CREATE TABLE Threads (
     CreatedBy INT NOT NULL, -- User who created the thread
     CreatedAt DATETIME DEFAULT GETDATE(), -- Thread creation date
     IsDeleted BIT DEFAULT 0, -- Soft delete flag
-    FOREIGN KEY (CreatedBy) REFERENCES [Table](Id) -- Link to 'Table' table
+    FOREIGN KEY (CreatedBy) REFERENCES Table(Id) -- Link to 'Table' table, place 'Table' in square brackets since Table is a keyword
 );
 
 -- Posts Table
@@ -20,7 +20,7 @@ CREATE TABLE Posts (
     CreatedAt DATETIME DEFAULT GETDATE(), -- Post creation date
     IsDeleted BIT DEFAULT 0, -- Soft delete flag
     FOREIGN KEY (ThreadID) REFERENCES Threads(ThreadID) ON DELETE CASCADE, -- Cascade delete
-    FOREIGN KEY (CreatedBy) REFERENCES [Table](Id) -- Link to Users table
+    FOREIGN KEY (CreatedBy) REFERENCES Table(Id) -- Link to 'Table' table, place 'Table' in square brackets since Table is a keyword
 );
 
 Test Data below:
