@@ -32,6 +32,7 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
+                        <a href="AllProfiles.aspx" class="nav-link">All Profiles</a>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/UserPage.aspx">Profile</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Coaches.aspx">Coaches</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/BecomeACoach.aspx">Become a Coach</a></li>
