@@ -105,7 +105,9 @@
     <Content Include="App_Data\Database2_log.ldf">
       <DependentUpon>Database2.mdf</DependentUpon>
     </Content>
+    <Content Include="BecomeACoach.aspx" />
     <Content Include="Checkout.aspx" />
+    <Content Include="Coaches.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -131,11 +133,13 @@
     <Content Include="EditUser.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="ForgetPassword.aspx" />
+    <Content Include="Forum.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
     <Content Include="ManageProduct.aspx" />
     <Content Include="ManageStaff.aspx" />
     <Content Include="ManageUsers.aspx" />
+    <Content Include="NewThread.aspx" />
     <Content Include="OtpConfirmation.aspx" />
     <Content Include="ProductDetails.aspx" />
     <Content Include="ProfilePage.aspx" />
@@ -200,6 +204,7 @@
     <Content Include="SignUp.aspx" />
     <Content Include="Site.Master" />
     <Content Include="StaffPage.aspx" />
+    <Content Include="Thread.aspx" />
     <Content Include="UserPage.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
@@ -216,6 +221,13 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BecomeACoach.aspx.cs">
+      <DependentUpon>BecomeACoach.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BecomeACoach.aspx.designer.cs">
+      <DependentUpon>BecomeACoach.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Checkout.aspx.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -223,6 +235,14 @@
     <Compile Include="Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Coaches.aspx.cs">
+      <DependentUpon>Coaches.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Coaches.aspx.designer.cs">
+      <DependentUpon>Coaches.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Coaches.cs" />
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -272,6 +292,13 @@
     <Compile Include="ForgetPassword.aspx.designer.cs">
       <DependentUpon>ForgetPassword.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Forum.aspx.cs">
+      <DependentUpon>Forum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Forum.aspx.designer.cs">
+      <DependentUpon>Forum.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -304,6 +331,13 @@
       <DependentUpon>ManageUsers.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs" />
+    <Compile Include="NewThread.aspx.cs">
+      <DependentUpon>NewThread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewThread.aspx.designer.cs">
+      <DependentUpon>NewThread.aspx</DependentUpon>
+    </Compile>
     <Compile Include="OtpConfirmation.aspx.cs">
       <DependentUpon>OtpConfirmation.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -381,6 +415,13 @@
     </Compile>
     <Compile Include="StaffPage.aspx.designer.cs">
       <DependentUpon>StaffPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Thread.aspx.cs">
+      <DependentUpon>Thread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Thread.aspx.designer.cs">
+      <DependentUpon>Thread.aspx</DependentUpon>
     </Compile>
     <Compile Include="UserPage.aspx.cs">
       <DependentUpon>UserPage.aspx</DependentUpon>
