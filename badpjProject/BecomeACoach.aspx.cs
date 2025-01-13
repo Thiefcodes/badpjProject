@@ -57,7 +57,7 @@ namespace badpjProject
             else { Response.Write("<script>alert('Submission NOT successful');</script>"); }
 
 
-            Response.Redirect("Coaches.aspx");
+            Response.Redirect("BecomeACoach.aspx");
         }
     }
 }

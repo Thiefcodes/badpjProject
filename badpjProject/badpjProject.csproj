@@ -101,10 +101,6 @@
     <Content Include="App_Data\Database1_log.ldf">
       <DependentUpon>Database1.mdf</DependentUpon>
     </Content>
-    <Content Include="App_Data\Database2.mdf" />
-    <Content Include="App_Data\Database2_log.ldf">
-      <DependentUpon>Database2.mdf</DependentUpon>
-    </Content>
     <Content Include="BecomeACoach.aspx" />
     <Content Include="Checkout.aspx" />
     <Content Include="Coaches.aspx" />
@@ -184,6 +180,7 @@
     <Content Include="StaffPage.aspx" />
     <Content Include="Thread.aspx" />
     <Content Include="UserPage.aspx" />
+    <Content Include="ViewCoaches.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -220,7 +217,7 @@
     <Compile Include="Coaches.aspx.designer.cs">
       <DependentUpon>Coaches.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Coaches.cs" />
+    <Compile Include="Models\Coaches.cs" />
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -407,6 +404,13 @@
     </Compile>
     <Compile Include="UserPage.aspx.designer.cs">
       <DependentUpon>UserPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewCoaches.aspx.cs">
+      <DependentUpon>ViewCoaches.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewCoaches.aspx.designer.cs">
+      <DependentUpon>ViewCoaches.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
