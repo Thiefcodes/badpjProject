@@ -44,6 +44,9 @@
                     </ul>
                     <!-- Sign Up Button -->
                     <div class="d-flex">
+                        <asp:LinkButton ID="LoginLink" runat="server" CssClass="btn btn-primary login-button" PostBackUrl="~/Login.aspx">
+                            Login
+                        </asp:LinkButton>
                         <asp:LinkButton ID="SignUpLink" runat="server" CssClass="btn btn-primary signup-button" PostBackUrl="~/SignUp.aspx">
                             Sign Up
                         </asp:LinkButton>
