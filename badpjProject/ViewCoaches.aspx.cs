@@ -15,10 +15,10 @@ namespace badpjProject
         Coaches coachManager = new Coaches();
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
-                {
+            if (!IsPostBack)
+            {
                 bind();
-                }
+            }
         }
 
         protected void bind()
@@ -71,6 +71,22 @@ namespace badpjProject
 
                 // Rebind data after an action
                 bind();
+            }
+            else if (e.CommandName == "ViewDetails")
+            {
+                // Redirect to the CoachDetails.aspx page with the coach ID
+                string coachID = e.CommandArgument.ToString();
+                Response.Redirect($"CoachDetails.aspx?id={coachID}");
+            }
+        }
+
+        protected void gvApprovedCoaches_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewDetails")
+            {
+                // Redirect to the CoachDetails.aspx page with the coach ID
+                string coachID = e.CommandArgument.ToString();
+                Response.Redirect($"CoachDetails.aspx?id={coachID}");
             }
         }
     }

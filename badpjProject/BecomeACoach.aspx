@@ -25,7 +25,7 @@
             <br />
             <br />
             <h5>Video showcasing your expertise&nbsp;&nbsp;</h5>
-            <asp:FileUpload ID="fu_Coach" runat="server" placeholder="Showcase your expertise" Width="500px" />
+            <asp:FileUpload ID="fu_Coach" runat="server" placeholder="Showcase your expertise" Width="500px" accept="video/*" />
         </asp:Panel>
         <br />
         <asp:Button ID="btn_Submit" runat="server" Text="Submit" CssClass="btn btn-primary" OnClick="btn_Submit_Click" />

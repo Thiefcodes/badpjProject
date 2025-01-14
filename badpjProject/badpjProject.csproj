@@ -98,12 +98,9 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="AllProfiles.aspx" />
-    <Content Include="App_Data\Database1.mdf" />
-    <Content Include="App_Data\Database1_log.ldf">
-      <DependentUpon>Database1.mdf</DependentUpon>
-    </Content>
     <Content Include="BecomeACoach.aspx" />
     <Content Include="Checkout.aspx" />
+    <Content Include="CoachDetails.aspx" />
     <Content Include="Coaches.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -179,6 +176,7 @@
     <Content Include="SignUp.aspx" />
     <Content Include="Site.Master" />
     <Content Include="StaffPage.aspx" />
+    <Content Include="CSS\Coaches.css" />
     <Content Include="Thread.aspx" />
     <Content Include="UserPage.aspx" />
     <Content Include="ViewCoaches.aspx" />
@@ -218,6 +216,13 @@
     </Compile>
     <Compile Include="Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CoachDetails.aspx.cs">
+      <DependentUpon>CoachDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CoachDetails.aspx.designer.cs">
+      <DependentUpon>CoachDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Coaches.aspx.cs">
       <DependentUpon>Coaches.aspx</DependentUpon>
@@ -437,6 +442,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>

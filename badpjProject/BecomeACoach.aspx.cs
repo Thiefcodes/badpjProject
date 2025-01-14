@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -21,6 +21,7 @@ namespace badpjProject
 
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
+            // Debugging: Check if any required fields are missing
             if (string.IsNullOrWhiteSpace(tb_Name.Text) ||
                 string.IsNullOrWhiteSpace(tb_Email.Text) ||
                 string.IsNullOrWhiteSpace(tb_Hp.Text) ||
@@ -32,32 +33,41 @@ namespace badpjProject
                 return;
             }
 
-            int result = 0;
-            string image = "";
+            string[] allowedExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
+            string fileExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
 
-
-            if (fu_Coach.HasFile)
+            if (!allowedExtensions.Contains(fileExtension))
             {
-                image = fu_Coach.FileName;
+                Response.Write("<script>alert('Please upload a valid video file (e.g., .mp4, .avi, .mov, .wmv)');</script>");
+                return;
             }
 
+            int result = 0;
+            string uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+
+            // Debugging: Generate coach ID and output to the alert
             string generatedId = GenerateCoachId();
+
             string status = "Pending";
 
-            Coaches coach = new Coaches(generatedId, tb_Name.Text, tb_Email.Text, 
-                                        int.Parse(tb_Hp.Text), tb_AboutYou.Text, ddl_Qualification.Text, image, status);
+            Coaches coach = new Coaches(generatedId, tb_Name.Text, tb_Email.Text,
+                                        int.Parse(tb_Hp.Text), tb_AboutYou.Text, ddl_Qualification.Text, uniqueFileName, status);
+
             result = coach.CoachesInsert();
 
+            // Debugging: Check if the insertion was successful
             if (result > 0)
             {
-                string saveimg = Server.MapPath("~/Uploads/") + image;
-                fu_Coach.SaveAs(saveimg);
+                string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueFileName;
+
+                fu_Coach.SaveAs(saveVideoPath);
                 Response.Write("<script>alert('Submission successful');</script>");
             }
-            else { Response.Write("<script>alert('Submission NOT successful');</script>"); }
-
-
-            Response.Redirect("BecomeACoach.aspx");
+            else
+            {
+                // Debugging: In case the insertion failed
+                Response.Write("<script>alert('Submission NOT successful');</script>");
+            }
         }
     }
 }
