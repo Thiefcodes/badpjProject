@@ -74,23 +74,6 @@ namespace badpjProject
             }
         }
 
-
-        private void UpdateThread(string threadId, string newTitle)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "UPDATE Threads SET Title = @Title WHERE ThreadID = @ThreadID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Title", newTitle);
-                cmd.Parameters.AddWithValue("@ThreadID", threadId);
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
-
         private void DeleteThread(string threadId)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
