@@ -23,17 +23,23 @@
             <hr />
             <!-- Comments Section -->
             <asp:Repeater ID="CommentsRepeater" runat="server">
-                <ItemTemplate>
-                    <div class="comment mb-3">
-                        <p><strong><%# Eval("CommenterName") %>:</strong> <%# Eval("CommentText") %></p>
-                        <small class="text-muted"><%# Eval("DateCreated", "{0:MMM dd, yyyy HH:mm}") %></small>
-                        <!-- Delete button visible only to the profile owner -->
-                        <asp:LinkButton ID="DeleteCommentButton" runat="server" CommandArgument='<%# Eval("CommentId") %>' 
-                            CssClass="btn btn-danger btn-sm float-end" Text="Delete" 
-                            OnClick="DeleteCommentButton_Click" Visible='<%# Eval("IsOwner") %>' />
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
+    <ItemTemplate>
+        <div class="comment mb-3">
+            <p><strong><%# Eval("CommenterName") %>:</strong> <%# Eval("CommentText") %></p>
+            <small class="text-muted"><%# Eval("DateCreated", "{0:MMM dd, yyyy HH:mm}") %></small>
+            <asp:LinkButton 
+                ID="DeleteCommentButton" 
+                runat="server" 
+                CommandArgument='<%# Eval("CommentId") %>' 
+                CssClass="btn btn-danger btn-sm float-end" 
+                Text="Delete" 
+                OnClick="DeleteCommentButton_Click" 
+                Visible='<%# Convert.ToBoolean(Eval("IsOwner")) %>'>
+            </asp:LinkButton>
+        </div>
+    </ItemTemplate>
+</asp:Repeater>
+
 
             <!-- Add Comment Form -->
             <asp:TextBox ID="CommentTextBox" runat="server" CssClass="form-control mt-3" placeholder="Leave a comment..." TextMode="MultiLine"></asp:TextBox>
