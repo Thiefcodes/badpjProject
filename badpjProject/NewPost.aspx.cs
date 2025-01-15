@@ -45,7 +45,7 @@ namespace badpjProject
                 cmd.ExecuteNonQuery();
                 conn.Close();
 
-                lblMessage.Text = "Post submitted successfully.";
+                Response.Write("<script>alert('Post submitted successfully.'); window.location='Thread.aspx?ThreadID=" + threadId + "';</script>");
             }
         }
 

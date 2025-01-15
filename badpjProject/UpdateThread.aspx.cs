@@ -53,7 +53,8 @@ namespace badpjProject
                 cmd.ExecuteNonQuery();
                 conn.Close();
 
-                lblMessage.Text = "Thread updated successfully.";
+                Response.Write("<script>alert('Thread Updated Successfully'); window.location='Thread.aspx?ThreadID=" + threadId + "';</script>");
+
             }
         }
 

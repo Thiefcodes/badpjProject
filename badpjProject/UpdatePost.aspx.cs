@@ -47,7 +47,8 @@ namespace badpjProject
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
-            Response.Redirect($"Thread.aspx?ThreadID={Request.QueryString["ThreadID"]}");
+            Response.Write($"<script>alert('Post Updated Successfully'); window.location='Thread.aspx?ThreadID={Request.QueryString["ThreadID"]}';</script>");
+
         }
     }
 }

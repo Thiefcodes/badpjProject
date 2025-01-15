@@ -69,6 +69,7 @@ namespace badpjProject
 
                 conn.Open();
                 cmd.ExecuteNonQuery();
+                Response.Write("<script>alert('Post deleted successfully');</script>");
             }
         }
 
@@ -96,7 +97,7 @@ namespace badpjProject
             if (Session["UserId"] == null || Session["Username"] == null || Session["Role"] == null)
             {
                 // Redirect to the login page if user is not logged in
-                Response.Redirect("Login.aspx");
+                Response.Write("<script>alert('Please log in first!'); window.location='Login.aspx';</script>");
             }
             else
             {
