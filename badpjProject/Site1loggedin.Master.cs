@@ -29,6 +29,16 @@ namespace badpjProject
                 // Redirect to login page if not logged in
                 Response.Redirect("Login.aspx");
             }
+
+            if (Session["Role"]?.ToString() != "Staff")
+            {
+                liStaffView.Visible = false;
+            }
+            else
+            {
+                liStaffView.Visible = true;
+            }
+
         }
 
 

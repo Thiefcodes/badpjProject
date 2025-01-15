@@ -21,7 +21,6 @@
             <ItemTemplate>
                 <tr>
                     <td>
-                        <!-- Clicking the image leads to ProductDetails -->
                         <asp:HyperLink
                             NavigateUrl='<%# "ProductDetails.aspx?productID=" + Eval("ProductID") %>'>
                             <asp:Image ID="imgProduct" runat="server"
@@ -33,7 +32,6 @@
                     <td><%# Eval("ProductName") %></td>
                     <td><%# Eval("Price", "{0:C}") %></td>
                     <td>
-                        <!-- View More button -->
                         <asp:HyperLink
                             ID="hlViewMore"
                             runat="server"
@@ -41,7 +39,6 @@
                             CssClass="btn btn-info btn-sm"
                             Text="View More" />
                         &nbsp;
-                        <!-- Add to Cart button -->
                         <asp:LinkButton
                             ID="btnAddToCart"
                             runat="server"

@@ -16,6 +16,18 @@ namespace badpjProject
         private string _connString =
             System.Configuration.ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["UserID"] == null)
+            {
+                this.MasterPageFile = "~/Site.Master";
+            }
+            else
+            {
+                this.MasterPageFile = "~/Site1loggedin.Master";
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -58,46 +70,53 @@ namespace badpjProject
 
         protected void AddToCart_Command(object sender, CommandEventArgs e)
         {
-            int productId = Convert.ToInt32(e.CommandArgument);
-            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
-            string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
-
-            using (SqlConnection conn = new SqlConnection(connStr))
+            if (Session["UserID"] == null)
             {
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                Response.Write("<script>alert('Please log in first!');</script>");
+            }
+            else
+            {
+                int productId = Convert.ToInt32(e.CommandArgument);
+                string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+                string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
+
+                using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    cmd.Parameters.AddWithValue("@ProductID", productId);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        CartItem newItem = new CartItem
-                        {
-                            ProductID = (int)reader["ProductID"],
-                            ProductName = reader["ProductName"].ToString(),
-                            Description = reader["Description"].ToString(),
-                            ImageUrl = reader["ImageUrl"].ToString(),
-                            Price = Convert.ToDecimal(reader["Price"]),
-                            Quantity = 1
-                        };
-                        List<CartItem> cart = (List<CartItem>)Session["Cart"];
+                        cmd.Parameters.AddWithValue("@ProductID", productId);
+                        SqlDataReader reader = cmd.ExecuteReader();
 
-                        if (cart == null)
+                        if (reader.Read())
                         {
-                            cart = new List<CartItem>();
-                        }
-                        CartItem existingItem = cart.Find(item => item.ProductID == newItem.ProductID);
+                            CartItem newItem = new CartItem
+                            {
+                                ProductID = (int)reader["ProductID"],
+                                ProductName = reader["ProductName"].ToString(),
+                                Description = reader["Description"].ToString(),
+                                ImageUrl = reader["ImageUrl"].ToString(),
+                                Price = Convert.ToDecimal(reader["Price"]),
+                                Quantity = 1
+                            };
+                            List<CartItem> cart = (List<CartItem>)Session["Cart"];
 
-                        if (existingItem != null)
-                        {
-                            existingItem.Quantity++;
+                            if (cart == null)
+                            {
+                                cart = new List<CartItem>();
+                            }
+                            CartItem existingItem = cart.Find(item => item.ProductID == newItem.ProductID);
+
+                            if (existingItem != null)
+                            {
+                                existingItem.Quantity++;
+                            }
+                            else
+                            {
+                                cart.Add(newItem);
+                            }
+                            Session["Cart"] = cart;
                         }
-                        else
-                        {
-                            cart.Add(newItem);
-                        }
-                        Session["Cart"] = cart;
                     }
                 }
             }
