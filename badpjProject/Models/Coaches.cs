@@ -176,6 +176,149 @@ namespace badpjProject
             return coachList;
         }
 
+        public List<Coaches> GetPendingCoaches()
+        {
+            List<Coaches> coachList = new List<Coaches>();
+
+            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status;
+            int coach_Hp;
+
+            string queryStr = "SELECT * FROM Coach WHERE Status = 'Pending' ORDER BY Name";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                try
+                {
+                    conn.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        coach_ID = dr["Id"].ToString();
+                        coach_Name = dr["Name"].ToString();
+                        coach_Email = dr["Email"].ToString();
+                        coach_Hp = int.Parse(dr["Hp"].ToString());
+                        coach_Desc = dr["Desc"].ToString();
+                        coach_Qualification = dr["Qualification"].ToString();
+                        coach_Video = dr["File_URL"].ToString();
+                        coach_Status = dr["Status"].ToString();
+
+                        Coaches coach = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status);
+                        coachList.Add(coach);
+                    }
+
+                    dr.Close();
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error: " + ex.Message);
+                    throw;
+                }
+            }
+
+            return coachList;
+        }
+
+        public List<Coaches> GetApprovedCoaches()
+        {
+            List<Coaches> coachList = new List<Coaches>();
+
+            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status;
+            int coach_Hp;
+
+            string queryStr = "SELECT * FROM Coach WHERE Status = 'Approved' ORDER BY Name";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                try
+                {
+                    conn.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        coach_ID = dr["Id"].ToString();
+                        coach_Name = dr["Name"].ToString();
+                        coach_Email = dr["Email"].ToString();
+                        coach_Hp = int.Parse(dr["Hp"].ToString());
+                        coach_Desc = dr["Desc"].ToString();
+                        coach_Qualification = dr["Qualification"].ToString();
+                        coach_Video = dr["File_URL"].ToString();
+                        coach_Status = dr["Status"].ToString();
+
+                        Coaches coach = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status);
+                        coachList.Add(coach);
+                    }
+
+                    dr.Close();
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error: " + ex.Message);
+                    throw;
+                }
+            }
+
+            return coachList;
+        }
+
+        public bool ApproveCoach(string coachId)
+        {
+            bool isApproved = false;
+
+            string queryStr = "UPDATE Coach SET Status = @Status WHERE Id = @Id";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@Status", "Approved");
+                cmd.Parameters.AddWithValue("@Id", coachId);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    isApproved = rowsAffected > 0; // True if at least one row is updated
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("MySQL Error in ApproveCoach: " + ex.Message);
+                    throw;
+                }
+            }
+
+            return isApproved;
+        }
+
+        public bool RejectCoach(string coachId)
+        {
+            bool isRejected = false;
+
+            string queryStr = "DELETE FROM Coach WHERE Id = @Id";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", coachId);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    isRejected = rowsAffected > 0; // True if at least one row is deleted
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("MySQL Error in RejectCoach: " + ex.Message);
+                    throw;
+                }
+            }
+
+            return isRejected;
+        }
+
         public int CoachesInsert()
         {
             int result = 0;

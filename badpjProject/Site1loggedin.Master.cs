@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace badpjProject
 {
@@ -23,6 +20,16 @@ namespace badpjProject
                 {
                     ProfilePicture.ImageUrl = "~/Images/default-profile.png"; // Default profile picture path
                 }
+
+                // Dynamically hide/show tabs based on role
+                if (Session["Role"]?.ToString() != "Staff")
+                {
+                    HideStaffOnlyTabs();
+                }
+                else
+                {
+                    HideUserOnlyTabs();
+                }
             }
             else
             {
@@ -31,6 +38,35 @@ namespace badpjProject
             }
         }
 
+        private void HideStaffOnlyTabs()
+        {
+            // List of controls to hide for non-staff users
+            List<Control> staffOnlyTabs = new List<Control>
+            {
+                liStaffManageProduct,
+                liStaffViewCoaches
+            };
+
+            foreach (var tab in staffOnlyTabs)
+            {
+                tab.Visible = false;
+            }
+        }
+
+
+        private void HideUserOnlyTabs()
+        {
+            // List of controls to hide for staff users
+            List<Control> userOnlyTabs = new List<Control>
+            {
+                liUserBecomeACoach
+            };
+
+            foreach (var tab in userOnlyTabs)
+            {
+                tab.Visible = false;
+            }
+        }
 
         protected void Logout_Click(object sender, EventArgs e)
         {

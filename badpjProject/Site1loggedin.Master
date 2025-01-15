@@ -13,6 +13,7 @@
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="CSS/Coaches.css" />
 </head>
 <body>
     <form runat="server">
@@ -32,9 +33,14 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
+                        <a href="AllProfiles.aspx" class="nav-link">All Profiles</a>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/UserPage.aspx">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Coaches.aspx">Coaches</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/BecomeACoach.aspx">Become a Coach</a></li>
+                        <li class="nav-item"><a class="nav-link"href="~/Coaches.aspx">Coaches</a></li>
+                        <li class="nav-item" runat="server" id="liUserBecomeACoach"><a class="nav-link" runat="server" href="~/BecomeACoach.aspx">Become a Coach</a></li>
+                        <li class="nav-item" runat="server" id="liStaffViewCoaches"><a class="nav-link" runat="server" href="~/ViewCoaches.aspx">View Coaches</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Forum.aspx">Forum</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Shop.aspx">Shop</a></li>
+                        <li class="nav-item" runat="server" id="liStaffManageProduct"><a class="nav-link" runat="server" href="~/ManageProduct.aspx">Manage Products</a></li>
                     </ul>
                     <!-- User Profile Picture -->
                     <div class="d-flex align-items-center">
