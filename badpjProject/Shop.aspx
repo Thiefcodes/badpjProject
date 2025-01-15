@@ -4,8 +4,15 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <h2 class="mt-4">Shop</h2>
-        <a href="Shoppingcart.aspx" class="btn btn-warning mb-3">View Cart</a>
-        <asp:Repeater ID="rptProducts" runat="server">
+        <asp:UpdatePanel runat="server">
+            <ContentTemplate>
+                <a href="Shoppingcart.aspx" class="btn btn-warning mb-3 position-relative">View Cart
+           
+                    <asp:Label ID="lblCartCount" runat="server" CssClass="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill"></asp:Label>
+                </a>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <asp:Repeater ID="rptProducts" runat="server" OnItemCommand="rptProducts_ItemCommand">
             <HeaderTemplate>
                 <table class="table table-hover">
                     <thead>
@@ -50,7 +57,7 @@
                 </tr>
             </ItemTemplate>
             <FooterTemplate>
-                    </tbody>
+                </tbody>
                 </table>
             </FooterTemplate>
         </asp:Repeater>
