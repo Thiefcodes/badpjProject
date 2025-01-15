@@ -98,6 +98,10 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="AllProfiles.aspx" />
+    <Content Include="App_Data\Database1.mdf" />
+    <Content Include="App_Data\Database1_log.ldf">
+      <DependentUpon>Database1.mdf</DependentUpon>
+    </Content>
     <Content Include="BecomeACoach.aspx" />
     <Content Include="Checkout.aspx" />
     <Content Include="CoachDetails.aspx" />
@@ -133,6 +137,7 @@
     <Content Include="ManageProduct.aspx" />
     <Content Include="ManageStaff.aspx" />
     <Content Include="ManageUsers.aspx" />
+    <Content Include="NewPost.aspx" />
     <Content Include="NewThread.aspx" />
     <Content Include="OtpConfirmation.aspx" />
     <Content Include="ProductDetails.aspx" />
@@ -320,6 +325,13 @@
       <DependentUpon>ManageUsers.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs" />
+    <Compile Include="NewPost.aspx.cs">
+      <DependentUpon>NewPost.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewPost.aspx.designer.cs">
+      <DependentUpon>NewPost.aspx</DependentUpon>
+    </Compile>
     <Compile Include="NewThread.aspx.cs">
       <DependentUpon>NewThread.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -442,7 +454,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>
