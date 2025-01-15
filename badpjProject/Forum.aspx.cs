@@ -12,6 +12,17 @@ namespace badpjProject
         {
             if (!IsPostBack)
             {
+                // Check the session role
+                if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
+                {
+                    // Make the Delete button visible if the role is "Admin"
+                    gvThreads.Columns[6].Visible = true;  // Assuming the Delete button is in the 4th column (index 3)
+                }
+                else
+                {
+                    // Hide the Delete button for non-admin roles
+                    gvThreads.Columns[6].Visible = false;
+                }
                 LoadThreads();
             }
         }
@@ -37,7 +48,15 @@ namespace badpjProject
 
         protected void gvThreads_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "ViewThread")
+            if (e.CommandName == "DeleteThread")
+            {
+                int index = Convert.ToInt32(e.CommandArgument);
+                string threadId = gvThreads.Rows[index].Cells[0].Text;
+
+                DeleteThread(threadId);
+                LoadThreads();
+            }
+            else if (e.CommandName == "ViewThread")
             {
                 int index = Convert.ToInt32(e.CommandArgument);
                 string threadId = gvThreads.Rows[index].Cells[0].Text;
@@ -45,21 +64,76 @@ namespace badpjProject
             }
         }
 
+        protected void gvThreads_RowEditing(object sender, System.Web.UI.WebControls.GridViewEditEventArgs e)
+        {
+            gvThreads.EditIndex = e.NewEditIndex;
+            LoadThreads();
+        }
+
+        protected void gvThreads_RowUpdating(object sender, System.Web.UI.WebControls.GridViewUpdateEventArgs e)
+        {
+            GridViewRow row = gvThreads.Rows[e.RowIndex];
+            string threadId = row.Cells[0].Text;
+            string newTitle = ((TextBox)row.Cells[1].Controls[0]).Text;
+
+            UpdateThread(threadId, newTitle);
+            gvThreads.EditIndex = -1;
+            LoadThreads();
+        }
+
+        protected void gvThreads_RowCancelingEdit(object sender, System.Web.UI.WebControls.GridViewCancelEditEventArgs e)
+        {
+            gvThreads.EditIndex = -1;
+            LoadThreads();
+        }
+
+        private void UpdateThread(string threadId, string newTitle)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE Threads SET Title = @Title WHERE ThreadID = @ThreadID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Title", newTitle);
+                cmd.Parameters.AddWithValue("@ThreadID", threadId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private void DeleteThread(string threadId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "DELETE FROM Threads WHERE ThreadID = @ThreadID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ThreadID", threadId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
         protected void btnNewThread_Click(object sender, EventArgs e)
         {
-            Response.Redirect("NewThread.aspx");
+            // Check if the user is logged in
+            if (Session["UserId"] == null || Session["Username"] == null || Session["Role"] == null)
+            {
+                // Redirect to the login page if user is not logged in
+                Response.Redirect("Login.aspx");
+            }
+            else
+            {
+                // Proceed with the current page as user is logged in
+                // Continue with your page logic here
+                Response.Redirect("NewThread.aspx");
+            }
         }
 
-        protected void gvThreads_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Get the selected row
-            GridViewRow selectedRow = gvThreads.SelectedRow;
-
-            // Retrieve the ThreadID from the first cell (adjust index as needed)
-            int threadId = Convert.ToInt32(selectedRow.Cells[0].Text);
-
-            // Redirect to the Thread page with the selected ThreadID
-            Response.Redirect($"Thread.aspx?ThreadID={threadId}");
-        }
     }
 }

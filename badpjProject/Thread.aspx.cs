@@ -51,8 +51,19 @@ namespace badpjProject
 
         protected void btnReply_Click(object sender, EventArgs e)
         {
-            string threadId = Request.QueryString["ThreadID"];
-            Response.Redirect($"NewPost.aspx?ThreadID={threadId}");
+            // Check if the user is logged in
+            if (Session["UserId"] == null || Session["Username"] == null || Session["Role"] == null)
+            {
+                // Redirect to the login page if user is not logged in
+                Response.Redirect("Login.aspx");
+            }
+            else
+            {
+                // Proceed with the current page as user is logged in
+                // Continue with your page logic here
+                string threadId = Request.QueryString["ThreadID"];
+                Response.Redirect($"NewPost.aspx?ThreadID={threadId}");
+            }
         }
     }
 }
