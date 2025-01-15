@@ -13,5 +13,6 @@
     </Columns>
 </asp:GridView>
 <asp:Button ID="btnReply" runat="server" Text="Reply" OnClick="btnReply_Click" />
+<asp:Button ID="btnBack" runat="server" Text="Back" OnClick="btnBack_Click" />
         </div>
 </asp:Content>

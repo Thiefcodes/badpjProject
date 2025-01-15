@@ -6,6 +6,6 @@
     <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Rows="10" Width="500px"></asp:TextBox>
     <br />
     <asp:Button ID="btnSubmit" runat="server" Text="Submit" OnClick="btnSubmit_Click" />
-    <asp:Button ID="btnCancel" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
+    <asp:Button ID="btnCancel" runat="server" Text="Back" OnClick="btnCancel_Click" />
         </div>
 </asp:Content>

@@ -36,9 +36,10 @@ namespace badpjProject
             }
             else if (e.CommandName == "EditPost")
             {
+                string threadId = Request.QueryString["ThreadID"];
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 string postId = gvPosts.DataKeys[rowIndex].Value.ToString();
-                Response.Redirect($"UpdatePost.aspx?PostID={postId}");
+                Response.Redirect($"UpdatePost.aspx?PostID={postId}&ThreadID={threadId}");
             }
         }
 
@@ -104,6 +105,11 @@ namespace badpjProject
                 string threadId = Request.QueryString["ThreadID"];
                 Response.Redirect($"NewPost.aspx?ThreadID={threadId}");
             }
+        }
+
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Forum.aspx");
         }
     }
 }
