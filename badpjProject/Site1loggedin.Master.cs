@@ -44,7 +44,8 @@ namespace badpjProject
             List<Control> staffOnlyTabs = new List<Control>
             {
                 liStaffManageProduct,
-                liStaffViewCoaches
+                liStaffViewCoaches,
+                liStaffAllorders
             };
 
             foreach (var tab in staffOnlyTabs)

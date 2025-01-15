@@ -97,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="About.aspx" />
+    <Content Include="Allorders.aspx" />
     <Content Include="AllProfiles.aspx" />
     <Content Include="App_Data\Database1.mdf" />
     <Content Include="App_Data\Database1_log.ldf">
@@ -140,6 +141,7 @@
     <Content Include="ManageUsers.aspx" />
     <Content Include="NewPost.aspx" />
     <Content Include="NewThread.aspx" />
+    <Content Include="Orders.aspx" />
     <Content Include="OtpConfirmation.aspx" />
     <Content Include="ProductDetails.aspx" />
     <Content Include="ProfilePage.aspx" />
@@ -150,6 +152,7 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ThankYou.aspx" />
     <Content Include="Wishlist.aspx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
@@ -196,6 +199,13 @@
     <Content Include="Site.Mobile.Master" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Allorders.aspx.cs">
+      <DependentUpon>Allorders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Allorders.aspx.designer.cs">
+      <DependentUpon>Allorders.aspx</DependentUpon>
+    </Compile>
     <Compile Include="AllProfiles.aspx.cs">
       <DependentUpon>AllProfiles.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -350,6 +360,13 @@
     <Compile Include="NewThread.aspx.designer.cs">
       <DependentUpon>NewThread.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Orders.aspx.cs">
+      <DependentUpon>Orders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Orders.aspx.designer.cs">
+      <DependentUpon>Orders.aspx</DependentUpon>
+    </Compile>
     <Compile Include="OtpConfirmation.aspx.cs">
       <DependentUpon>OtpConfirmation.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -427,6 +444,12 @@
     </Compile>
     <Compile Include="StaffPage.aspx.designer.cs">
       <DependentUpon>StaffPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ThankYou.aspx.cs">
+      <DependentUpon>ThankYou.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ThankYou.aspx.designer.cs">
+      <DependentUpon>ThankYou.aspx</DependentUpon>
     </Compile>
     <Compile Include="Thread.aspx.cs">
       <DependentUpon>Thread.aspx</DependentUpon>
