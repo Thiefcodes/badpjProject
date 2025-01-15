@@ -4,6 +4,7 @@ using badpjProject.Models;
 using System.Configuration;
 using System.Collections.Generic;
 using System.Web.UI.WebControls;
+using System.Linq;
 
 namespace badpjProject
 {
@@ -37,6 +38,7 @@ namespace badpjProject
                 if (int.TryParse(Request.QueryString["productID"], out _productId))
                 {
                     LoadProduct(_productId);
+                    UpdateCartCount();
 
                     bool isInWishlist = IsProductInWishlist(_productId, _currentUserID);
                     lblWishlistIndicator.Visible = isInWishlist;
@@ -95,52 +97,76 @@ namespace badpjProject
 
         protected void btnAddToCart_Click(object sender, EventArgs e)
         {
-            if (_currentUserID != -1)
+            if (Session["UserID"] == null)
             {
-                int productId = _productId;
+                Response.Write("<script>alert('Please log in first!'); window.location='Login.aspx';</script>");
+                return;
+            }
+            int productId;
+            if (!int.TryParse(hfProductID.Value, out productId))
+            {
+                Response.Write("<script>alert('Invalid product selection.');</script>");
+                return;
+            }
 
-                string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
-                string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
 
-                using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
                     {
-                        cmd.Parameters.AddWithValue("@ProductID", productId);
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        if (reader.Read())
+                        CartItem newItem = new CartItem
                         {
-                            CartItem newItem = new CartItem
-                            {
-                                ProductID = (int)reader["ProductID"],
-                                ProductName = reader["ProductName"].ToString(),
-                                Description = reader["Description"].ToString(),
-                                ImageUrl = reader["ImageUrl"].ToString(),
-                                Price = Convert.ToDecimal(reader["Price"]),
-                                Quantity = 1
-                            };
-                            List<CartItem> cart = (List<CartItem>)Session["Cart"] ?? new List<CartItem>();
+                            ProductID = (int)reader["ProductID"],
+                            ProductName = reader["ProductName"].ToString(),
+                            Description = reader["Description"].ToString(),
+                            ImageUrl = reader["ImageUrl"].ToString(),
+                            Price = Convert.ToDecimal(reader["Price"]),
+                            Quantity = 1
+                        };
 
-                            CartItem existingItem = cart.Find(item => item.ProductID == newItem.ProductID);
-                            if (existingItem != null)
-                            {
-                                existingItem.Quantity++;
-                            }
-                            else
-                            {
-                                cart.Add(newItem);
-                            }
-                            Session["Cart"] = cart;
+                        List<CartItem> cart = (List<CartItem>)Session["Cart"] ?? new List<CartItem>();
+
+                        CartItem existingItem = cart.Find(item => item.ProductID == newItem.ProductID);
+
+                        if (existingItem != null)
+                        {
+                            existingItem.Quantity++;
                         }
+                        else
+                        {
+                            cart.Add(newItem);
+                        }
+
+                        Session["Cart"] = cart;
+                        UpdateCartCount();
+                        Response.Write("<script>alert('Item added to cart!');</script>");
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Product not found.');</script>");
                     }
                 }
             }
-            else
+        }
+        private void UpdateCartCount()
+        {
+            int cartCount = 0;
+
+            if (Session["Cart"] != null)
             {
-                Response.Write("<script>alert('Please log in first!');</script>");
+                List<CartItem> cart = (List<CartItem>)Session["Cart"];
+                cartCount = cart.Sum(item => item.Quantity);
             }
         }
+
     }
 }
+

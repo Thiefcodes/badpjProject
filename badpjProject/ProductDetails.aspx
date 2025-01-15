@@ -37,12 +37,16 @@
                     Visible="false"
                     Text="(On your Wishlist!)"/>
 
+                
+                <asp:HiddenField ID="hfProductID" runat="server" />
+
                 <asp:Button
                     ID="btnAddToCart"
                     runat="server"
-                    Text="Add to Cart"
-                    CssClass="btn btn-primary"
-                    OnClick="btnAddToCart_Click"/>
+                    CssClass="btn btn-primary btn-sm"
+                    OnClick="btnAddToCart_Click"
+                    Text="Add to Cart" />
+
             </div>
         </div>
     </div>
