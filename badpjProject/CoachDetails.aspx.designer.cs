@@ -11,70 +11,97 @@ namespace badpjProject
 {
 
 
-    public partial class ProductDetails
+    public partial class CoachDetail
     {
 
         /// <summary>
-        /// imgProduct control.
+        /// videoContainer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image imgProduct;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl videoContainer;
 
         /// <summary>
-        /// lblName control.
+        /// videoPlayer control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblName;
+        protected global::System.Web.UI.HtmlControls.HtmlVideo videoPlayer;
 
         /// <summary>
-        /// lblPrice control.
+        /// videoSource control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPrice;
+        protected global::System.Web.UI.HtmlControls.HtmlSource videoSource;
 
         /// <summary>
-        /// lblDescription control.
+        /// lbl_CoachName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDescription;
+        protected global::System.Web.UI.WebControls.Label lbl_CoachName;
 
         /// <summary>
-        /// lblWishlistIndicator control.
+        /// lbl_CoachEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWishlistIndicator;
+        protected global::System.Web.UI.WebControls.Label lbl_CoachEmail;
 
         /// <summary>
-        /// hfProductID control.
+        /// lbl_CoachHp control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfProductID;
+        protected global::System.Web.UI.WebControls.Label lbl_CoachHp;
 
         /// <summary>
-        /// btnAddToCart control.
+        /// lbl_CoachDesc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddToCart;
+        protected global::System.Web.UI.WebControls.Label lbl_CoachDesc;
+
+        /// <summary>
+        /// lbl_CoachQualification control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_CoachQualification;
+
+        /// <summary>
+        /// lbl_CoachStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_CoachStatus;
+
+        /// <summary>
+        /// Btn_Back control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Btn_Back;
     }
 }

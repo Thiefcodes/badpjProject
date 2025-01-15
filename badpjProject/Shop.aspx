@@ -4,8 +4,20 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
         <h2 class="mt-4">Shop</h2>
-        <a href="Shoppingcart.aspx" class="btn btn-warning mb-3">View Cart</a>
-        <asp:Repeater ID="rptProducts" runat="server">
+        <div>
+        <asp:UpdatePanel runat="server">
+            <ContentTemplate>
+                <a href="Shoppingcart.aspx" class="btn btn-warning mb-3 position-relative">View Cart
+            <asp:Label ID="lblCartCount" runat="server" CssClass="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill"></asp:Label>
+                </a>
+            </ContentTemplate>
+</asp:UpdatePanel>
+            <asp:Button ID="btnViewWishlist" runat="server"
+                CssClass="btn btn-info mb-3"
+                Text="View Wishlist"
+                OnClick="btnViewWishlist_Click"/>
+        </div>
+        <asp:Repeater ID="rptProducts" runat="server" OnItemDataBound="rptProducts_ItemDataBound">
             <HeaderTemplate>
                 <table class="table table-hover">
                     <thead>
@@ -21,7 +33,6 @@
             <ItemTemplate>
                 <tr>
                     <td>
-                        <!-- Clicking the image leads to ProductDetails -->
                         <asp:HyperLink
                             NavigateUrl='<%# "ProductDetails.aspx?productID=" + Eval("ProductID") %>'>
                             <asp:Image ID="imgProduct" runat="server"
@@ -31,9 +42,15 @@
                         </asp:HyperLink>
                     </td>
                     <td><%# Eval("ProductName") %></td>
+                     <td>
+                        <%# Eval("ProductName") %>
+                        <asp:Label ID="lblWishlistIndicator" runat="server"
+                            CssClass="text-success fw-bold ms-2"
+                            Visible="false"
+                            Text="(On your Wishlist!)"></asp:Label>
+                    </td>
                     <td><%# Eval("Price", "{0:C}") %></td>
                     <td>
-                        <!-- View More button -->
                         <asp:HyperLink
                             ID="hlViewMore"
                             runat="server"
@@ -41,7 +58,6 @@
                             CssClass="btn btn-info btn-sm"
                             Text="View More" />
                         &nbsp;
-                        <!-- Add to Cart button -->
                         <asp:LinkButton
                             ID="btnAddToCart"
                             runat="server"
@@ -49,6 +65,14 @@
                             CommandArgument='<%# Eval("ProductID") %>'
                             OnCommand="AddToCart_Command"
                             Text="Add to Cart" />
+                        &nbsp;
+                        <asp:LinkButton
+                            ID="btnAddToWishlist"
+                            runat="server"
+                            CssClass="btn btn-warning btn-sm"
+                            CommandArgument='<%# Eval("ProductID") %>'
+                            OnCommand="AddToWishlist_Command"
+                            Text="Add to Wishlist" />
                     </td>
                 </tr>
             </ItemTemplate>

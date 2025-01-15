@@ -104,6 +104,7 @@
     </Content>
     <Content Include="BecomeACoach.aspx" />
     <Content Include="Checkout.aspx" />
+    <Content Include="CoachDetails.aspx" />
     <Content Include="Coaches.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -136,6 +137,7 @@
     <Content Include="ManageProduct.aspx" />
     <Content Include="ManageStaff.aspx" />
     <Content Include="ManageUsers.aspx" />
+    <Content Include="NewPost.aspx" />
     <Content Include="NewThread.aspx" />
     <Content Include="OtpConfirmation.aspx" />
     <Content Include="ProductDetails.aspx" />
@@ -147,6 +149,7 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Wishlist.aspx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -179,8 +182,12 @@
     <Content Include="SignUp.aspx" />
     <Content Include="Site.Master" />
     <Content Include="StaffPage.aspx" />
+    <Content Include="CSS\Coaches.css" />
     <Content Include="Thread.aspx" />
+    <Content Include="UpdatePost.aspx" />
+    <Content Include="UpdateThread.aspx" />
     <Content Include="UserPage.aspx" />
+    <Content Include="ViewCoaches.aspx" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="VisitingProfile.aspx" />
     <Content Include="Web.config" />
@@ -218,6 +225,13 @@
     <Compile Include="Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CoachDetails.aspx.cs">
+      <DependentUpon>CoachDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CoachDetails.aspx.designer.cs">
+      <DependentUpon>CoachDetails.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Coaches.aspx.cs">
       <DependentUpon>Coaches.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -225,7 +239,7 @@
     <Compile Include="Coaches.aspx.designer.cs">
       <DependentUpon>Coaches.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Coaches.cs" />
+    <Compile Include="Models\Coaches.cs" />
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -314,6 +328,13 @@
       <DependentUpon>ManageUsers.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs" />
+    <Compile Include="NewPost.aspx.cs">
+      <DependentUpon>NewPost.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewPost.aspx.designer.cs">
+      <DependentUpon>NewPost.aspx</DependentUpon>
+    </Compile>
     <Compile Include="NewThread.aspx.cs">
       <DependentUpon>NewThread.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -406,12 +427,33 @@
     <Compile Include="Thread.aspx.designer.cs">
       <DependentUpon>Thread.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UpdatePost.aspx.cs">
+      <DependentUpon>UpdatePost.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UpdatePost.aspx.designer.cs">
+      <DependentUpon>UpdatePost.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateThread.aspx.cs">
+      <DependentUpon>UpdateThread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UpdateThread.aspx.designer.cs">
+      <DependentUpon>UpdateThread.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UserPage.aspx.cs">
       <DependentUpon>UserPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UserPage.aspx.designer.cs">
       <DependentUpon>UserPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewCoaches.aspx.cs">
+      <DependentUpon>ViewCoaches.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewCoaches.aspx.designer.cs">
+      <DependentUpon>ViewCoaches.aspx</DependentUpon>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
@@ -426,6 +468,13 @@
     </Compile>
     <Compile Include="VisitingProfile.aspx.designer.cs">
       <DependentUpon>VisitingProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Wishlist.aspx.cs">
+      <DependentUpon>Wishlist.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Wishlist.aspx.designer.cs">
+      <DependentUpon>Wishlist.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

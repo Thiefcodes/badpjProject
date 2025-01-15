@@ -12,8 +12,25 @@ namespace badpjProject
         private string _connString =
             ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["UserID"] == null)
+            {
+                this.MasterPageFile = "~/Site.Master";
+            }
+            else
+            {
+                this.MasterPageFile = "~/Site1loggedin.Master";
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["Role"]?.ToString() != "Staff")
+            {
+                Response.Redirect("~/Shop.aspx");
+            }
+
             if (!IsPostBack)
             {
                 LoadProducts();
