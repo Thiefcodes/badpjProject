@@ -15,6 +15,7 @@ namespace badpjProject
     {
         private string _connString =
             System.Configuration.ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+        private int _currentUserID;
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -30,6 +31,15 @@ namespace badpjProject
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["UserID"] != null)
+            {
+                _currentUserID = Convert.ToInt32(Session["UserID"]);
+            }
+            else
+            {
+                _currentUserID = -1; 
+            }
+
             if (!IsPostBack)
             {
                 LoadProducts();
@@ -68,13 +78,61 @@ namespace badpjProject
             rptProducts.DataBind();
         }
 
-        protected void AddToCart_Command(object sender, CommandEventArgs e)
+        protected void btnViewWishlist_Click(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
+            if (Session["Role"]?.ToString() == "Staff" || Session["Role"]?.ToString() == "User")
             {
-                Response.Write("<script>alert('Please log in first!');</script>");
+                Response.Redirect("Wishlist.aspx");
+
             }
             else
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert",
+                "alert('You need to be logged in to view your wishlist!');", true);
+            }
+        }
+
+        protected void rptProducts_ItemDataBound(object sender, System.Web.UI.WebControls.RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == System.Web.UI.WebControls.ListItemType.Item ||
+                e.Item.ItemType == System.Web.UI.WebControls.ListItemType.AlternatingItem)
+            {
+                var product = (Product)e.Item.DataItem;
+
+                bool isInWishlist = IsProductInWishlist(product.ProductID, _currentUserID);
+
+                var lblWishlistIndicator = (System.Web.UI.WebControls.Label)
+                    e.Item.FindControl("lblWishlistIndicator");
+                if (lblWishlistIndicator != null && isInWishlist)
+                {
+                    lblWishlistIndicator.Visible = true;
+                }
+            }
+        }
+
+        protected bool IsProductInWishlist(int productID, int userID)
+        {
+            if (userID == 0) return false;
+
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                string sql = @"SELECT COUNT(*) FROM dbo.Wishlist
+                               WHERE ProductID = @ProductID AND UserID = @UserID";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", productID);
+                    cmd.Parameters.AddWithValue("@UserID", userID);
+                    conn.Open();
+
+                    int count = (int)cmd.ExecuteScalar();
+                    return (count > 0);
+                }
+            }
+        }
+
+        protected void AddToCart_Command(object sender, CommandEventArgs e)
+        {
+            if (_currentUserID != -1)
             {
                 int productId = Convert.ToInt32(e.CommandArgument);
                 string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
@@ -120,6 +178,37 @@ namespace badpjProject
                     }
                 }
             }
+            else
+            {
+                Response.Write("<script>alert('Please log in first!');</script>");
+            }
+        }
+        protected void AddToWishlist_Command(object sender, System.Web.UI.WebControls.CommandEventArgs e)
+        {
+            int productId = Convert.ToInt32(e.CommandArgument);
+
+            if (_currentUserID < 1)
+            {
+                Response.Write("<script>alert('Please log in first!');</script>");
+                Response.Redirect("Login.aspx?returnUrl=Shop.aspx");
+            }
+
+            if (!IsProductInWishlist(productId, _currentUserID))
+            {
+                using (SqlConnection conn = new SqlConnection(_connString))
+                {
+                    string sql = @"INSERT INTO dbo.Wishlist (UserID, ProductID)
+                                   VALUES (@UserID, @ProductID)";
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserID", _currentUserID);
+                        cmd.Parameters.AddWithValue("@ProductID", productId);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
         }
     }
 }

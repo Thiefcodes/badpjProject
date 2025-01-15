@@ -30,12 +30,19 @@
                     runat="server"
                     CssClass="d-block mb-4" />
 
+                <asp:Label
+                    ID="lblWishlistIndicator"
+                    runat="server"
+                    CssClass="text-success fw-bold"
+                    Visible="false"
+                    Text="(On your Wishlist!)"/>
+
                 <asp:Button
                     ID="btnAddToCart"
                     runat="server"
                     Text="Add to Cart"
                     CssClass="btn btn-primary"
-                    OnClick="btnAddToCart_Click" />
+                    OnClick="btnAddToCart_Click"/>
             </div>
         </div>
     </div>
