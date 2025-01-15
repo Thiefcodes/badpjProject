@@ -39,5 +39,10 @@ namespace badpjProject
         {
             Response.Redirect("EditProfilePage.aspx");
         }
+        protected void ConfigureRewardsButton_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ConfigureRewards.aspx");
+        }
+
     }
 }

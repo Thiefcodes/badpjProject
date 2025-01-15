@@ -20,8 +20,9 @@
 
         <!-- Bottom-left buttons -->
         <div class="position-absolute" style="bottom: 20px; left: 20px;">
-            <asp:Button ID="ManageStaffButton" runat="server" Text="Manage Staff" CssClass="btn btn-primary mb-2 w-100" OnClick="ManageStaffButton_Click" />
-            <asp:Button ID="ManageUsersButton" runat="server" Text="Manage Users" CssClass="btn btn-secondary w-100" OnClick="ManageUsersButton_Click" />
-        </div>
+    <asp:Button ID="ManageStaffButton" runat="server" Text="Manage Staff" CssClass="btn btn-primary mb-2 w-100" OnClick="ManageStaffButton_Click" />
+    <asp:Button ID="ManageUsersButton" runat="server" Text="Manage Users" CssClass="btn btn-secondary mb-2 w-100" OnClick="ManageUsersButton_Click" />
+    <asp:Button ID="ConfigureRewardsButton" runat="server" Text="Configure Rewards" CssClass="btn btn-info w-100" OnClick="ConfigureRewardsButton_Click" />
+</div>
     </div>
 </asp:Content>
