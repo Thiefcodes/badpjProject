@@ -5,7 +5,13 @@
     <div class="container">
         <h2 class="mt-4">Shop</h2>
         <div>
-        <a href="Shoppingcart.aspx" class="btn btn-warning mb-3">View Cart</a>
+        <asp:UpdatePanel runat="server">
+            <ContentTemplate>
+                <a href="Shoppingcart.aspx" class="btn btn-warning mb-3 position-relative">View Cart
+            <asp:Label ID="lblCartCount" runat="server" CssClass="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill"></asp:Label>
+                </a>
+            </ContentTemplate>
+</asp:UpdatePanel>
             <asp:Button ID="btnViewWishlist" runat="server"
                 CssClass="btn btn-info mb-3"
                 Text="View Wishlist"
