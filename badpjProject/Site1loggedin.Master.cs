@@ -60,7 +60,8 @@ namespace badpjProject
             // List of controls to hide for staff users
             List<Control> userOnlyTabs = new List<Control>
             {
-                liUserBecomeACoach
+                liUserBecomeACoach,
+                liUserOrders
             };
 
             foreach (var tab in userOnlyTabs)
