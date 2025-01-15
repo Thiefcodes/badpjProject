@@ -8,6 +8,17 @@ namespace badpjProject
 {
     public partial class Forum : System.Web.UI.Page
     {
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["UserID"] == null)
+            {
+                this.MasterPageFile = "~/Site.Master";
+            }
+            else
+            {
+                this.MasterPageFile = "~/Site1loggedin.Master";
+            }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)

@@ -11,70 +11,52 @@ namespace badpjProject
 {
 
 
-    public partial class StaffPage
+    public partial class ConfigureRewards
     {
 
         /// <summary>
-        /// ProfilePicture control.
+        /// RewardNameTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image ProfilePicture;
+        protected global::System.Web.UI.WebControls.TextBox RewardNameTextBox;
 
         /// <summary>
-        /// StaffNameLabel control.
+        /// RewardImageUpload control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label StaffNameLabel;
+        protected global::System.Web.UI.WebControls.FileUpload RewardImageUpload;
 
         /// <summary>
-        /// StaffEmailLabel control.
+        /// StreakHoursTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label StaffEmailLabel;
+        protected global::System.Web.UI.WebControls.TextBox StreakHoursTextBox;
 
         /// <summary>
-        /// EditProfileButton control.
+        /// AddRewardButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button EditProfileButton;
+        protected global::System.Web.UI.WebControls.Button AddRewardButton;
 
         /// <summary>
-        /// ManageStaffButton control.
+        /// RewardsRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ManageStaffButton;
-
-        /// <summary>
-        /// ManageUsersButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ManageUsersButton;
-
-        /// <summary>
-        /// ConfigureRewardsButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ConfigureRewardsButton;
+        protected global::System.Web.UI.WebControls.Repeater RewardsRepeater;
     }
 }
