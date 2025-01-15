@@ -79,16 +79,16 @@ namespace badpjProject
         {
             if (e.CommandName == "UpdateStatus")
             {
-                // Get the row index
+
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
 
-                // Get the corresponding GridViewRow
+
                 GridViewRow row = gvAllOrders.Rows[rowIndex];
 
-                // Find the TextBox in the row
+
                 TextBox txtStatus = (TextBox)row.FindControl("txtStatus");
 
-                // Get the new status value
+
                 string newStatus = txtStatus.Text.Trim();
 
                 if (string.IsNullOrEmpty(newStatus))
@@ -97,16 +97,15 @@ namespace badpjProject
                     return;
                 }
 
-                // Get the OrderID from DataKeys
                 int orderId = Convert.ToInt32(gvAllOrders.DataKeys[row.RowIndex].Value);
 
-                // Update the order status in the database
+
                 UpdateOrderStatus(orderId, newStatus);
 
-                // Reload the GridView to reflect the changes
+
                 LoadAllOrders();
 
-                // Optional: Confirmation message
+
                 Response.Write("<script>alert('Order status updated successfully!');</script>");
             }
         }

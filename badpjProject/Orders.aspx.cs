@@ -23,7 +23,6 @@ namespace badpjProject
 
         private void LoadOrders()
         {
-            // Redirect to login if user is not logged in
             if (Session["UserID"] == null)
             {
                 Response.Write("<script>alert('Please log in to view your orders.'); window.location='Login.aspx';</script>");
@@ -43,7 +42,6 @@ namespace badpjProject
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    // Add the UserID parameter
                     cmd.Parameters.AddWithValue("@UserID", Session["UserID"]);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -51,8 +49,6 @@ namespace badpjProject
                         while (reader.Read())
                         {
                             int orderId = (int)reader["OrderID"];
-
-                            // Check if the order already exists in the list
                             var existingOrder = orders.FirstOrDefault(o => o.OrderID == orderId);
                             if (existingOrder == null)
                             {
@@ -67,8 +63,6 @@ namespace badpjProject
 
                                 orders.Add(existingOrder);
                             }
-
-                            // Add order item details
                             existingOrder.Items.Add(new OrderDetail
                             {
                                 ProductName = reader["ProductName"].ToString(),
@@ -79,14 +73,10 @@ namespace badpjProject
                     }
                 }
             }
-
-            // Bind data to the repeater
             rptOrders.DataSource = orders;
             rptOrders.DataBind();
         }
     }
-
-    // Models for Order and OrderDetail
     public class Order
     {
         public int OrderID { get; set; }
