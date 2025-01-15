@@ -15,13 +15,31 @@ namespace badpjProject
     {
 
         /// <summary>
-        /// liStaffView control.
+        /// liUserBecomeACoach control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liStaffView;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liUserBecomeACoach;
+
+        /// <summary>
+        /// liStaffViewCoaches control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liStaffViewCoaches;
+
+        /// <summary>
+        /// liStaffManageProduct control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liStaffManageProduct;
 
         /// <summary>
         /// ProfilePicture control.

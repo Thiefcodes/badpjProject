@@ -88,6 +88,23 @@ namespace badpjProject
                 string coachID = e.CommandArgument.ToString();
                 Response.Redirect($"CoachDetails.aspx?id={coachID}");
             }
+            else if (e.CommandName == "Remove")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                string coachID = gvApprovedCoaches.DataKeys[rowIndex].Value.ToString();
+
+                bool success = coachManager.RejectCoach(coachID);
+                if (success)
+                {
+                    Response.Write("<script>alert('Coach removed successfully');</script>");
+                }
+                else
+                {
+                    Response.Write("<script>alert('Error removing coach');</script>");
+                }
+
+                bind();
+            }
         }
     }
 }
