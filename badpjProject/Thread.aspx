@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="Thread.aspx.cs" Inherits="badpjProject.Thread" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="container mt-4">
     <h1><asp:Label ID="lblThreadTitle" runat="server" Text="Thread Title"></asp:Label></h1>
 <asp:GridView ID="gvPosts" runat="server" AutoGenerateColumns="False">
     <Columns>
@@ -9,4 +10,5 @@
     </Columns>
 </asp:GridView>
 <asp:Button ID="btnReply" runat="server" Text="Reply" OnClick="btnReply_Click" />
+        </div>
 </asp:Content>
