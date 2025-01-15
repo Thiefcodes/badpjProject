@@ -25,19 +25,30 @@ namespace badpjProject
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO Posts (ThreadID, Content, CreatedBy) VALUES (@ThreadID, @Content, @CreatedBy)";
+                conn.Open();
+
+                // Retrieve the next available PostID
+                SqlCommand getMaxIdCmd = new SqlCommand("SELECT ISNULL(MAX(PostID), 0) + 1 FROM Posts", conn);
+                int newPostId = Convert.ToInt32(getMaxIdCmd.ExecuteScalar());
+
+                // Insert the new post
+                string query = "INSERT INTO Posts (PostID, ThreadID, Content, CreatedBy, CreatedAt, IsDeleted) " +
+                               "VALUES (@PostID, @ThreadID, @Content, @CreatedBy, @CreatedAt, @IsDeleted)";
                 SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@PostID", newPostId);
                 cmd.Parameters.AddWithValue("@ThreadID", threadId);
                 cmd.Parameters.AddWithValue("@Content", content);
                 cmd.Parameters.AddWithValue("@CreatedBy", userId);
+                cmd.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+                cmd.Parameters.AddWithValue("@IsDeleted", false); // Default value for IsDeleted
 
-                conn.Open();
                 cmd.ExecuteNonQuery();
                 conn.Close();
 
                 lblMessage.Text = "Post submitted successfully.";
             }
         }
+
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {

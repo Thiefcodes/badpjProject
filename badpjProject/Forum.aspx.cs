@@ -16,11 +16,13 @@ namespace badpjProject
                 if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
                 {
                     // Make the Delete button visible if the role is "Admin"
-                    gvThreads.Columns[6].Visible = true;  // Assuming the Delete button is in the 4th column (index 3)
+                    gvThreads.Columns[5].Visible = true;  // Assuming the Delete button is in the 6th column (index 5)
+                    gvThreads.Columns[6].Visible = true; // Assuming the Update button is in the 7th column(index 6)
                 }
                 else
                 {
                     // Hide the Delete button for non-admin roles
+                    gvThreads.Columns[5].Visible = false;
                     gvThreads.Columns[6].Visible = false;
                 }
                 LoadThreads();
@@ -62,44 +64,13 @@ namespace badpjProject
                 string threadId = gvThreads.Rows[index].Cells[0].Text;
                 Response.Redirect($"Thread.aspx?ThreadID={threadId}");
             }
-        }
-
-        protected void gvThreads_RowEditing(object sender, System.Web.UI.WebControls.GridViewEditEventArgs e)
-        {
-            gvThreads.EditIndex = e.NewEditIndex;
-            LoadThreads();
-        }
-
-        protected void gvThreads_RowUpdating(object sender, System.Web.UI.WebControls.GridViewUpdateEventArgs e)
-        {
-            GridViewRow row = gvThreads.Rows[e.RowIndex];
-            string threadId = row.Cells[0].Text;
-            string newTitle = ((TextBox)row.Cells[1].Controls[0]).Text;
-
-            UpdateThread(threadId, newTitle);
-            gvThreads.EditIndex = -1;
-            LoadThreads();
-        }
-
-        protected void gvThreads_RowCancelingEdit(object sender, System.Web.UI.WebControls.GridViewCancelEditEventArgs e)
-        {
-            gvThreads.EditIndex = -1;
-            LoadThreads();
-        }
-
-        private void UpdateThread(string threadId, string newTitle)
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            else if (e.CommandName == "UpdateThread")
             {
-                string query = "UPDATE Threads SET Title = @Title WHERE ThreadID = @ThreadID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Title", newTitle);
-                cmd.Parameters.AddWithValue("@ThreadID", threadId);
+                int index = Convert.ToInt32(e.CommandArgument);
+                string threadId = gvThreads.Rows[index].Cells[0].Text;
 
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                // Redirect to an update page (or use inline editing as an alternative)
+                Response.Redirect($"UpdateThread.aspx?ThreadID={threadId}");
             }
         }
 

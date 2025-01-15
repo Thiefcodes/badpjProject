@@ -33,6 +33,7 @@
             <asp:TemplateField HeaderText="Actions">
                 <ItemTemplate>
                     <asp:Button ID="btn_ViewDetails" runat="server" Text="View Details" CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_ID") %>' />
+                    <asp:Button ID="btn_Remove" runat="server" Text="Remove" CommandName="Remove" CommandArgument='<%# Container.DataItemIndex %>' />
                 </ItemTemplate>
             </asp:TemplateField>
         </Columns>

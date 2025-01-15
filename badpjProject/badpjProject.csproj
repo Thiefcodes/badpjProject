@@ -184,6 +184,7 @@
     <Content Include="StaffPage.aspx" />
     <Content Include="CSS\Coaches.css" />
     <Content Include="Thread.aspx" />
+    <Content Include="UpdateThread.aspx" />
     <Content Include="UserPage.aspx" />
     <Content Include="ViewCoaches.aspx" />
     <Content Include="ViewSwitcher.ascx" />
@@ -424,6 +425,13 @@
     </Compile>
     <Compile Include="Thread.aspx.designer.cs">
       <DependentUpon>Thread.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateThread.aspx.cs">
+      <DependentUpon>UpdateThread.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UpdateThread.aspx.designer.cs">
+      <DependentUpon>UpdateThread.aspx</DependentUpon>
     </Compile>
     <Compile Include="UserPage.aspx.cs">
       <DependentUpon>UserPage.aspx</DependentUpon>
