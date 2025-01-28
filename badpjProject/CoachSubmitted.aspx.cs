@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace badpjProject
 {
-    public partial class CoachSubmit : System.Web.UI.Page
+    public partial class CoachSubmitted : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

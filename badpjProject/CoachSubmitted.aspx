@@ -5,8 +5,15 @@
         <div class="card shadow-lg p-4 text-center" style="width: 400px; border-radius: 10px;">
             <h3 class="text-success mb-4">Submission Successful!</h3>
             <p>Thank you for submitting your application to become a coach. Your application is under review.</p>
+            
+            <!-- Centered Button -->
             <div class="text-center mt-3">
-                <asp:Button ID="btn_BackToHome" runat="server" Text="Back to Home" CssClass="btn btn-primary mt-3" OnClick="btn_BackToHome_Click" />
+                <asp:Button 
+                    ID="btn_BackToHome" 
+                    runat="server" 
+                    Text="Back to Home" 
+                    CssClass="btn btn-primary" 
+                    OnClick="btn_BackToHome_Click" />
             </div>
         </div>
     </div>

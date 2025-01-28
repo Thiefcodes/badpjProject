@@ -64,7 +64,7 @@ namespace badpjProject
             if (result > 0)
             {
                 fu_Coach.SaveAs(saveVideoPath);
-                Response.Redirect("~/CoachSubmit.aspx"); // Redirect to success page
+                Response.Redirect("~/CoachSubmitted.aspx");
             }
             else
             {

@@ -107,7 +107,7 @@
     <Content Include="Checkout.aspx" />
     <Content Include="CoachDetails.aspx" />
     <Content Include="Coaches.aspx" />
-    <Content Include="CoachSubmit.aspx" />
+    <Content Include="CoachSubmitted.aspx" />
     <Content Include="ConfigureRewards.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -251,12 +251,12 @@
     <Compile Include="Coaches.aspx.designer.cs">
       <DependentUpon>Coaches.aspx</DependentUpon>
     </Compile>
-    <Compile Include="CoachSubmit.aspx.cs">
-      <DependentUpon>CoachSubmit.aspx</DependentUpon>
+    <Compile Include="CoachSubmitted.aspx.cs">
+      <DependentUpon>CoachSubmitted.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="CoachSubmit.aspx.designer.cs">
-      <DependentUpon>CoachSubmit.aspx</DependentUpon>
+    <Compile Include="CoachSubmitted.aspx.designer.cs">
+      <DependentUpon>CoachSubmitted.aspx</DependentUpon>
     </Compile>
     <Compile Include="ConfigureRewards.aspx.cs">
       <DependentUpon>ConfigureRewards.aspx</DependentUpon>
