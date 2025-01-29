@@ -16,6 +16,7 @@
              <h5 class="text-center text-muted">
      <asp:Label ID="DescriptionDisplay" runat="server" Text="user@example.com"></asp:Label>
  </h5>
+            <asp:Button ID="EditProfileButton" runat="server" Text="Edit Profile" CssClass="btn btn-success mt-3 mb-4" OnClick="EditProfileButton_Click" />
         </div>
 
         <div class="card shadow-sm p-4 mt-3" style="width: 100%; max-width: 600px; border-radius: 10px;">

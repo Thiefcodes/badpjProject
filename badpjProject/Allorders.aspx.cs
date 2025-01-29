@@ -79,16 +79,9 @@ namespace badpjProject
         {
             if (e.CommandName == "UpdateStatus")
             {
-
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
-
-
                 GridViewRow row = gvAllOrders.Rows[rowIndex];
-
-
                 TextBox txtStatus = (TextBox)row.FindControl("txtStatus");
-
-
                 string newStatus = txtStatus.Text.Trim();
 
                 if (string.IsNullOrEmpty(newStatus))
@@ -98,17 +91,37 @@ namespace badpjProject
                 }
 
                 int orderId = Convert.ToInt32(gvAllOrders.DataKeys[row.RowIndex].Value);
-
-
                 UpdateOrderStatus(orderId, newStatus);
-
-
                 LoadAllOrders();
-
-
                 Response.Write("<script>alert('Order status updated successfully!');</script>");
             }
+            else if (e.CommandName == "DeleteOrder")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                int orderId = Convert.ToInt32(gvAllOrders.DataKeys[rowIndex].Value);
+                DeleteOrder(orderId);
+                LoadAllOrders();
+                Response.Write("<script>alert('Order deleted successfully!');</script>");
+            }
         }
+        private void DeleteOrder(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+
+                string query = "DELETE FROM Orders WHERE OrderID = @OrderID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@OrderID", orderId);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+                if (rowsAffected == 0)
+                {
+                    Response.Write("<script>alert('Failed to delete the order.');</script>");
+                }
+            }
+        }
+
 
 
 

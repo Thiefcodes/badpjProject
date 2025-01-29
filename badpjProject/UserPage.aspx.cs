@@ -174,7 +174,10 @@ namespace badpjProject
             // Refresh comments
             LoadComments();
         }
-
+        protected void EditProfileButton_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("EditProfilePage.aspx");
+        }
 
 
     }

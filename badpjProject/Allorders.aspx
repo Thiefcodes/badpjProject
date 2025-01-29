@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AllOrders.aspx.cs" Inherits="badpjProject.AllOrders" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="AllOrders.aspx.cs" Inherits="badpjProject.AllOrders" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
      <div class="container mt-4">
         <h2 class="text-center">All Orders</h2>
@@ -19,6 +19,10 @@
             <ItemTemplate>
                 <asp:Button ID="btnUpdateStatus" runat="server" Text="Update" CommandName="UpdateStatus" CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-primary btn-sm" />
             </ItemTemplate>
+                <ItemTemplate>
+        <asp:Button ID="btnUpdateStatus" runat="server" Text="Update" CommandName="UpdateStatus" CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-primary btn-sm" />
+        <asp:Button ID="btnDeleteOrder" runat="server" Text="Delete" CommandName="DeleteOrder" CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn btn-danger btn-sm" OnClientClick="return confirm('Are you sure you want to delete this order?');" />
+    </ItemTemplate>
         </asp:TemplateField>
     </Columns>
 </asp:GridView>
