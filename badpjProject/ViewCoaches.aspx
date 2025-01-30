@@ -24,14 +24,18 @@
                         <asp:LinkButton ID="btnApprove" runat="server" 
                             CssClass="btn btn-success btn-sm"
                             CommandName="Approve" CommandArgument='<%# Eval("Coach_Id") %>' 
-                            Text="Approve" />
+                            Text="Approve" 
+                            OnClientClick="return confirm('Do you want to approve this coach?');" />
+
                         <asp:LinkButton ID="btnReject" runat="server" 
                             CssClass="btn btn-danger btn-sm"
                             CommandName="Reject" CommandArgument='<%# Eval("Coach_Id") %>' 
-                            Text="Reject" />
+                            Text="Reject" 
+                            OnClientClick="return confirm('Do you want to reject this coach?');" />
+
                         <asp:LinkButton ID="hlViewDetails" runat="server" 
                             CssClass="btn btn-info btn-sm"
-                            CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>'
+                            CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>' 
                             Text="View Details" />
                     </td>
                 </tr>
@@ -41,6 +45,7 @@
                 </table>
             </FooterTemplate>
         </asp:Repeater>
+
         <asp:Literal ID="litNoPendingCoaches" runat="server" Text="" />
 
         <h2 class="mt-5">Approved Coaches</h2>
@@ -64,13 +69,14 @@
                     <td>
                         <asp:LinkButton ID="hlViewDetails" runat="server" 
                             CssClass="btn btn-info btn-sm"
-                            CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>'
+                            CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>' 
                             Text="View Details" />
 
                         <asp:LinkButton ID="btnRemove" runat="server" 
                             CssClass="btn btn-danger btn-sm"
-                            CommandName="Remove" CommandArgument='<%# Eval("Coach_Id") %>'
-                            Text="Remove" />
+                            CommandName="Remove" CommandArgument='<%# Eval("Coach_Id") %>' 
+                            Text="Remove"
+                            OnClientClick="return confirm('Do you want to remove this coach?');" />
                     </td>
                 </tr>
             </ItemTemplate>
@@ -79,6 +85,10 @@
                 </table>
             </FooterTemplate>
         </asp:Repeater>
+
         <asp:Literal ID="litNoApprovedCoaches" runat="server" Text="" />
+
+        <!-- Label to show success or error messages -->
+        <asp:Label ID="lblMessage" runat="server" CssClass="alert" Visible="false"></asp:Label>
     </div>
 </asp:Content>

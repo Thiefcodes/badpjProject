@@ -77,12 +77,12 @@ namespace badpjProject
             if (e.CommandName == "Approve")
             {
                 bool success = coachManager.ApproveCoach(coachID);
-                ShowAlert(success ? "Coach approved successfully" : "Error approving coach");
+                ShowAlert(success ? "Coach approved successfully!" : "Error approving coach", success ? "success" : "error");
             }
             else if (e.CommandName == "Reject")
             {
                 bool success = coachManager.RejectCoach(coachID);
-                ShowAlert(success ? "Coach rejected successfully" : "Error rejecting coach");
+                ShowAlert(success ? "Coach rejected successfully!" : "Error rejecting coach", success ? "error" : "success");
             }
             else if (e.CommandName == "ViewDetails")
             {
@@ -102,15 +102,43 @@ namespace badpjProject
             }
             else if (e.CommandName == "Remove")
             {
-                bool success = coachManager.RejectCoach(coachID); // Treating "Remove" as "Reject"
-                ShowAlert(success ? "Coach removed successfully" : "Error removing coach");
+                bool success = coachManager.RejectCoach(coachID); // Treating remove as reject
+                ShowAlert(success ? "Coach removed successfully!" : "Error removing coach", success ? "error" : "success");
                 BindCoaches();
             }
         }
 
-        private void ShowAlert(string message)
+
+
+        private void ShowAlert(string message, string type)
         {
-            ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('{message}');", true);
+            string colorClass = type == "success" ? "alert-success" : "alert-danger";
+
+            string script = $@"
+                var alertBox = document.createElement('div');
+                alertBox.className = 'alert {colorClass} alert-dismissible fade show text-center';
+                alertBox.role = 'alert';
+                alertBox.innerHTML = `{message} <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>`;
+
+                // Apply custom styles
+                alertBox.style.position = 'fixed';
+                alertBox.style.top = '80px';
+                alertBox.style.left = '50%';
+                alertBox.style.transform = 'translateX(-50%)';
+                alertBox.style.width = '300px';
+                alertBox.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
+                alertBox.style.zIndex = '1050';
+
+                document.body.appendChild(alertBox);
+
+                setTimeout(function() {{
+                    alertBox.remove();
+                }}, 5000);
+            ";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "alert", script, true);
         }
+
+
     }
 }
