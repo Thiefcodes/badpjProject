@@ -16,17 +16,16 @@ namespace badpjProject
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Reset error label on page load
-            lbl_Error.Visible = false;
-            lbl_Error.Text = string.Empty;
+
         }
 
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
+            ClearErrorStyles();
+
             if (!IsValid)
             {
-                lbl_Error.Visible = true;
-                lbl_Error.Text = "Please fix the errors and try again.";
+                ApplyErrorStyles();
                 return;
             }
 
@@ -36,8 +35,6 @@ namespace badpjProject
 
             if (!allowedExtensions.Contains(fileExtension))
             {
-                lbl_Error.Visible = true;
-                lbl_Error.Text = "Please upload a valid video file (e.g., .mp4, .avi, .mov, .wmv).";
                 return;
             }
 
@@ -66,10 +63,51 @@ namespace badpjProject
                 fu_Coach.SaveAs(saveVideoPath);
                 Response.Redirect("~/CoachSubmitted.aspx");
             }
-            else
+        }
+        private void ClearErrorStyles()
+        {
+            // Remove the error class and reset to default (black) border
+            tb_Name.CssClass = tb_Name.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_Email.CssClass = tb_Email.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_Hp.CssClass = tb_Hp.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_AboutYou.CssClass = tb_AboutYou.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            ddl_Qualification.CssClass = ddl_Qualification.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            fu_Coach.CssClass = fu_Coach.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+        }
+
+        private void ApplyErrorStyles()
+        {
+            if (!rfv_Name.IsValid)
             {
-                lbl_Error.Visible = true;
-                lbl_Error.Text = "Submission was not successful. Please try again later.";
+                tb_Name.CssClass += " input-validation-error";
+            }
+            if (!rfv_Email.IsValid)
+            {
+                tb_Email.CssClass += " input-validation-error";
+            }
+            if (!rev_Email.IsValid)
+            {
+                tb_Email.CssClass += " input-validation-error";
+            }
+            if (!rfv_Hp.IsValid)
+            {
+                tb_Hp.CssClass += " input-validation-error";
+            }
+            if (!rev_Hp.IsValid)
+            {
+                tb_Hp.CssClass += " input-validation-error";
+            }
+            if (!rfv_AboutYou.IsValid)
+            {
+                tb_AboutYou.CssClass += " input-validation-error";
+            }
+            if (!rfv_Qualification.IsValid)
+            {
+                ddl_Qualification.CssClass += " input-validation-error";
+            }
+            if (!rfv_Coach.IsValid)
+            {
+                fu_Coach.CssClass += " input-validation-error";
             }
         }
     }
