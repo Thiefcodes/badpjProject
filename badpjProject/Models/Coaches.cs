@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 
 namespace badpjProject
 {
@@ -295,11 +296,63 @@ namespace badpjProject
         public bool RejectCoach(string coachId)
         {
             bool isRejected = false;
+            string fileUrl = null;
 
-            string queryStr = "DELETE FROM Coach WHERE Id = @Id";
+            // Step 1: Get the file URL from the database
+            string getFileQuery = "SELECT file_url FROM Coach WHERE Id = @Id";
 
             using (SqlConnection conn = new SqlConnection(_connStr))
-            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            using (SqlCommand cmd = new SqlCommand(getFileQuery, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", coachId);
+
+                try
+                {
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        fileUrl = result.ToString();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error while fetching file URL: " + ex.Message);
+                    return false;
+                }
+            }
+
+            // Step 2: Delete the file if it exists
+            if (!string.IsNullOrEmpty(fileUrl))
+            {
+                string filePath = HttpContext.Current.Server.MapPath("uploads/" + fileUrl);
+
+                if (File.Exists(filePath))
+                {
+                    try
+                    {
+                        // Make sure file is not hidden or read-only before deleting
+                        File.SetAttributes(filePath, FileAttributes.Normal);
+                        File.Delete(filePath);
+                        Debug.WriteLine($"File deleted: {filePath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Error deleting file: " + ex.Message);
+                        return false; // Stop if file deletion fails
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine($"File not found: {filePath}");
+                }
+            }
+
+            // Step 3: Delete the coach record from the database
+            string deleteQuery = "DELETE FROM Coach WHERE Id = @Id";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
             {
                 cmd.Parameters.AddWithValue("@Id", coachId);
 
@@ -311,13 +364,14 @@ namespace badpjProject
                 }
                 catch (SqlException ex)
                 {
-                    Debug.WriteLine("MySQL Error in RejectCoach: " + ex.Message);
-                    throw;
+                    Debug.WriteLine("SQL Error in RejectCoach: " + ex.Message);
+                    return false;
                 }
             }
 
             return isRejected;
         }
+
 
         public int CoachesInsert()
         {
