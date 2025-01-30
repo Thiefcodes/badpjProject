@@ -76,7 +76,7 @@ namespace badpjProject
             {
                 // Redirect to the CoachDetails.aspx page with the coach ID
                 string coachID = e.CommandArgument.ToString();
-                Response.Redirect($"CoachDetails.aspx?id={coachID}");
+                Response.Redirect($"RegisterCoachesDetails.aspx?id={coachID}");
             }
         }
 
@@ -86,7 +86,7 @@ namespace badpjProject
             {
                 // Redirect to the CoachDetails.aspx page with the coach ID
                 string coachID = e.CommandArgument.ToString();
-                Response.Redirect($"CoachDetails.aspx?id={coachID}");
+                Response.Redirect($"RegisterCoachesDetails.aspx?id={coachID}");
             }
             else if (e.CommandName == "Remove")
             {

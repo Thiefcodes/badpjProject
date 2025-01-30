@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Coach Details" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="CoachDetails.aspx.cs" Inherits="badpjProject.CoachDetail" %>
+﻿<%@ Page Title="Coach Details" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="RegisterCoachesDetails.aspx.cs" Inherits="badpjProject.CoachDetail" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <h2>COACH DETAILS</h2>
     <div class="details-container">
