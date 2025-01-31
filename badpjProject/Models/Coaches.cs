@@ -388,4 +388,60 @@ namespace badpjProject
             return result;
         }
     }
+
+    public partial class CoachStatus
+    {
+        string _connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+        private int _id = 0;
+        private string _coachId = ""; 
+        private int _userId = 0;
+        private bool _isCoach = false; 
+
+        public CoachStatus()
+        {
+        }
+
+        public CoachStatus(int id, string coachId, int userId, bool isCoach)
+        {
+            _id = id;
+            _coachId = coachId;
+            _userId = userId;
+            _isCoach = isCoach;
+        }
+
+        public CoachStatus(string coachId, int userId, bool isCoach)
+            : this(0, coachId, userId, isCoach)
+        {
+        }
+
+        public CoachStatus(int id)
+            : this(id, "", 0, false)
+        {
+        }
+
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        public string CoachId
+        {
+            get { return _coachId; }
+            set { _coachId = value; }
+        }
+
+        public int UserId
+        {
+            get { return _userId; }
+            set { _userId = value; }
+        }
+
+        public bool IsCoach
+        {
+            get { return _isCoach; }
+            set { _isCoach = value; }
+        }
+    }
+
 }
