@@ -265,7 +265,9 @@
     <Compile Include="ConfigureRewards.aspx.designer.cs">
       <DependentUpon>ConfigureRewards.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Coaches.cs" />
+    <Compile Include="Models\Coaches.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
