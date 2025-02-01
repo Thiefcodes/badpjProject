@@ -24,6 +24,7 @@ namespace badpjProject
                 this.MasterPageFile = "~/Site1loggedin.Master";
             }
         }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["Role"]?.ToString() != "Staff")
@@ -36,6 +37,7 @@ namespace badpjProject
                 LoadAllOrders();
             }
         }
+
         private void LoadAllOrders()
         {
             using (SqlConnection conn = new SqlConnection(_connString))
@@ -43,12 +45,12 @@ namespace badpjProject
                 conn.Open();
 
                 string query = @"
-            SELECT o.OrderID, u.Login_Name AS UserName, o.ProductName, o.Quantity, 
-                   CONCAT(o.Address, ', ', o.City, ', ', o.PostalCode) AS FullAddress,
-                   o.OrderDate, o.Status
-            FROM Orders o
-            INNER JOIN [Table] u ON o.UserID = u.Id
-            ORDER BY o.OrderDate DESC";
+                    SELECT o.OrderID, u.Login_Name AS UserName, o.ProductName, o.Quantity, 
+                           CONCAT(o.Address, ', ', o.City, ', ', o.PostalCode) AS FullAddress,
+                           o.OrderDate, o.Status
+                    FROM Orders o
+                    INNER JOIN [Table] u ON o.UserID = u.Id
+                    ORDER BY o.OrderDate DESC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
 
@@ -81,8 +83,8 @@ namespace badpjProject
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 GridViewRow row = gvAllOrders.Rows[rowIndex];
-                TextBox txtStatus = (TextBox)row.FindControl("txtStatus");
-                string newStatus = txtStatus.Text.Trim();
+                DropDownList ddlStatus = (DropDownList)row.FindControl("ddlStatus");
+                string newStatus = ddlStatus.SelectedValue;
 
                 if (string.IsNullOrEmpty(newStatus))
                 {
@@ -104,6 +106,7 @@ namespace badpjProject
                 Response.Write("<script>alert('Order deleted successfully!');</script>");
             }
         }
+
         private void DeleteOrder(int orderId)
         {
             using (SqlConnection conn = new SqlConnection(_connString))
@@ -121,9 +124,6 @@ namespace badpjProject
                 }
             }
         }
-
-
-
 
         private void UpdateOrderStatus(int orderId, string newStatus)
         {
@@ -143,7 +143,6 @@ namespace badpjProject
                 }
             }
         }
-
     }
 
     public class AllOrdersModel

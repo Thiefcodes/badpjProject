@@ -61,9 +61,9 @@ namespace badpjProject
         }
         protected void btnPlaceOrder_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtAddress.Text) || string.IsNullOrEmpty(txtCity.Text) || string.IsNullOrEmpty(txtPostalCode.Text))
+            // Check if the Page is valid
+            if (!Page.IsValid)
             {
-                Response.Write("<script>alert('Please fill in all the address fields.');</script>");
                 return;
             }
 
@@ -121,6 +121,7 @@ namespace badpjProject
                 }
             }
         }
+
 
 
         public class OrderSummaryItem

@@ -76,7 +76,78 @@ namespace badpjProject
             rptOrders.DataSource = orders;
             rptOrders.DataBind();
         }
+
+        protected void rptOrders_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "Refund")
+            {
+                int orderId = Convert.ToInt32(e.CommandArgument);
+
+                using (SqlConnection conn = new SqlConnection(_connString))
+                {
+                    conn.Open();
+
+                    // Retrieve the current status of the order
+                    string query = "SELECT Status FROM Orders WHERE OrderID = @OrderID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@OrderID", orderId);
+                        string currentStatus = cmd.ExecuteScalar()?.ToString();
+
+                        // Check if the order is eligible for a refund
+                        if (currentStatus == "Shipping" || currentStatus == "Shipped")
+                        {
+                            // Inform the user that refund is not allowed for this status
+                            Response.Write("<script>alert('Refunds are not allowed for orders with status Shipping or Shipped.');</script>");
+                            return;
+                        }
+                    }
+                }
+
+                // If eligible, update the order status to Refund
+                UpdateOrderStatusToRefund(orderId);
+                LoadOrders();
+                Response.Write("<script>alert('Order has been marked as refunded.');</script>");
+            }
+        }
+
+        private void UpdateOrderStatusToRefund(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+
+                // Check if the order already has "(Refund)" in the ID
+                string checkQuery = "SELECT Status FROM Orders WHERE OrderID = @OrderID";
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@OrderID", orderId);
+                    string currentStatus = (string)checkCmd.ExecuteScalar();
+
+                    // If already marked as Refund, do nothing
+                    if (currentStatus == "Refund")
+                    {
+                        Response.Write("<script>alert('This order is already refunded.');</script>");
+                        return;
+                    }
+                }
+
+                // Update the order status to "Refund"
+                string updateQuery = "UPDATE Orders SET Status = 'Refund' WHERE OrderID = @OrderID";
+                using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@OrderID", orderId);
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    if (rowsAffected == 0)
+                    {
+                        Response.Write("<script>alert('Failed to update order status.');</script>");
+                    }
+                }
+            }
+        }
     }
+
     public class Order
     {
         public int OrderID { get; set; }
