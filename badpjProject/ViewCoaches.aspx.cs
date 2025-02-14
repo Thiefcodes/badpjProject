@@ -76,20 +76,45 @@ namespace badpjProject
 
             if (e.CommandName == "Approve")
             {
-                bool success = coachManager.ApproveCoach(coachID);
-                ShowAlert(success ? "Coach approved successfully!" : "Error approving coach", success ? "success" : "error");
+                // Update the Coach table status to "Approved"
+                bool coachApproved = coachManager.ApproveCoach(coachID);
+                if (coachApproved)
+                {
+                    // Now update the CoachStatus record to set isCoach = true
+                    CoachStatus cs = new CoachStatus();
+                    bool statusUpdated = cs.UpdateIsCoachStatus(coachID);
+                    if (statusUpdated)
+                        ShowAlert("Coach approved successfully!", "success");
+                    else
+                        ShowAlert("Coach approved, but failed to update coach status record.", "error");
+                }
+                else
+                {
+                    ShowAlert("Error approving coach.", "error");
+                }
             }
             else if (e.CommandName == "Reject")
             {
-                bool success = coachManager.RejectCoach(coachID);
-                ShowAlert(success ? "Coach rejected successfully!" : "Error rejecting coach", success ? "error" : "success");
+                bool coachDeleted = coachManager.RejectCoach(coachID);
+                bool coachStatusDeleted = false;
+
+                if (coachDeleted)
+                {
+                    CoachStatus cs = new CoachStatus();
+                    coachStatusDeleted = cs.DeleteCoachStatus(coachID);
+                }
+
+                ShowAlert(
+                    (coachDeleted && coachStatusDeleted) ? "Coach rejected successfully!" : "Error rejecting coach.",
+                    (coachDeleted && coachStatusDeleted) ? "success" : "error"
+                );
             }
             else if (e.CommandName == "ViewDetails")
             {
                 Response.Redirect($"SignUpCoachesDetails.aspx?id={coachID}");
             }
 
-            BindCoaches(); // Refresh list after action
+            BindCoaches();
         }
 
         protected void rptApprovedCoaches_ItemCommand(object source, RepeaterCommandEventArgs e)
@@ -102,8 +127,20 @@ namespace badpjProject
             }
             else if (e.CommandName == "Remove")
             {
-                bool success = coachManager.RejectCoach(coachID); // Treating remove as reject
-                ShowAlert(success ? "Coach removed successfully!" : "Error removing coach", success ? "error" : "success");
+                bool coachDeleted = coachManager.RejectCoach(coachID);
+                bool coachStatusDeleted = false;
+
+                if (coachDeleted)
+                {
+                    CoachStatus cs = new CoachStatus();
+                    coachStatusDeleted = cs.DeleteCoachStatus(coachID);
+                }
+
+                ShowAlert(
+                    (coachDeleted && coachStatusDeleted) ? "Coach rejected successfully!" : "Error rejecting coach.",
+                    (coachDeleted && coachStatusDeleted) ? "success" : "error"
+                );
+
                 BindCoaches();
             }
         }

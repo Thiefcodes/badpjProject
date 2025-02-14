@@ -6,7 +6,7 @@
             border: solid red !important;
         }
         .form-control {
-            border: 1.5px solid black;
+            border: 1.5px solid gray;
         }
     </style>
     <div class="d-flex justify-content-center align-items-center vh-100">

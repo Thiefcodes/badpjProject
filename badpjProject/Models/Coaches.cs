@@ -517,6 +517,60 @@ namespace badpjProject
             return result;
         }
 
+        public bool UpdateIsCoachStatus(string coachId)
+        {
+            bool updated = false;
+            string query = @"
+                UPDATE cs
+                SET cs.isCoach = 1
+                FROM dbo.CoachStatus cs
+                INNER JOIN dbo.Coach c ON cs.coach_id = c.Id
+                WHERE cs.coach_id = @coachId AND c.Status = 'Approved'";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@coachId", coachId);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    updated = rowsAffected > 0;
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error in UpdateIsCoachStatus: " + ex.Message);
+                }
+            }
+
+            return updated;
+        }
+
+        public bool DeleteCoachStatus(string coachId)
+        {
+            bool deleted = false;
+            string query = "DELETE FROM [dbo].[CoachStatus] WHERE coach_id = @coachId";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@coachId", coachId);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    deleted = rowsAffected > 0;
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error in DeleteCoachStatus: " + ex.Message);
+                }
+            }
+
+            return deleted;
+        }
     }
 
 }
