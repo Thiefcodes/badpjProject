@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Shopping Cart" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ShoppingCart.aspx.cs" Inherits="badpjProject.ShoppingCart" %>
+﻿<%@ Page Title="Shopping Cart" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="ShoppingCart.aspx.cs" Inherits="badpjProject.ShoppingCart" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-4">

@@ -44,7 +44,8 @@ namespace badpjProject
             List<Control> staffOnlyTabs = new List<Control>
             {
                 liStaffManageProduct,
-                liStaffViewCoaches
+                liStaffViewCoaches,
+                liStaffAllorders
             };
 
             foreach (var tab in staffOnlyTabs)
@@ -59,7 +60,8 @@ namespace badpjProject
             // List of controls to hide for staff users
             List<Control> userOnlyTabs = new List<Control>
             {
-                liUserBecomeACoach
+                liUserBecomeACoach,
+                liUserOrders
             };
 
             foreach (var tab in userOnlyTabs)

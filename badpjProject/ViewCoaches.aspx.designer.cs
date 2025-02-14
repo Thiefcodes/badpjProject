@@ -15,21 +15,48 @@ namespace badpjProject
     {
 
         /// <summary>
-        /// gvPendingCoaches control.
+        /// rptPendingCoaches control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvPendingCoaches;
+        protected global::System.Web.UI.WebControls.Repeater rptPendingCoaches;
 
         /// <summary>
-        /// gvApprovedCoaches control.
+        /// litNoPendingCoaches control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvApprovedCoaches;
+        protected global::System.Web.UI.WebControls.Literal litNoPendingCoaches;
+
+        /// <summary>
+        /// rptApprovedCoaches control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptApprovedCoaches;
+
+        /// <summary>
+        /// litNoApprovedCoaches control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litNoApprovedCoaches;
+
+        /// <summary>
+        /// lblMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMessage;
     }
 }

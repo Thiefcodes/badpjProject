@@ -78,12 +78,22 @@ namespace badpjProject
 
             using (SqlConnection conn = new SqlConnection(_connString))
             {
+                string deleteWishlistQuery = "DELETE FROM Wishlist WHERE ProductID = @ProductID";
+                using (SqlCommand cmd = new SqlCommand(deleteWishlistQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+
                 string sql = "DELETE FROM dbo.Products WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@ProductID", productId);
                     conn.Open();
                     cmd.ExecuteNonQuery();
+                    conn.Close();
                 }
             }
 

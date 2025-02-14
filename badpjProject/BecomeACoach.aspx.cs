@@ -21,52 +21,93 @@ namespace badpjProject
 
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
-            // Debugging: Check if any required fields are missing
-            if (string.IsNullOrWhiteSpace(tb_Name.Text) ||
-                string.IsNullOrWhiteSpace(tb_Email.Text) ||
-                string.IsNullOrWhiteSpace(tb_Hp.Text) ||
-                string.IsNullOrWhiteSpace(tb_AboutYou.Text) ||
-                string.IsNullOrWhiteSpace(ddl_Qualification.SelectedValue) ||
-                !fu_Coach.HasFile)
+            ClearErrorStyles();
+
+            if (!IsValid)
             {
-                Response.Write("<script>alert('All fields are required');</script>");
+                ApplyErrorStyles();
                 return;
             }
 
+            // Check file extension
             string[] allowedExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
             string fileExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
 
             if (!allowedExtensions.Contains(fileExtension))
             {
-                Response.Write("<script>alert('Please upload a valid video file (e.g., .mp4, .avi, .mov, .wmv)');</script>");
                 return;
             }
 
-            int result = 0;
-            string uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
-
-            // Debugging: Generate coach ID and output to the alert
+            // Generate unique coach ID and file name
             string generatedId = GenerateCoachId();
+            string uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+            string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueFileName;
 
             string status = "Pending";
 
-            Coaches coach = new Coaches(generatedId, tb_Name.Text, tb_Email.Text,
-                                        int.Parse(tb_Hp.Text), tb_AboutYou.Text, ddl_Qualification.Text, uniqueFileName, status);
+            Coaches coach = new Coaches(
+                generatedId,
+                tb_Name.Text,
+                tb_Email.Text,
+                int.Parse(tb_Hp.Text),
+                tb_AboutYou.Text,
+                ddl_Qualification.SelectedValue,
+                uniqueFileName,
+                status
+            );
 
-            result = coach.CoachesInsert();
+            int result = coach.CoachesInsert();
 
-            // Debugging: Check if the insertion was successful
             if (result > 0)
             {
-                string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueFileName;
-
                 fu_Coach.SaveAs(saveVideoPath);
-                Response.Write("<script>alert('Submission successful');</script>");
+                Response.Redirect("~/CoachSubmitted.aspx");
             }
-            else
+        }
+        private void ClearErrorStyles()
+        {
+            // Remove the error class and reset to default (black) border
+            tb_Name.CssClass = tb_Name.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_Email.CssClass = tb_Email.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_Hp.CssClass = tb_Hp.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_AboutYou.CssClass = tb_AboutYou.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            ddl_Qualification.CssClass = ddl_Qualification.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            fu_Coach.CssClass = fu_Coach.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+        }
+
+        private void ApplyErrorStyles()
+        {
+            if (!rfv_Name.IsValid)
             {
-                // Debugging: In case the insertion failed
-                Response.Write("<script>alert('Submission NOT successful');</script>");
+                tb_Name.CssClass += " input-validation-error";
+            }
+            if (!rfv_Email.IsValid)
+            {
+                tb_Email.CssClass += " input-validation-error";
+            }
+            if (!rev_Email.IsValid)
+            {
+                tb_Email.CssClass += " input-validation-error";
+            }
+            if (!rfv_Hp.IsValid)
+            {
+                tb_Hp.CssClass += " input-validation-error";
+            }
+            if (!rev_Hp.IsValid)
+            {
+                tb_Hp.CssClass += " input-validation-error";
+            }
+            if (!rfv_AboutYou.IsValid)
+            {
+                tb_AboutYou.CssClass += " input-validation-error";
+            }
+            if (!rfv_Qualification.IsValid)
+            {
+                ddl_Qualification.CssClass += " input-validation-error";
+            }
+            if (!rfv_Coach.IsValid)
+            {
+                fu_Coach.CssClass += " input-validation-error";
             }
         }
     }

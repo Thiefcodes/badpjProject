@@ -7,10 +7,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 
 namespace badpjProject
 {
-    public class Coaches
+    public partial class Coaches
     {
         string _connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
         private string _coachID = null;
@@ -148,30 +149,30 @@ namespace badpjProject
 
             string queryStr = "SELECT * FROM Coach Order By Name";
 
-            SqlConnection conn = new SqlConnection(_connStr);
-            SqlCommand cmd = new SqlCommand(queryStr, conn);
-
-            conn.Open();
-            SqlDataReader dr = cmd.ExecuteReader();
-
-            while (dr.Read())
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
             {
-                coach_ID = dr["Id"].ToString();
-                coach_Name = dr["Name"].ToString();
-                coach_Email = dr["Email"].ToString();
-                coach_Hp = int.Parse(dr["Hp"].ToString());
-                coach_Desc = dr["Desc"].ToString();
-                coach_Qualification = dr["Qualification"].ToString();
-                coach_Video = dr["File_URL"].ToString();
-                coach_Status = dr["Status"].ToString();
+                conn.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        coach_ID = dr["Id"].ToString();
+                        coach_Name = dr["Name"].ToString();
+                        coach_Email = dr["Email"].ToString();
+                        coach_Hp = int.Parse(dr["Hp"].ToString());
+                        coach_Desc = dr["Desc"].ToString();
+                        coach_Qualification = dr["Qualification"].ToString();
+                        coach_Video = dr["File_URL"].ToString();
+                        coach_Status = dr["Status"].ToString();
 
-                Coaches a = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status);
-                coachList.Add(a);
+                        Coaches a = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status);
+                        coachList.Add(a);
+                    }
+
+                    dr.Close();
+                }
             }
-
-            conn.Close();
-            dr.Close();
-            dr.Dispose();
 
             return coachList;
         }
@@ -294,30 +295,64 @@ namespace badpjProject
 
         public bool RejectCoach(string coachId)
         {
-            bool isRejected = false;
+            string fileUrl = null;
 
-            string queryStr = "DELETE FROM Coach WHERE Id = @Id";
-
+            // Step 1: Retrieve File URL
             using (SqlConnection conn = new SqlConnection(_connStr))
-            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT File_URL FROM Coach WHERE Id = @Id", conn))
             {
                 cmd.Parameters.AddWithValue("@Id", coachId);
 
                 try
                 {
                     conn.Open();
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    isRejected = rowsAffected > 0; // True if at least one row is deleted
+                    fileUrl = cmd.ExecuteScalar()?.ToString();
                 }
                 catch (SqlException ex)
                 {
-                    Debug.WriteLine("MySQL Error in RejectCoach: " + ex.Message);
-                    throw;
+                    Debug.WriteLine("SQL Error while fetching file URL: " + ex.Message);
+                    return false;
                 }
             }
 
-            return isRejected;
+            if (!string.IsNullOrEmpty(fileUrl))
+            {
+                try
+                {
+                    string filePath = HttpContext.Current.Server.MapPath("~/uploads/" + fileUrl);
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                        Debug.WriteLine($"File deleted: {filePath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error deleting file: " + ex.Message);
+                    return false; // Stop execution if file deletion fails
+                }
+            }
+
+            // Step 3: Delete Coach Record
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM Coach WHERE Id = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", coachId);
+
+                try
+                {
+                    conn.Open();
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error in RejectCoach: " + ex.Message);
+                    return false;
+                }
+            }
         }
+
+
 
         public int CoachesInsert()
         {
@@ -353,4 +388,60 @@ namespace badpjProject
             return result;
         }
     }
+
+    public partial class CoachStatus
+    {
+        string _connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+        private int _id = 0;
+        private string _coachId = ""; 
+        private int _userId = 0;
+        private bool _isCoach = false; 
+
+        public CoachStatus()
+        {
+        }
+
+        public CoachStatus(int id, string coachId, int userId, bool isCoach)
+        {
+            _id = id;
+            _coachId = coachId;
+            _userId = userId;
+            _isCoach = isCoach;
+        }
+
+        public CoachStatus(string coachId, int userId, bool isCoach)
+            : this(0, coachId, userId, isCoach)
+        {
+        }
+
+        public CoachStatus(int id)
+            : this(id, "", 0, false)
+        {
+        }
+
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        public string CoachId
+        {
+            get { return _coachId; }
+            set { _coachId = value; }
+        }
+
+        public int UserId
+        {
+            get { return _userId; }
+            set { _userId = value; }
+        }
+
+        public bool IsCoach
+        {
+            get { return _isCoach; }
+            set { _isCoach = value; }
+        }
+    }
+
 }
