@@ -442,6 +442,82 @@ namespace badpjProject
             get { return _isCoach; }
             set { _isCoach = value; }
         }
+
+        public bool IsUserAlreadyCoach(int userId)
+        {
+            bool isAlreadyCoach = false;
+
+            string queryStr = "SELECT COUNT(*) FROM [dbo].[CoachStatus] WHERE user_id = @UserId";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                try
+                {
+                    conn.Open();
+                    int result = (int)cmd.ExecuteScalar();
+
+                    if (result > 0)
+                    {
+                        isAlreadyCoach = true; // User already exists as a coach or has a pending application
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error: " + ex.Message);
+                }
+            }
+
+            return isAlreadyCoach;
+        }
+
+        public bool InsertCoachStatus(int userId, string coachId)
+        {
+            bool result = false;
+
+            // Check if the user is already in the CoachStatus table
+            string checkQuery = "SELECT COUNT(*) FROM [dbo].[CoachStatus] WHERE user_id = @userId";
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(checkQuery, conn))
+            {
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                try
+                {
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+
+                    // If the user is not already in the CoachStatus table, insert a new record
+                    if (count == 0)
+                    {
+                        string insertQuery = "INSERT INTO [dbo].[CoachStatus] (user_id, coach_id, isCoach) VALUES (@userId, @coachId, 0)";
+                        using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                        {
+                            insertCmd.Parameters.AddWithValue("@userId", userId);
+                            insertCmd.Parameters.AddWithValue("@coachId", coachId);
+
+                            int rowsAffected = insertCmd.ExecuteNonQuery();
+                            result = rowsAffected > 0;  // True if the insertion was successful
+                        }
+                    }
+                    else
+                    {
+                        result = false; // User already exists in CoachStatus table
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error: " + ex.Message);
+                    result = false;
+                }
+            }
+
+            return result;
+        }
+
     }
 
 }
+
