@@ -52,15 +52,6 @@ namespace badpjProject
                 return;
             }
 
-            // Check file extension
-            string[] allowedExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
-            string fileExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
-
-            if (!allowedExtensions.Contains(fileExtension))
-            {
-                return;
-            }
-
             if (Session["UserID"] == null)
             {
                 Response.Redirect("~/Login.aspx");
@@ -68,21 +59,47 @@ namespace badpjProject
             }
             int userId = int.Parse(Session["UserID"].ToString());
 
-            // Generate unique coach ID and file name
             string generatedCoachId = GenerateCoachId();
-            string uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
-            string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueFileName;
+
+            string[] allowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
+            string videoExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
+
+            if (!allowedVideoExtensions.Contains(videoExtension))
+            {
+                return;
+            }
+            string uniqueVideoFileName = Guid.NewGuid().ToString() + videoExtension;
+            string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueVideoFileName;
+
+            string profilePicFileName = "";
+            string profilePicSavePath = "";
+            if (fu_ProfilePic.HasFile)
+            {
+                string[] allowedImageExtensions = { ".jpg", ".jpeg", ".png" };
+                string imageExtension = Path.GetExtension(fu_ProfilePic.FileName).ToLower();
+                if (!allowedImageExtensions.Contains(imageExtension))
+                {
+                    return;
+                }
+                profilePicFileName = Guid.NewGuid().ToString() + imageExtension;
+                profilePicSavePath = Server.MapPath("~/Uploads/") + profilePicFileName;
+            }
+
+
+
             string status = "Pending";
 
             Coaches coach = new Coaches(
                 generatedCoachId,
-                tb_Name.Text,
-                tb_Email.Text,
-                int.Parse(tb_Hp.Text),
-                tb_AboutYou.Text,
+                tb_Name.Text.Trim(),
+                tb_Email.Text.Trim(),
+                int.Parse(tb_Hp.Text.Trim()),
+                tb_AboutYou.Text.Trim(),
                 ddl_Qualification.SelectedValue,
-                uniqueFileName,
-                status
+                uniqueVideoFileName,
+                status,
+                profilePicFileName,  
+                tb_AreaOfExpertise.Text.Trim()   
             );
 
             try
@@ -95,6 +112,10 @@ namespace badpjProject
                     if (insertStatus)
                     {
                         fu_Coach.SaveAs(saveVideoPath);
+                        if (fu_ProfilePic.HasFile)
+                        {
+                            fu_ProfilePic.SaveAs(profilePicSavePath);
+                        }
                         Response.Redirect("~/CoachSubmitted.aspx");
                     }
                     else

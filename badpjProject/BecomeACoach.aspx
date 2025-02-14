@@ -53,6 +53,15 @@
                     <asp:RequiredFieldValidator ID="rfv_Coach" runat="server" ControlToValidate="fu_Coach" CssClass="text-danger" ErrorMessage="Please upload a video file." Display="Dynamic" style="display:block; width: 100%; max-width: 325px; margin-left:auto; margin-right:auto;"></asp:RequiredFieldValidator>
                 </div>
 
+                <div class="form-group mb-3">
+                    <h5 class="text-center">Profile Picture (optional)</h5>
+                    <asp:FileUpload ID="fu_ProfilePic" runat="server" CssClass="form-control" accept="image/*" style="width:100%; max-width:325px; margin:auto;" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <asp:TextBox ID="tb_AreaOfExpertise" runat="server" CssClass="form-control" placeholder="Area of Expertise (optional)" style="width:100%; max-width:325px; margin:auto;" />
+                </div>
+
                 <div class="text-center">
                     <asp:Button ID="btn_Submit" runat="server" Text="Submit" CssClass="btn btn-primary w-" OnClick="btn_Submit_Click" />
                 </div>

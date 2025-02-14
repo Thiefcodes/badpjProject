@@ -150,6 +150,24 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_Coach;
 
         /// <summary>
+        /// fu_ProfilePic control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fu_ProfilePic;
+
+        /// <summary>
+        /// tb_AreaOfExpertise control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tb_AreaOfExpertise;
+
+        /// <summary>
         /// btn_Submit control.
         /// </summary>
         /// <remarks>
