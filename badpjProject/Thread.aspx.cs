@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Configuration;
 using System.Web.UI.WebControls;
+using System.Web.UI;
 
 namespace badpjProject
 {
@@ -12,10 +13,67 @@ namespace badpjProject
         {
             if (!IsPostBack)
             {
+                // Load the thread and posts after role checks
                 LoadThread();
                 LoadPosts();
             }
 
+        }
+        protected void gvPosts_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            // Check if the row is a data row (not header, footer, or pager)
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Get the PostID from the current row
+                int postId = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "PostID"));
+                int userId = Convert.ToInt32(Session["UserID"]);
+
+                // Find the Edit, Delete, and Like buttons in the current row
+                Button btnEdit = (Button)e.Row.FindControl("btnEdit");
+                Button btnDelete = (Button)e.Row.FindControl("btnDelete");
+                Button btnLike = (Button)e.Row.FindControl("btnLike");
+
+                // Button visibility based on role (Staff or not)
+                if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
+                {
+                    // Make the Edit and Delete buttons visible for Staff role
+                    if (btnEdit != null) btnEdit.Visible = true;
+                    if (btnDelete != null) btnDelete.Visible = true;
+                }
+                else
+                {
+                    // Hide the Edit and Delete buttons for non-staff roles
+                    if (btnEdit != null) btnEdit.Visible = false;
+                    if (btnDelete != null) btnDelete.Visible = false;
+                }
+
+                // Button text update based on Like status
+                if (btnLike != null)
+                {
+                    // Check if the user has liked this post
+                    string checkQuery = "SELECT COUNT(*) FROM PostLikes WHERE PostID = @PostID AND UserID = @UserID";
+                    string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                        checkCmd.Parameters.AddWithValue("@PostID", postId);
+                        checkCmd.Parameters.AddWithValue("@UserID", userId);
+                        int likeCount = (int)checkCmd.ExecuteScalar();
+
+                        // Update the Like button text based on like status
+                        if (likeCount > 0)
+                        {
+                            btnLike.Text = "Liked";  // User has liked the post
+                        }
+                        else
+                        {
+                            btnLike.Text = "Like";   // User has not liked the post
+                        }
+                    }
+                }
+            }
         }
 
         protected void gvPosts_RowCommand(object sender, GridViewCommandEventArgs e)

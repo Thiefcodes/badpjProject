@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-4">
     <h1><asp:Label ID="lblThreadTitle" runat="server" Text="Thread Title"></asp:Label></h1>
-<asp:GridView ID="gvPosts" runat="server" AutoGenerateColumns="False" 
+<asp:GridView ID="gvPosts" runat="server" OnRowDataBound="gvPosts_RowDataBound" AutoGenerateColumns="False" 
     OnRowCommand="gvPosts_RowCommand" DataKeyNames="PostID">
     <Columns>
         <asp:BoundField DataField="Content" HeaderText="Content" />
@@ -17,8 +17,16 @@
               Text="Like" />
           </ItemTemplate>
         </asp:TemplateField>
-        <asp:ButtonField CommandName="EditPost" Text="Edit" ButtonType="Button" />
-        <asp:ButtonField CommandName="DeletePost" Text="Delete" ButtonType="Button" />
+        <asp:TemplateField HeaderText="">
+        <ItemTemplate>
+        <asp:Button ID="btnEdit" runat="server" CommandName="EditPost" Text="Edit" ButtonType="Button" />
+        </ItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField HeaderText="">
+        <ItemTemplate>
+        <asp:Button ID="btnDelete" runat="server" CommandName="DeletePost" Text="Delete" ButtonType="Button" />
+        </ItemTemplate>
+        </asp:TemplateField>
     </Columns>
 </asp:GridView>
 

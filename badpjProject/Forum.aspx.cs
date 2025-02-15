@@ -23,20 +23,31 @@ namespace badpjProject
         {
             if (!IsPostBack)
             {
+                LoadThreads();
+            }
+        }
+
+        protected void gvThreads_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Find the buttons in the current row using CommandName
+                Button btnUpdate = (Button)e.Row.FindControl("btnUpdate");
+                Button btnDelete = (Button)e.Row.FindControl("btnDelete");
+
                 // Check the session role
                 if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
                 {
-                    // Make the Delete button visible if the role is "Admin"
-                    gvThreads.Columns[5].Visible = true;  // Assuming the Delete button is in the 6th column (index 5)
-                    gvThreads.Columns[6].Visible = true; // Assuming the Update button is in the 7th column(index 6)
+                    // Make the buttons visible for staff users
+                    btnUpdate.Visible = true;
+                    btnDelete.Visible = true;
                 }
                 else
                 {
-                    // Hide the Delete button for non-admin roles
-                    gvThreads.Columns[5].Visible = false;
-                    gvThreads.Columns[6].Visible = false;
+                    // Hide the buttons for non-staff users
+                    btnUpdate.Visible = false;
+                    btnDelete.Visible = false;
                 }
-                LoadThreads();
             }
         }
 
@@ -48,11 +59,12 @@ namespace badpjProject
             {
                 // Fix syntax error by enclosing "Table" in square brackets
                 string query = @"
-            SELECT t.ThreadID, t.Title, 
-                   COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
-                   t.CreatedAt
-            FROM Threads t
-            LEFT JOIN [Table] u ON t.CreatedBy = u.Id";
+                 SELECT t.ThreadID, t.Title, 
+                 COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
+                 t.CreatedAt,
+                 t.Views   -- Added Views column
+                 FROM Threads t
+                 LEFT JOIN [Table] u ON t.CreatedBy = u.Id";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
