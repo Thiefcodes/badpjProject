@@ -42,18 +42,23 @@ namespace badpjProject
 
         private void LoadThreads()
         {
-            // Retrieve the connection string from the configuration file
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                // Create and execute the SQL command
-                SqlCommand cmd = new SqlCommand("SELECT ThreadID, Title, CreatedBy, CreatedAt FROM Threads", conn);
+                // Fix syntax error by enclosing "Table" in square brackets
+                string query = @"
+            SELECT t.ThreadID, t.Title, 
+                   COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
+                   t.CreatedAt
+            FROM Threads t
+            LEFT JOIN [Table] u ON t.CreatedBy = u.Id";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
 
-                // Bind the data to the GridView
                 gvThreads.DataSource = dt;
                 gvThreads.DataBind();
             }
