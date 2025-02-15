@@ -86,19 +86,28 @@ namespace badpjProject
             }
         }
 
-
-
         private void LoadPosts()
         {
             string threadId = Request.QueryString["ThreadID"];
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT PostID, Content, CreatedBy, CreatedAt, Likes FROM Posts WHERE ThreadID = @ThreadID", conn);
+                // Modify the SQL query to join the "Table" and replace CreatedBy with the Login_Name
+                string query = @"
+            SELECT p.PostID, p.Content, 
+                   COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
+                   p.CreatedAt, p.Likes
+            FROM Posts p
+            LEFT JOIN [Table] u ON p.CreatedBy = u.Id
+            WHERE p.ThreadID = @ThreadID";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ThreadID", threadId);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
+
                 gvPosts.DataSource = dt;
                 gvPosts.DataBind();
             }
