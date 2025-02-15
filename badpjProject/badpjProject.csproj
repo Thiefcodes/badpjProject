@@ -105,6 +105,7 @@
     </Content>
     <Content Include="BecomeACoach.aspx" />
     <Content Include="Checkout.aspx" />
+    <Content Include="CoachDetails.aspx" />
     <Content Include="CoachProfile.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
     <Content Include="Coaches.aspx" />
@@ -237,6 +238,13 @@
     </Compile>
     <Compile Include="Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CoachDetails.aspx.cs">
+      <DependentUpon>CoachDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CoachDetails.aspx.designer.cs">
+      <DependentUpon>CoachDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="CoachProfile.aspx.cs">
       <DependentUpon>CoachProfile.aspx</DependentUpon>
