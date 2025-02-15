@@ -1,27 +1,42 @@
-﻿<%@ Page Title="Coaches" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="Coaches.aspx.cs" Inherits="badpjProject.Coaches" %>
+﻿<%@ Page Title="Our Coaches" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="Coaches.aspx.cs" Inherits="badpjProject.Coaches" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container">
-        <h2 class="mt-4">Our Coaches</h2>
-
-        <!-- Button for Approved Coaches to Create/Edit Profile -->
-        <asp:Panel ID="pnlCreateProfile" runat="server" Visible="false">
-            <a href="CreateCoachProfile.aspx" class="btn btn-primary mb-3">Create/Edit Your Profile</a>
-        </asp:Panel>
-
-        <div class="coaches-container">
+    <div class="container my-4">
+        <h2 class="text-center mb-4">Our Coaches</h2>
+        <div class="row">
             <asp:Repeater ID="rptCoaches" runat="server">
                 <ItemTemplate>
-                    <div class="coach-card">
-                        <img src='<%# Eval("ProfilePicture") %>' alt='<%# Eval("Name") %>' class="coach-photo" />
-                        <h3><%# Eval("Name") %></h3>
-                        <p><%# Eval("Specialties") %></p>
-                        <a href="CoachProfile.aspx?CoachID=<%# Eval("CoachID") %>" class="btn">View Profile</a>
+                    <div class="col-md-4">
+                        <div class="card coach-card">
+                            <img src='<%# !string.IsNullOrEmpty(Eval("Coach_ProfileImage").ToString()) ? 
+                                ResolveUrl("~/Uploads/" + Eval("Coach_ProfileImage").ToString()) : 
+                                ResolveUrl("~/Uploads/default-image.png") %>' class="card-img-top" alt="Profile Image" />
+                            <div class="card-body text-center">
+                                <h5 class="card-title"><%# Eval("Coach_Name") %></h5>
+                                <p class="card-text">
+                                    <%# string.IsNullOrEmpty(Eval("Coach_AreaOfExpertise").ToString()) ? "&nbsp;" : Eval("Coach_AreaOfExpertise") %>
+                                </p>
+                                <a href='CoachDetails.aspx?id=<%# Eval("Coach_ID") %>' class="btn btn-primary">View Profile</a>
+                            </div>
+                        </div>
                     </div>
                 </ItemTemplate>
             </asp:Repeater>
         </div>
-
-        <asp:Literal ID="litNoCoaches" runat="server" Text="" />
     </div>
+    <style>
+        .coach-card {
+            margin-bottom: 20px;
+            border: none; /* Remove card border */
+            box-shadow: none; /* Remove card shadow */
+        }
+        .coach-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%; /* Circular image */
+            display: block;
+            margin: 0 auto; /* Center image horizontally */
+        }
+    </style>
 </asp:Content>

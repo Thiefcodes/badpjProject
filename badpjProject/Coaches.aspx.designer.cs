@@ -15,15 +15,6 @@ namespace badpjProject
     {
 
         /// <summary>
-        /// pnlCreateProfile control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlCreateProfile;
-
-        /// <summary>
         /// rptCoaches control.
         /// </summary>
         /// <remarks>
@@ -31,14 +22,5 @@ namespace badpjProject
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptCoaches;
-
-        /// <summary>
-        /// litNoCoaches control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litNoCoaches;
     }
 }

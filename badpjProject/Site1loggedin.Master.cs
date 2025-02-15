@@ -11,6 +11,13 @@ namespace badpjProject
             // Check if user is logged in
             if (Session["UserId"] != null)
             {
+                int userId = int.Parse(Session["UserId"].ToString());
+
+                // Determine if the user is a coach by checking the CoachStatus table
+                CoachStatus cs = new CoachStatus();
+                bool isCoach = cs.IsUserAlreadyCoach(userId);
+                Session["IsCoach"] = isCoach;
+
                 // Set a default profile picture if none exists
                 if (Session["ProfilePicture"] != null)
                 {
@@ -29,6 +36,17 @@ namespace badpjProject
                 else
                 {
                     HideUserOnlyTabs();
+                }
+
+                if (isCoach)
+                {
+                    // Hide tabs that should not be visible to coaches
+                    HideCoachOnlyTabs();
+                }
+                else
+                {
+                    // Hide tabs that are only relevant for coaches (if any)
+                    HideNonCoachOnlyTabs();
                 }
             }
             else
@@ -69,6 +87,36 @@ namespace badpjProject
                 tab.Visible = false;
             }
         }
+
+        private void HideCoachOnlyTabs()
+        {
+            // List of controls to hide for users who are already coaches (e.g., "Become a Coach" tab, public "Coaches" page)
+            List<Control> coachOnlyTabs = new List<Control>
+            {
+                liUserBecomeACoach,
+                liPublicCoaches
+            };
+
+            foreach (var tab in coachOnlyTabs)
+            {
+                tab.Visible = false;
+            }
+        }
+
+        private void HideNonCoachOnlyTabs()
+        {
+            // List of controls to hide for users who are not coaches (e.g., coach-specific profile links)
+            List<Control> nonCoachOnlyTabs = new List<Control>
+            {
+                liCoachProfile  // Adjust the control IDs to match your master page
+            };
+
+            foreach (var tab in nonCoachOnlyTabs)
+            {
+                tab.Visible = false;
+            }
+        }
+
 
         protected void Logout_Click(object sender, EventArgs e)
         {

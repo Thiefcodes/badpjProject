@@ -35,7 +35,8 @@
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
                         <a href="AllProfiles.aspx" class="nav-link">All Profiles</a>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/UserPage.aspx">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Coaches.aspx">Coaches</a></li>
+                        <li class="nav-item" runat="server" id="liPublicCoaches"><a class="nav-link" runat="server" href="~/Coaches.aspx">Coaches</a></li>
+                        <li class="nav-item" runat="server" id="liCoachProfile"><a class="nav-link" runat="server" href="~/CoachProfile.aspx">Coach Profile</a></li>
                         <li class="nav-item" runat="server" id="liUserBecomeACoach"><a class="nav-link" runat="server" href="~/BecomeACoach.aspx">Become a Coach</a></li>
                         <li class="nav-item" runat="server" id="liStaffViewCoaches"><a class="nav-link" runat="server" href="~/ViewCoaches.aspx">View Coaches</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Forum.aspx">Forum</a></li>

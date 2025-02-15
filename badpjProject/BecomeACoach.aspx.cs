@@ -98,8 +98,8 @@ namespace badpjProject
                 ddl_Qualification.SelectedValue,
                 uniqueVideoFileName,
                 status,
-                profilePicFileName,  
-                tb_AreaOfExpertise.Text.Trim()   
+                profilePicFileName,
+                ddl_AreaOfExpertise.SelectedValue  
             );
 
             try
@@ -145,6 +145,7 @@ namespace badpjProject
             tb_Hp.CssClass = tb_Hp.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             tb_AboutYou.CssClass = tb_AboutYou.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             ddl_Qualification.CssClass = ddl_Qualification.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            ddl_AreaOfExpertise.CssClass = ddl_AreaOfExpertise.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             fu_Coach.CssClass = fu_Coach.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
         }
 
@@ -177,6 +178,10 @@ namespace badpjProject
             if (!rfv_Qualification.IsValid)
             {
                 ddl_Qualification.CssClass += " input-validation-error";
+            }
+            if (!rfv_AreaOfExpertise.IsValid)
+            {
+                ddl_AreaOfExpertise.CssClass += " input-validation-error";
             }
             if (!rfv_Coach.IsValid)
             {
