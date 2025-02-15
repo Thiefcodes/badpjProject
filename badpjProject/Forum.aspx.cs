@@ -64,29 +64,39 @@ namespace badpjProject
             }
         }
 
-        protected void gvThreads_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
+        protected void gvThreads_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "DeleteThread")
-            {
-                int index = Convert.ToInt32(e.CommandArgument);
-                string threadId = gvThreads.Rows[index].Cells[0].Text;
+            int index = Convert.ToInt32(e.CommandArgument);
+            string threadId = gvThreads.Rows[index].Cells[0].Text;
 
-                DeleteThread(threadId);
-                LoadThreads();
-            }
-            else if (e.CommandName == "ViewThread")
+            if (e.CommandName == "ViewThread")
             {
-                int index = Convert.ToInt32(e.CommandArgument);
-                string threadId = gvThreads.Rows[index].Cells[0].Text;
+                IncrementThreadViews(threadId);
                 Response.Redirect($"Thread.aspx?ThreadID={threadId}");
             }
             else if (e.CommandName == "UpdateThread")
             {
-                int index = Convert.ToInt32(e.CommandArgument);
-                string threadId = gvThreads.Rows[index].Cells[0].Text;
-
-                // Redirect to an update page (or use inline editing as an alternative)
                 Response.Redirect($"UpdateThread.aspx?ThreadID={threadId}");
+            }
+            else if (e.CommandName == "DeleteThread")
+            {
+                DeleteThread(threadId);
+                LoadThreads();
+            }
+        }
+
+        private void IncrementThreadViews(string threadId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE Threads SET Views = Views + 1 WHERE ThreadID = @ThreadID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ThreadID", threadId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
 

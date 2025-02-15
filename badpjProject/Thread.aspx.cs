@@ -37,25 +37,70 @@ namespace badpjProject
             else if (e.CommandName == "LikePost")
             {
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
-                string postId = gvPosts.DataKeys[rowIndex].Value.ToString();
-                IncreaseLikeCount(postId);
+                // Get the PostID from CommandArgument
+                int postId;
+                if (!int.TryParse(e.CommandArgument.ToString(), out postId))
+                {
+                    Response.Write("Invalid Post ID.");
+                    return;
+                }
+
+                // Ensure safe conversion of userId from the session
+                int userId;
+                if (!int.TryParse(Session["UserID"]?.ToString(), out userId))
+                {
+                    Response.Write("Invalid User ID.");
+                    return;
+                }
+
+                // Call the Like/Unlike handler and pass the necessary parameters
+                ToggleLike(postId, userId);
+
+                // Optionally, refresh the posts to reflect the updated like status
                 LoadPosts();
             }
         }
 
-        private void IncreaseLikeCount(string postId)
+        private void ToggleLike(int postId, int userId)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "UPDATE Posts SET Likes = Likes + 1 WHERE PostID = @PostID";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@PostID", postId);
                 conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
 
+                // Check if user already liked the post
+                string checkQuery = "SELECT COUNT(*) FROM PostLikes WHERE PostID = @PostID AND UserID = @UserID";
+                SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                checkCmd.Parameters.AddWithValue("@PostID", postId);
+                checkCmd.Parameters.AddWithValue("@UserID", userId);
+                int likeCount = (int)checkCmd.ExecuteScalar();
+
+                if (likeCount > 0)
+                {
+                    // Unlike: Remove from PostLikes table and decrement Likes count
+                    string unlikeQuery = "DELETE FROM PostLikes WHERE PostID = @PostID AND UserID = @UserID; " +
+                                         "UPDATE Posts SET Likes = Likes - 1 WHERE PostID = @PostID";
+                    SqlCommand unlikeCmd = new SqlCommand(unlikeQuery, conn);
+                    unlikeCmd.Parameters.AddWithValue("@PostID", postId);
+                    unlikeCmd.Parameters.AddWithValue("@UserID", userId);
+                    unlikeCmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    // Like: Insert into PostLikes table and increment Likes count
+                    string likeQuery = "INSERT INTO PostLikes (PostID, UserID) VALUES (@PostID, @UserID); " +
+                                       "UPDATE Posts SET Likes = Likes + 1 WHERE PostID = @PostID";
+                    SqlCommand likeCmd = new SqlCommand(likeQuery, conn);
+                    likeCmd.Parameters.AddWithValue("@PostID", postId);
+                    likeCmd.Parameters.AddWithValue("@UserID", userId);
+                    likeCmd.ExecuteNonQuery();
+                }
+            }
+
+            // Refresh the posts to reflect the updated like status
+            LoadPosts();
+        }
         private void LoadThread()
         {
             string threadId = Request.QueryString["ThreadID"];
@@ -89,21 +134,23 @@ namespace badpjProject
         private void LoadPosts()
         {
             string threadId = Request.QueryString["ThreadID"];
+            int userId = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"]) : 0;
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                // Modify the SQL query to join the "Table" and replace CreatedBy with the Login_Name
                 string query = @"
-            SELECT p.PostID, p.Content, 
-                   COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
-                   p.CreatedAt, p.Likes
+            SELECT p.PostID, p.Content, COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, p.CreatedAt, 
+                   p.Likes, 
+                   CASE WHEN pl.UserID IS NOT NULL THEN 'Liked' ELSE 'Like' END AS LikeStatus
             FROM Posts p
             LEFT JOIN [Table] u ON p.CreatedBy = u.Id
+            LEFT JOIN PostLikes pl ON p.PostID = pl.PostID AND pl.UserID = @UserID
             WHERE p.ThreadID = @ThreadID";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ThreadID", threadId);
+                cmd.Parameters.AddWithValue("@UserID", userId);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);

@@ -9,7 +9,14 @@
         <asp:BoundField DataField="CreatedBy" HeaderText="Author" />
         <asp:BoundField DataField="CreatedAt" HeaderText="Date Created" DataFormatString="{0:yyyy-MM-dd}" />
         <asp:BoundField DataField="Likes" HeaderText="Likes" />
-        <asp:ButtonField CommandName="LikePost" Text="Like" ButtonType="Button" />
+        <asp:TemplateField HeaderText="Like">
+          <ItemTemplate>
+           <asp:Button ID="btnLike" runat="server" 
+              CommandName="LikePost" 
+              CommandArgument='<%# Eval("PostID") %>' 
+              Text="Like" />
+          </ItemTemplate>
+        </asp:TemplateField>
         <asp:ButtonField CommandName="EditPost" Text="Edit" ButtonType="Button" />
         <asp:ButtonField CommandName="DeletePost" Text="Delete" ButtonType="Button" />
     </Columns>
