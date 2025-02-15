@@ -13,9 +13,7 @@
                                 ResolveUrl("~/Uploads/default-image.png") %>' class="card-img-top" alt="Profile Image" />
                             <div class="card-body text-center">
                                 <h5 class="card-title"><%# Eval("Coach_Name") %></h5>
-                                <p class="card-text">
-                                    <%# string.IsNullOrEmpty(Eval("Coach_AreaOfExpertise").ToString()) ? "&nbsp;" : Eval("Coach_AreaOfExpertise") %>
-                                </p>
+                                <p class="card-text"><%# Eval("Coach_AreaOfExpertise") %></p>
                                 <a href='CoachDetails.aspx?id=<%# Eval("Coach_ID") %>' class="btn btn-primary">View Profile</a>
                             </div>
                         </div>

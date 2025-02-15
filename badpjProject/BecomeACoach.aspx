@@ -52,7 +52,7 @@
                         <asp:ListItem Value="" Text="--Select Expertise--" />
                         <asp:ListItem Value="Strength Training" Text="Strength Training" />
                         <asp:ListItem Value="Cardiovascular Training" Text="Cardiovascular Training" />
-                        <asp:ListItem Value="High-Intensity Interval Training (HIIT)" Text="High-Intensity Interval Training (HIIT)" />
+                        <asp:ListItem Value="HIIT" Text="High-Intensity Interval Training (HIIT)" />
                         <asp:ListItem Value="Bodybuilding" Text="Bodybuilding" />
                         <asp:ListItem Value="Powerlifting" Text="Powerlifting" />
                         <asp:ListItem Value="CrossFit" Text="CrossFit" />
