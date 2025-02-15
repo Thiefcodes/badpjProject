@@ -13,6 +13,7 @@ namespace badpjProject
         {
             if (!IsPostBack)
             {
+                imgHeader.ImageUrl = Page.ResolveUrl("~/Uploads/Coach-Header.jpg");
                 BindCoaches();
             }
         }
