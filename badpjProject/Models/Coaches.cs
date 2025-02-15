@@ -298,6 +298,71 @@ namespace badpjProject
             return coachList;
         }
 
+        public Coaches GetCoachByUserId(int userId)
+        {
+            string coachId = null;
+            // Query the CoachStatus table to find the coach_id for the given userId.
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            {
+                string query = "SELECT TOP 1 coach_id FROM CoachStatus WHERE user_id = @UserId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        coachId = result.ToString();
+                    }
+                }
+            }
+
+            // If a coachId was found, use your existing getCoaches method to retrieve details.
+            if (!string.IsNullOrEmpty(coachId))
+            {
+                return getCoaches(coachId);
+            }
+
+            return null;
+        }
+
+        public bool UpdateCoachProfile()
+        {
+            bool success = false;
+            string queryStr = "UPDATE Coach SET " +
+                              "[Name] = @Name, " +
+                              "Email = @Email, " +
+                              "Hp = @Hp, " +
+                              "[Desc] = @Desc, " +
+                              "ProfileImage = @ProfileImage, " +
+                              "AreaOfExpertise = @AreaOfExpertise " +
+                              "WHERE Id = @Id";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", this.Coach_Name);
+                cmd.Parameters.AddWithValue("@Email", this.Coach_Email);
+                cmd.Parameters.AddWithValue("@Hp", this.Coach_Hp);
+                cmd.Parameters.AddWithValue("@Desc", this.Coach_Desc);
+                cmd.Parameters.AddWithValue("@ProfileImage", this.Coach_ProfileImage);
+                cmd.Parameters.AddWithValue("@AreaOfExpertise", this.Coach_AreaOfExpertise);
+                cmd.Parameters.AddWithValue("@Id", this.Coach_ID);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    success = rowsAffected > 0;
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error in UpdateCoachProfile: " + ex.Message);
+                }
+            }
+            return success;
+        }
+
         public bool ApproveCoach(string coachId)
         {
             bool isApproved = false;
