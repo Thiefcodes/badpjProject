@@ -31,6 +31,7 @@
                             </a>
                             <div class="card-body text-center">
                                 <h5 class="card-title"><%# Eval("Coach_Name") %></h5>
+                                <p class="card-text"><%# Eval("Coach_Qualification") %></p>
                                 <p class="card-text"><%# Eval("Coach_AreaOfExpertise") %></p>
                             </div>
                         </div>
