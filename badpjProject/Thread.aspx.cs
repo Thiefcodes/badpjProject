@@ -22,16 +22,9 @@ namespace badpjProject
         {
             if (e.CommandName == "DeletePost")
             {
-                // Get the row index of the button clicked
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
-
-                // Retrieve PostID from the DataKeys collection
                 string postId = gvPosts.DataKeys[rowIndex].Value.ToString();
-
-                // Call DeletePost method to delete the record
                 DeletePost(postId);
-
-                // Reload the posts to refresh the GridView
                 LoadPosts();
             }
             else if (e.CommandName == "EditPost")
@@ -40,6 +33,26 @@ namespace badpjProject
                 int rowIndex = Convert.ToInt32(e.CommandArgument);
                 string postId = gvPosts.DataKeys[rowIndex].Value.ToString();
                 Response.Redirect($"UpdatePost.aspx?PostID={postId}&ThreadID={threadId}");
+            }
+            else if (e.CommandName == "LikePost")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                string postId = gvPosts.DataKeys[rowIndex].Value.ToString();
+                IncreaseLikeCount(postId);
+                LoadPosts();
+            }
+        }
+
+        private void IncreaseLikeCount(string postId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE Posts SET Likes = Likes + 1 WHERE PostID = @PostID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@PostID", postId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -81,7 +94,7 @@ namespace badpjProject
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT PostID, Content, CreatedBy, CreatedAt FROM Posts WHERE ThreadID = @ThreadID", conn);
+                SqlCommand cmd = new SqlCommand("SELECT PostID, Content, CreatedBy, CreatedAt, Likes FROM Posts WHERE ThreadID = @ThreadID", conn);
                 cmd.Parameters.AddWithValue("@ThreadID", threadId);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
