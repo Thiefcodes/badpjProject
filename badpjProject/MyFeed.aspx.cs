@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Threading;
 
 namespace badpjProject
 {
@@ -15,6 +16,7 @@ namespace badpjProject
         public string GlobalThreadId { get; set; } // Global variable to store the ThreadID
         protected void Page_Load(object sender, EventArgs e)
         {
+            string threadId = Request.QueryString["ThreadID"];
             if (!IsPostBack)
             {
                 // Ensure the user is logged in
@@ -22,6 +24,11 @@ namespace badpjProject
                 {
                     Response.Redirect("Login.aspx"); // Redirect to login page if not logged in
                 }
+                else if (!string.IsNullOrEmpty(threadId))
+                {
+                    LoadRandomPosts();
+                }
+                LoadRandomThread();
 
                 // Load threads and posts created by the user
                 LoadThreads();
@@ -63,22 +70,18 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 string query = @"
-            SELECT p.PostID, p.Content, COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, p.CreatedAt, p.ThreadID, p.Likes
+            SELECT p.PostID, p.Content, COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, p.CreatedAt, 
+                   p.Likes, 
+                   CASE WHEN pl.UserID IS NOT NULL THEN 'Liked' ELSE 'Like' END AS LikeStatus
             FROM Posts p
             LEFT JOIN [Table] u ON p.CreatedBy = u.Id
-            WHERE u.Id = @UserID;";
+            LEFT JOIN PostLikes pl ON p.PostID = pl.PostID AND pl.UserID = @UserID";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@UserID", userId);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
-
-                if (dt.Rows.Count > 0)
-                {
-                    // Set GlobalThreadId to the first ThreadID from the results
-                    GlobalThreadId = dt.Rows[0]["ThreadID"].ToString();
-                }
 
                 gvPosts.DataSource = dt;
                 gvPosts.DataBind();
@@ -118,6 +121,47 @@ namespace badpjProject
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        private void ToggleLike(int postId, int userId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                // Check if user already liked the post
+                string checkQuery = "SELECT COUNT(*) FROM PostLikes WHERE PostID = @PostID AND UserID = @UserID";
+                SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                checkCmd.Parameters.AddWithValue("@PostID", postId);
+                checkCmd.Parameters.AddWithValue("@UserID", userId);
+                int likeCount = (int)checkCmd.ExecuteScalar();
+
+                if (likeCount > 0)
+                {
+                    // Unlike: Remove from PostLikes table and decrement Likes count
+                    string unlikeQuery = "DELETE FROM PostLikes WHERE PostID = @PostID AND UserID = @UserID; " +
+                                         "UPDATE Posts SET Likes = Likes - 1 WHERE PostID = @PostID";
+                    SqlCommand unlikeCmd = new SqlCommand(unlikeQuery, conn);
+                    unlikeCmd.Parameters.AddWithValue("@PostID", postId);
+                    unlikeCmd.Parameters.AddWithValue("@UserID", userId);
+                    unlikeCmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    // Like: Insert into PostLikes table and increment Likes count
+                    string likeQuery = "INSERT INTO PostLikes (PostID, UserID) VALUES (@PostID, @UserID); " +
+                                       "UPDATE Posts SET Likes = Likes + 1 WHERE PostID = @PostID";
+                    SqlCommand likeCmd = new SqlCommand(likeQuery, conn);
+                    likeCmd.Parameters.AddWithValue("@PostID", postId);
+                    likeCmd.Parameters.AddWithValue("@UserID", userId);
+                    likeCmd.ExecuteNonQuery();
+                }
+            }
+
+            // Refresh the posts to reflect the updated like status
+            LoadRandomPosts();
         }
 
         protected void gvPosts_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -163,6 +207,132 @@ namespace badpjProject
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 Response.Write("<script>alert('Post deleted successfully');</script>");
+            }
+        }
+
+        private void LoadRandomThread()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"
+        SELECT TOP 1 t.ThreadID, t.ThreadID, t.Title
+        FROM Threads t
+        ORDER BY NEWID();"; // Select one random thread
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                gvRandomThreads.DataSource = dt;
+                gvRandomThreads.DataBind();
+            }
+        }
+        protected void gvRandomThreads_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "SelectThread")
+            {
+                int index = Convert.ToInt32(e.CommandArgument);
+                string threadId = gvRandomThreads.Rows[index].Cells[0].Text;
+
+                IncrementThreadViews(threadId);
+                Response.Redirect($"MyFeed.aspx?ThreadID={threadId}"); // Reload page with ThreadID
+            }
+        }
+
+        protected void gvRandomPosts_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "LikePost")
+            {
+                int index = Convert.ToInt32(e.CommandArgument);
+                if (!int.TryParse(e.CommandArgument.ToString(), out int postId))
+                {
+                    Response.Write("Invalid Post ID.");
+                    return;
+                }
+
+                // Ensure safe conversion of userId from the session
+                int userId;
+                if (!int.TryParse(Session["UserID"]?.ToString(), out userId))
+                {
+                    Response.Write("Invalid User ID.");
+                    return;
+                }
+
+                // Call the Like/Unlike handler and pass the necessary parameters
+                ToggleLike(postId, userId);
+
+                // Optionally, refresh the posts to reflect the updated like status
+                LoadRandomPosts();
+            }
+        }
+
+        protected void gvRandomPosts_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                int postId = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "PostID"));
+                int userId = Convert.ToInt32(Session["UserID"]);
+
+                Button btnLike = (Button)e.Row.FindControl("btnLike");
+                if (btnLike != null)
+                {
+                    // Check if the user has liked this post
+                    string checkQuery = "SELECT COUNT(*) FROM PostLikes WHERE PostID = @PostID AND UserID = @UserID";
+                    string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                        checkCmd.Parameters.AddWithValue("@PostID", postId);
+                        checkCmd.Parameters.AddWithValue("@UserID", userId);
+                        int likeCount = (int)checkCmd.ExecuteScalar();
+
+                        // Update the Like button text based on like status
+                        if (likeCount > 0)
+                        {
+                            btnLike.Text = "Liked";  // User has liked the post
+                        }
+                        else
+                        {
+                            btnLike.Text = "Like";   // User has not liked the post
+                        }
+                    }
+                }
+            }
+                
+        }
+
+        private void LoadRandomPosts()
+        {
+            string threadId = Request.QueryString["ThreadID"]; // Get ThreadID from query string
+            if (string.IsNullOrEmpty(threadId))
+            {
+                lblMessage.Text = "Select a thread to view posts.";
+                return;
+            }
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"
+        SELECT p.PostID, p.Content, COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, p.CreatedAt, p.Likes
+        FROM Posts p
+        LEFT JOIN [Table] u ON p.CreatedBy = u.Id
+        WHERE p.ThreadID = @ThreadID;";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ThreadID", threadId);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+
+                gvRandomPosts.DataSource = dt;
+                gvRandomPosts.DataBind();
             }
         }
     }
