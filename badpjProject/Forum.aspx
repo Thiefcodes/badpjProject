@@ -3,7 +3,7 @@
     <link href="ForumStyles.css" rel="stylesheet" type="text/css" />
     <div class="container mt-4">
         <h1>Forum Threads</h1>
-    <asp:GridView ID="gvThreads" runat="server" AutoGenerateColumns="False"
+    <asp:GridView ID="gvThreads" runat="server" CellPadding="10" AutoGenerateColumns="False"
     OnRowCommand="gvThreads_RowCommand">
     <Columns>
         <asp:BoundField DataField="ThreadID" HeaderText="ID" />
@@ -16,6 +16,6 @@
         <asp:ButtonField CommandName="DeleteThread" ItemStyle-CssClass="btn-custom" Text="Delete" ButtonType="Button" />
     </Columns>
 </asp:GridView>
-    <asp:Button ID="btnNewThread" runat="server" CssClass="btn btn-primary btn-sm" Text="New Thread" OnClick="btnNewThread_Click" />
+    <asp:Button ID="btnNewThread" runat="server" CssClass="btn-custom" Text="New Thread" OnClick="btnNewThread_Click" />
        </div>
 </asp:Content>

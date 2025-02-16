@@ -3,7 +3,7 @@
     <link href="ForumStyles.css" rel="stylesheet" type="text/css" />
     <div class="container mt-4">
     <h1><asp:Label ID="lblThreadTitle" runat="server" Text="Thread Title"></asp:Label></h1>
-<asp:GridView ID="gvPosts" runat="server" OnRowDataBound="gvPosts_RowDataBound" AutoGenerateColumns="False" 
+<asp:GridView ID="gvPosts" runat="server" CellPadding="10" OnRowDataBound="gvPosts_RowDataBound" AutoGenerateColumns="False" 
     OnRowCommand="gvPosts_RowCommand" DataKeyNames="PostID">
     <Columns>
         <asp:BoundField DataField="PostID" HeaderText="ID" />
@@ -24,7 +24,7 @@
     </Columns>
 </asp:GridView>
 
-<asp:Button ID="btnReply" runat="server" CssClass="btn btn-primary btn-sm" Text="Reply" OnClick="btnReply_Click" />
-<asp:Button ID="btnBack" runat="server" CssClass="btn btn-danger" Text="Back" OnClick="btnBack_Click" />
+<asp:Button ID="btnBack" runat="server" ItemStyle-CssClass="btn-custom" Text="Back" OnClick="btnBack_Click" />
+<asp:Button ID="btnReply" runat="server" ItemStyle-CssClass="btn-custom" Text="Reply" OnClick="btnReply_Click" />
         </div>
 </asp:Content>
