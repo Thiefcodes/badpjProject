@@ -15,6 +15,15 @@ namespace badpjProject
     {
 
         /// <summary>
+        /// formDiv control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel formDiv;
+
+        /// <summary>
         /// tb_Name control.
         /// </summary>
         /// <remarks>
@@ -123,6 +132,24 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_Qualification;
 
         /// <summary>
+        /// ddl_AreaOfExpertise control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddl_AreaOfExpertise;
+
+        /// <summary>
+        /// rfv_AreaOfExpertise control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_AreaOfExpertise;
+
+        /// <summary>
         /// fu_Coach control.
         /// </summary>
         /// <remarks>
@@ -141,6 +168,15 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_Coach;
 
         /// <summary>
+        /// fu_ProfilePic control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fu_ProfilePic;
+
+        /// <summary>
         /// btn_Submit control.
         /// </summary>
         /// <remarks>
@@ -148,5 +184,14 @@ namespace badpjProject
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btn_Submit;
+
+        /// <summary>
+        /// lblStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatus;
     }
 }

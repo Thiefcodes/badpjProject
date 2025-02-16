@@ -37,16 +37,3 @@
     object-fit: cover;
     margin-bottom: 10px;
 }
-
-.btn {
-    background-color: #cc0000;
-    color: white;
-    text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    display: inline-block;
-}
-
-.btn:hover {
-    background-color: #a80000;
-}

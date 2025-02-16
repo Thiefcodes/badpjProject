@@ -13,14 +13,17 @@ namespace badpjProject
         {
             if (!IsPostBack)
             {
+                imgHeader.ImageUrl = Page.ResolveUrl("~/Uploads/Coach-Header.jpg");
                 BindCoaches();
             }
         }
 
         private void BindCoaches()
         {
-            Coaches coachHandler = new Coaches();
-            rptCoaches.DataSource = coachHandler.GetApprovedCoaches();
+            Coaches coachManager = new Coaches();
+            List<Coaches> approvedCoaches = coachManager.GetApprovedCoaches();
+
+            rptCoaches.DataSource = approvedCoaches;
             rptCoaches.DataBind();
         }
 

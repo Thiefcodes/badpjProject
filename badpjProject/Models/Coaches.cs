@@ -22,13 +22,17 @@ namespace badpjProject
         private string _coachQualification = "";
         private string _coachVideo = "";
         private string _coachStatus = "";
+        private string _coachProfileImage = "";
+        private string _coachAreaOfExpertise = "";
+
 
         public Coaches()
         {
         }
 
         public Coaches(string coachID, string coachName, string coachEmail,
-                        int coachHp, string coachDesc, string coachQualification, string coachVideo, string coachStatus)
+               int coachHp, string coachDesc, string coachQualification, string coachVideo, string coachStatus,
+               string coachProfileImage, string coachAreaOfExpertise)
         {
             _coachID = coachID;
             _coachName = coachName;
@@ -38,16 +42,18 @@ namespace badpjProject
             _coachQualification = coachQualification;
             _coachVideo = coachVideo;
             _coachStatus = coachStatus;
+            _coachProfileImage = coachProfileImage;
+            _coachAreaOfExpertise = coachAreaOfExpertise;
         }
 
         public Coaches(string coachName, string coachEmail,
                int coachHp, string coachDesc, string coachQualification, string coachVideo, string coachStatus)
-            : this(null, coachName, coachEmail, coachHp, coachDesc, coachQualification, coachVideo, coachStatus)
+            : this(null, coachName, coachEmail, coachHp, coachDesc, coachQualification, coachVideo, coachStatus, "", "")
         {
         }
 
         public Coaches(string coachID)
-            : this(coachID, "", "", 0, "", "", "", "")
+            : this(coachID, "", "", 0, "", "", "", "", "", "")
         {
         }
 
@@ -99,12 +105,23 @@ namespace badpjProject
             set { _coachStatus = value; }
         }
 
+        public string Coach_ProfileImage
+        {
+            get { return _coachProfileImage; }
+            set { _coachProfileImage = value; }
+        }
+
+        public string Coach_AreaOfExpertise
+        {
+            get { return _coachAreaOfExpertise; }
+            set { _coachAreaOfExpertise = value; }
+        }
+
         public Coaches getCoaches(string coachID)
         {
-
             Coaches coachDetail = null;
 
-            string coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status;
+            string coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise;
             int coach_Hp;
 
             string queryStr = "SELECT * FROM Coach WHERE Id = @CoachID";
@@ -125,26 +142,29 @@ namespace badpjProject
                 coach_Qualification = dr["Qualification"].ToString();
                 coach_Video = dr["File_URL"].ToString();
                 coach_Status = dr["Status"].ToString();
+                coach_ProfileImage = dr["ProfileImage"].ToString();
+                coach_AreaOfExpertise = dr["AreaOfExpertise"].ToString();
 
-                coachDetail = new Coaches(coachID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status);
+                coachDetail = new Coaches(coachID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise);
             }
             else
             {
                 coachDetail = null;
             }
 
-            conn.Close();
             dr.Close();
+            conn.Close();
             dr.Dispose();
 
             return coachDetail;
         }
 
+
         public List<Coaches> getCoachesAll()
         {
             List<Coaches> coachList = new List<Coaches>();
 
-            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status;
+            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise;
             int coach_Hp;
 
             string queryStr = "SELECT * FROM Coach Order By Name";
@@ -165,8 +185,12 @@ namespace badpjProject
                         coach_Qualification = dr["Qualification"].ToString();
                         coach_Video = dr["File_URL"].ToString();
                         coach_Status = dr["Status"].ToString();
+                        coach_ProfileImage = dr["ProfileImage"].ToString();
+                        coach_AreaOfExpertise = dr["AreaOfExpertise"].ToString();
 
-                        Coaches a = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status);
+                        Coaches a = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp,
+                                                coach_Desc, coach_Qualification, coach_Video, coach_Status,
+                                                coach_ProfileImage, coach_AreaOfExpertise);
                         coachList.Add(a);
                     }
 
@@ -177,11 +201,12 @@ namespace badpjProject
             return coachList;
         }
 
+
         public List<Coaches> GetPendingCoaches()
         {
             List<Coaches> coachList = new List<Coaches>();
 
-            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status;
+            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise;
             int coach_Hp;
 
             string queryStr = "SELECT * FROM Coach WHERE Status = 'Pending' ORDER BY Name";
@@ -204,8 +229,12 @@ namespace badpjProject
                         coach_Qualification = dr["Qualification"].ToString();
                         coach_Video = dr["File_URL"].ToString();
                         coach_Status = dr["Status"].ToString();
+                        coach_ProfileImage = dr["ProfileImage"].ToString();
+                        coach_AreaOfExpertise = dr["AreaOfExpertise"].ToString();
 
-                        Coaches coach = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status);
+                        Coaches coach = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp,
+                                                    coach_Desc, coach_Qualification, coach_Video, coach_Status,
+                                                    coach_ProfileImage, coach_AreaOfExpertise);
                         coachList.Add(coach);
                     }
 
@@ -225,7 +254,7 @@ namespace badpjProject
         {
             List<Coaches> coachList = new List<Coaches>();
 
-            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status;
+            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise;
             int coach_Hp;
 
             string queryStr = "SELECT * FROM Coach WHERE Status = 'Approved' ORDER BY Name";
@@ -248,8 +277,12 @@ namespace badpjProject
                         coach_Qualification = dr["Qualification"].ToString();
                         coach_Video = dr["File_URL"].ToString();
                         coach_Status = dr["Status"].ToString();
+                        coach_ProfileImage = dr["ProfileImage"].ToString();
+                        coach_AreaOfExpertise = dr["AreaOfExpertise"].ToString();
 
-                        Coaches coach = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status);
+                        Coaches coach = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp,
+                                                    coach_Desc, coach_Qualification, coach_Video, coach_Status,
+                                                    coach_ProfileImage, coach_AreaOfExpertise);
                         coachList.Add(coach);
                     }
 
@@ -263,6 +296,71 @@ namespace badpjProject
             }
 
             return coachList;
+        }
+
+        public Coaches GetCoachByUserId(int userId)
+        {
+            string coachId = null;
+            // Query the CoachStatus table to find the coach_id for the given userId.
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            {
+                string query = "SELECT TOP 1 coach_id FROM CoachStatus WHERE user_id = @UserId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        coachId = result.ToString();
+                    }
+                }
+            }
+
+            // If a coachId was found, use your existing getCoaches method to retrieve details.
+            if (!string.IsNullOrEmpty(coachId))
+            {
+                return getCoaches(coachId);
+            }
+
+            return null;
+        }
+
+        public bool UpdateCoachProfile()
+        {
+            bool success = false;
+            string queryStr = "UPDATE Coach SET " +
+                              "[Name] = @Name, " +
+                              "Email = @Email, " +
+                              "Hp = @Hp, " +
+                              "[Desc] = @Desc, " +
+                              "ProfileImage = @ProfileImage, " +
+                              "AreaOfExpertise = @AreaOfExpertise " +
+                              "WHERE Id = @Id";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", this.Coach_Name);
+                cmd.Parameters.AddWithValue("@Email", this.Coach_Email);
+                cmd.Parameters.AddWithValue("@Hp", this.Coach_Hp);
+                cmd.Parameters.AddWithValue("@Desc", this.Coach_Desc);
+                cmd.Parameters.AddWithValue("@ProfileImage", this.Coach_ProfileImage);
+                cmd.Parameters.AddWithValue("@AreaOfExpertise", this.Coach_AreaOfExpertise);
+                cmd.Parameters.AddWithValue("@Id", this.Coach_ID);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    success = rowsAffected > 0;
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error in UpdateCoachProfile: " + ex.Message);
+                }
+            }
+            return success;
         }
 
         public bool ApproveCoach(string coachId)
@@ -296,49 +394,75 @@ namespace badpjProject
         public bool RejectCoach(string coachId)
         {
             string fileUrl = null;
+            string profileImageUrl = null;
 
-            // Step 1: Retrieve File URL
+            // Retrieve File_URL and ProfileImage from the Coach record
             using (SqlConnection conn = new SqlConnection(_connStr))
-            using (SqlCommand cmd = new SqlCommand("SELECT File_URL FROM Coach WHERE Id = @Id", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT File_URL, ProfileImage FROM Coach WHERE Id = @Id", conn))
             {
                 cmd.Parameters.AddWithValue("@Id", coachId);
-
                 try
                 {
                     conn.Open();
-                    fileUrl = cmd.ExecuteScalar()?.ToString();
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            fileUrl = dr["File_URL"]?.ToString();
+                            profileImageUrl = dr["ProfileImage"]?.ToString();
+                        }
+                    }
                 }
                 catch (SqlException ex)
                 {
-                    Debug.WriteLine("SQL Error while fetching file URL: " + ex.Message);
+                    Debug.WriteLine("SQL Error while fetching file URLs: " + ex.Message);
                     return false;
                 }
             }
 
+            // Delete the video file if it exists
             if (!string.IsNullOrEmpty(fileUrl))
             {
                 try
                 {
-                    string filePath = HttpContext.Current.Server.MapPath("~/uploads/" + fileUrl);
-                    if (File.Exists(filePath))
+                    string videoPath = HttpContext.Current.Server.MapPath("~/uploads/" + fileUrl);
+                    if (File.Exists(videoPath))
                     {
-                        File.Delete(filePath);
-                        Debug.WriteLine($"File deleted: {filePath}");
+                        File.Delete(videoPath);
+                        Debug.WriteLine($"Video file deleted: {videoPath}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Error deleting file: " + ex.Message);
-                    return false; // Stop execution if file deletion fails
+                    Debug.WriteLine("Error deleting video file: " + ex.Message);
+                    return false;
                 }
             }
 
-            // Step 3: Delete Coach Record
+            // Delete the profile image if it exists
+            if (!string.IsNullOrEmpty(profileImageUrl))
+            {
+                try
+                {
+                    string imagePath = HttpContext.Current.Server.MapPath("~/uploads/" + profileImageUrl);
+                    if (File.Exists(imagePath))
+                    {
+                        File.Delete(imagePath);
+                        Debug.WriteLine($"Profile image deleted: {imagePath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error deleting profile image: " + ex.Message);
+                    return false;
+                }
+            }
+
+            // Delete the Coach record from the database
             using (SqlConnection conn = new SqlConnection(_connStr))
             using (SqlCommand cmd = new SqlCommand("DELETE FROM Coach WHERE Id = @Id", conn))
             {
                 cmd.Parameters.AddWithValue("@Id", coachId);
-
                 try
                 {
                     conn.Open();
@@ -352,14 +476,12 @@ namespace badpjProject
             }
         }
 
-
-
         public int CoachesInsert()
         {
             int result = 0;
 
-            string queryStr = "INSERT INTO Coach (Id, [Name], Email, Hp, [Desc], Qualification, File_URL, Status) " +
-                              "VALUES (@Coaches_ID, @Coaches_Name, @Coaches_Email, @Coaches_Hp, @Coaches_Desc, @Coaches_Qualification, @Coaches_Video, @Coaches_Status)";
+            string queryStr = "INSERT INTO Coach (Id, [Name], Email, Hp, [Desc], Qualification, File_URL, Status, ProfileImage, AreaOfExpertise) " +
+                              "VALUES (@Coaches_ID, @Coaches_Name, @Coaches_Email, @Coaches_Hp, @Coaches_Desc, @Coaches_Qualification, @Coaches_Video, @Coaches_Status, @ProfileImage, @AreaOfExpertise)";
 
             using (SqlConnection conn = new SqlConnection(_connStr))
             using (SqlCommand cmd = new SqlCommand(queryStr, conn))
@@ -372,6 +494,8 @@ namespace badpjProject
                 cmd.Parameters.AddWithValue("@Coaches_Qualification", this.Coach_Qualification);
                 cmd.Parameters.AddWithValue("@Coaches_Video", this.Coach_Video);
                 cmd.Parameters.AddWithValue("@Coaches_Status", this.Coach_Status);
+                cmd.Parameters.AddWithValue("@ProfileImage", this.Coach_ProfileImage);
+                cmd.Parameters.AddWithValue("@AreaOfExpertise", this.Coach_AreaOfExpertise);
 
                 try
                 {
@@ -442,6 +566,135 @@ namespace badpjProject
             get { return _isCoach; }
             set { _isCoach = value; }
         }
-    }
 
+        public bool IsUserAlreadyCoach(int userId)
+        {
+            bool isAlreadyCoach = false;
+
+            string queryStr = "SELECT COUNT(*) FROM [dbo].[CoachStatus] WHERE user_id = @UserId";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                try
+                {
+                    conn.Open();
+                    int result = (int)cmd.ExecuteScalar();
+
+                    if (result > 0)
+                    {
+                        isAlreadyCoach = true; // User already exists as a coach or has a pending application
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error: " + ex.Message);
+                }
+            }
+
+            return isAlreadyCoach;
+        }
+
+        public bool InsertCoachStatus(int userId, string coachId)
+        {
+            bool result = false;
+
+            // Check if the user is already in the CoachStatus table
+            string checkQuery = "SELECT COUNT(*) FROM [dbo].[CoachStatus] WHERE user_id = @userId";
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(checkQuery, conn))
+            {
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                try
+                {
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+
+                    // If the user is not already in the CoachStatus table, insert a new record
+                    if (count == 0)
+                    {
+                        string insertQuery = "INSERT INTO [dbo].[CoachStatus] (user_id, coach_id, isCoach) VALUES (@userId, @coachId, 0)";
+                        using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                        {
+                            insertCmd.Parameters.AddWithValue("@userId", userId);
+                            insertCmd.Parameters.AddWithValue("@coachId", coachId);
+
+                            int rowsAffected = insertCmd.ExecuteNonQuery();
+                            result = rowsAffected > 0;  // True if the insertion was successful
+                        }
+                    }
+                    else
+                    {
+                        result = false; // User already exists in CoachStatus table
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error: " + ex.Message);
+                    result = false;
+                }
+            }
+
+            return result;
+        }
+
+        public bool UpdateIsCoachStatus(string coachId)
+        {
+            bool updated = false;
+            string query = @"
+                UPDATE cs
+                SET cs.isCoach = 1
+                FROM dbo.CoachStatus cs
+                INNER JOIN dbo.Coach c ON cs.coach_id = c.Id
+                WHERE cs.coach_id = @coachId AND c.Status = 'Approved'";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@coachId", coachId);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    updated = rowsAffected > 0;
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error in UpdateIsCoachStatus: " + ex.Message);
+                }
+            }
+
+            return updated;
+        }
+
+        public bool DeleteCoachStatus(string coachId)
+        {
+            bool deleted = false;
+            string query = "DELETE FROM [dbo].[CoachStatus] WHERE coach_id = @coachId";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@coachId", coachId);
+
+                try
+                {
+                    conn.Open();
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    deleted = rowsAffected > 0;
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error in DeleteCoachStatus: " + ex.Message);
+                }
+            }
+
+            return deleted;
+        }
+    }
 }
+

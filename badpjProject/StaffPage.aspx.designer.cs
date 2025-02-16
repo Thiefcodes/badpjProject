@@ -51,6 +51,15 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.Button EditProfileButton;
 
         /// <summary>
+        /// EnableFacialAuthButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button EnableFacialAuthButton;
+
+        /// <summary>
         /// ManageStaffButton control.
         /// </summary>
         /// <remarks>

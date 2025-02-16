@@ -45,8 +45,6 @@
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
-      <Private>True</Private>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -105,8 +103,14 @@
     <Content Include="App_Data\Database1_log.ldf">
       <DependentUpon>Database1.mdf</DependentUpon>
     </Content>
+    <Content Include="Authentication.aspx" />
     <Content Include="BecomeACoach.aspx" />
+    <Content Include="CameraAccess.aspx" />
     <Content Include="Checkout.aspx" />
+    <Content Include="CoachDetails.aspx" />
+    <Content Include="CoachEditProfile.aspx" />
+    <Content Include="CoachProfile.aspx" />
+    <Content Include="EnableFacialAuthentication.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
     <Content Include="Coaches.aspx" />
     <Content Include="CoachSubmitted.aspx" />
@@ -155,6 +159,7 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="TestPage.aspx" />
     <Content Include="ThankYou.aspx" />
     <Content Include="Wishlist.aspx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
@@ -225,6 +230,13 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Authentication.aspx.cs">
+      <DependentUpon>Authentication.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Authentication.aspx.designer.cs">
+      <DependentUpon>Authentication.aspx</DependentUpon>
+    </Compile>
     <Compile Include="BecomeACoach.aspx.cs">
       <DependentUpon>BecomeACoach.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -232,12 +244,47 @@
     <Compile Include="BecomeACoach.aspx.designer.cs">
       <DependentUpon>BecomeACoach.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CameraAccess.aspx.cs">
+      <DependentUpon>CameraAccess.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CameraAccess.aspx.designer.cs">
+      <DependentUpon>CameraAccess.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Checkout.aspx.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Checkout.aspx.designer.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CoachDetails.aspx.cs">
+      <DependentUpon>CoachDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CoachDetails.aspx.designer.cs">
+      <DependentUpon>CoachDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CoachEditProfile.aspx.cs">
+      <DependentUpon>CoachEditProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CoachEditProfile.aspx.designer.cs">
+      <DependentUpon>CoachEditProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CoachProfile.aspx.cs">
+      <DependentUpon>CoachProfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CoachProfile.aspx.designer.cs">
+      <DependentUpon>CoachProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EnableFacialAuthentication.aspx.cs">
+      <DependentUpon>EnableFacialAuthentication.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EnableFacialAuthentication.aspx.designer.cs">
+      <DependentUpon>EnableFacialAuthentication.aspx</DependentUpon>
     </Compile>
     <Compile Include="SignUpCoachesDetails.aspx.cs">
       <DependentUpon>SignUpCoachesDetails.aspx</DependentUpon>
@@ -456,6 +503,13 @@
     </Compile>
     <Compile Include="StaffPage.aspx.designer.cs">
       <DependentUpon>StaffPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TestPage.aspx.cs">
+      <DependentUpon>TestPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestPage.aspx.designer.cs">
+      <DependentUpon>TestPage.aspx</DependentUpon>
     </Compile>
     <Compile Include="ThankYou.aspx.cs">
       <DependentUpon>ThankYou.aspx</DependentUpon>

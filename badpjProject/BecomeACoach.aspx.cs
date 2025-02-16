@@ -13,12 +13,35 @@ namespace badpjProject
         {
             return Guid.NewGuid().ToString();
         }
-
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                // Retrieve the logged-in user's ID from session
+                if (Session["UserID"] == null)
+                {
+                    // If not logged in, redirect to login page
+                    Response.Redirect("~/Login.aspx");
+                    return;
+                }
+                int userId = int.Parse(Session["UserID"].ToString());
+                CoachStatus cs = new CoachStatus();
 
+                // Check if the logged-in user already has a coach application
+                if (cs.IsUserAlreadyCoach(userId))
+                {
+                    // Hide the form and show the "Pending" status message
+                    formDiv.Visible = false;
+                    lblStatus.Text = "Your application is pending.";
+                    lblStatus.Visible = true;
+                }
+                else
+                {
+                    formDiv.Visible = true;
+                    lblStatus.Visible = false;
+                }
+            }
         }
-
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
             ClearErrorStyles();
@@ -29,41 +52,91 @@ namespace badpjProject
                 return;
             }
 
-            // Check file extension
-            string[] allowedExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
-            string fileExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
+            if (Session["UserID"] == null)
+            {
+                Response.Redirect("~/Login.aspx");
+                return;
+            }
+            int userId = int.Parse(Session["UserID"].ToString());
 
-            if (!allowedExtensions.Contains(fileExtension))
+            string generatedCoachId = GenerateCoachId();
+
+            string[] allowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
+            string videoExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
+
+            if (!allowedVideoExtensions.Contains(videoExtension))
             {
                 return;
             }
+            string uniqueVideoFileName = Guid.NewGuid().ToString() + videoExtension;
+            string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueVideoFileName;
 
-            // Generate unique coach ID and file name
-            string generatedId = GenerateCoachId();
-            string uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
-            string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueFileName;
+            string profilePicFileName = "";
+            string profilePicSavePath = "";
+            if (fu_ProfilePic.HasFile)
+            {
+                string[] allowedImageExtensions = { ".jpg", ".jpeg", ".png" };
+                string imageExtension = Path.GetExtension(fu_ProfilePic.FileName).ToLower();
+                if (!allowedImageExtensions.Contains(imageExtension))
+                {
+                    return;
+                }
+                profilePicFileName = Guid.NewGuid().ToString() + imageExtension;
+                profilePicSavePath = Server.MapPath("~/Uploads/") + profilePicFileName;
+            }
+
+
 
             string status = "Pending";
 
             Coaches coach = new Coaches(
-                generatedId,
-                tb_Name.Text,
-                tb_Email.Text,
-                int.Parse(tb_Hp.Text),
-                tb_AboutYou.Text,
+                generatedCoachId,
+                tb_Name.Text.Trim(),
+                tb_Email.Text.Trim(),
+                int.Parse(tb_Hp.Text.Trim()),
+                tb_AboutYou.Text.Trim(),
                 ddl_Qualification.SelectedValue,
-                uniqueFileName,
-                status
+                uniqueVideoFileName,
+                status,
+                profilePicFileName,
+                ddl_AreaOfExpertise.SelectedValue  
             );
 
-            int result = coach.CoachesInsert();
-
-            if (result > 0)
+            try
             {
-                fu_Coach.SaveAs(saveVideoPath);
-                Response.Redirect("~/CoachSubmitted.aspx");
+                int result = coach.CoachesInsert();
+                if (result > 0)
+                {
+                    CoachStatus cs = new CoachStatus();
+                    bool insertStatus = cs.InsertCoachStatus(userId, generatedCoachId);
+                    if (insertStatus)
+                    {
+                        fu_Coach.SaveAs(saveVideoPath);
+                        if (fu_ProfilePic.HasFile)
+                        {
+                            fu_ProfilePic.SaveAs(profilePicSavePath);
+                        }
+                        Response.Redirect("~/CoachSubmitted.aspx");
+                    }
+                    else
+                    {
+                        lblStatus.Text = "Error: Failed to insert coach status record. Please try again later.";
+                        lblStatus.Visible = true;
+                    }
+                }
+                else
+                {
+                    lblStatus.Text = "Error: Failed to insert coach record. Please try again later.";
+                    lblStatus.Visible = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                lblStatus.Text = "An unexpected error occurred: " + ex.Message;
+                lblStatus.Visible = true;
             }
         }
+
         private void ClearErrorStyles()
         {
             // Remove the error class and reset to default (black) border
@@ -72,6 +145,7 @@ namespace badpjProject
             tb_Hp.CssClass = tb_Hp.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             tb_AboutYou.CssClass = tb_AboutYou.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             ddl_Qualification.CssClass = ddl_Qualification.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            ddl_AreaOfExpertise.CssClass = ddl_AreaOfExpertise.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             fu_Coach.CssClass = fu_Coach.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
         }
 
@@ -104,6 +178,10 @@ namespace badpjProject
             if (!rfv_Qualification.IsValid)
             {
                 ddl_Qualification.CssClass += " input-validation-error";
+            }
+            if (!rfv_AreaOfExpertise.IsValid)
+            {
+                ddl_AreaOfExpertise.CssClass += " input-validation-error";
             }
             if (!rfv_Coach.IsValid)
             {
