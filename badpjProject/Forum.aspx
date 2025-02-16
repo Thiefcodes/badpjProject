@@ -11,6 +11,7 @@
         <asp:BoundField DataField="CreatedBy" HeaderText="Author" />
         <asp:BoundField DataField="CreatedAt" HeaderText="Date Created" DataFormatString="{0:yyyy-MM-dd}" />
         <asp:BoundField DataField="Views" HeaderText="Views" /> 
+        <asp:BoundField DataField="PostCount" HeaderText="Posts" />
         <asp:ButtonField CommandName="ViewThread" ItemStyle-CssClass="btn-custom" Text="Select" ButtonType="Button"/>
         <asp:ButtonField CommandName="UpdateThread" ItemStyle-CssClass="btn-custom" Text="Update" ButtonType="Button"/>
         <asp:ButtonField CommandName="DeleteThread" ItemStyle-CssClass="btn-custom" Text="Delete" ButtonType="Button" />
