@@ -10,44 +10,41 @@ namespace badpjProject
         {
             if (!IsPostBack)
             {
+                // Retrieve the coach ID from the query string.
                 string coachID = Request.QueryString["Id"];
-                if (!string.IsNullOrEmpty(coachID))
+                if (string.IsNullOrEmpty(coachID))
                 {
-                    
-                    Coaches coach = new Coaches().getCoaches(coachID);
-                    if (coach != null)
-                    {
-                        lbl_CoachName.Text = coach.Coach_Name;
-                        lbl_CoachEmail.Text = coach.Coach_Email;
-                        lbl_CoachHp.Text = coach.Coach_Hp.ToString();
-                        lbl_CoachDesc.Text = coach.Coach_Desc;
-                        lbl_CoachQualification.Text = coach.Coach_Qualification;
-                        lbl_CoachStatus.Text = coach.Coach_Status;
+                    Response.Redirect("ViewCoaches.aspx");
+                    return;
+                }
 
-                        string videoPath = $"~/Uploads/{coach.Coach_Video}";
+                Coaches coach = new Coaches().getCoaches(coachID);
+                if (coach == null)
+                {
+                    Response.Redirect("ViewCoaches.aspx");
+                    return;
+                }
 
-                        // Debugging: Show the resolved video path in an alert
-                        string resolvedVideoPath = Server.MapPath(videoPath);
-                        if (File.Exists(resolvedVideoPath))
-                        {
-                            videoSource.Attributes["src"] = ResolveUrl(videoPath);
-                            videoContainer.Visible = true;
-                            videoPlayer.Visible = true;
-                            videoPlayer.DataBind();
-                        }
-                        else
-                        {
-                            videoContainer.Visible = false;
-                        }
-                    }
-                    else
-                    {
-                      Response.Redirect("ViewCoaches.aspx");
-                    }
+                // Set coach details into labels.
+                lbl_CoachName.Text = coach.Coach_Name;
+                lbl_CoachEmail.Text = coach.Coach_Email;
+                lbl_CoachHp.Text = coach.Coach_Hp.ToString();
+                lbl_CoachDesc.Text = coach.Coach_Desc;
+                lbl_CoachQualification.Text = coach.Coach_Qualification;
+                lbl_CoachStatus.Text = coach.Coach_Status;
+
+                // Setup the video player if the video file exists.
+                string videoPath = $"~/Uploads/{coach.Coach_Video}";
+                string resolvedVideoPath = Server.MapPath(videoPath);
+                if (File.Exists(resolvedVideoPath))
+                {
+                    videoSource.Attributes["src"] = ResolveUrl(videoPath);
+                    videoContainer.Visible = true;
+                    videoPlayer.Visible = true;
                 }
                 else
                 {
-                   Response.Redirect("ViewCoaches.aspx");
+                    videoContainer.Visible = false;
                 }
             }
         }
