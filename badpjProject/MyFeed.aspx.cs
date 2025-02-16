@@ -46,7 +46,8 @@ namespace badpjProject
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             string query = @"
             SELECT t.ThreadID, t.Title, t.CreatedAt, t.Views,
-            COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount
+            COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount,
+            t.ImagePath
             FROM Threads t
             WHERE t.CreatedBy = @UserID
             ORDER BY t.CreatedAt DESC"; // Order by date created (latest first)
@@ -259,7 +260,8 @@ namespace badpjProject
               SELECT TOP 3 t.ThreadID, 
               t.Views, 
               t.Title, 
-              COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount
+              COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount,
+              t.ImagePath
               FROM Threads t
               ORDER BY t.Views DESC, PostCount DESC;"; // Select one random thread
 
