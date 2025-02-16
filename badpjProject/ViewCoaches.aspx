@@ -25,7 +25,7 @@
         </div>
 
         <!-- Single Repeater for Coaches -->
-        <asp:Repeater ID="rptCoaches" runat="server" OnItemCommand="rptCoaches_ItemCommand">
+        <asp:Repeater ID="rptCoaches" runat="server" OnItemCommand="rptCoaches_ItemCommand" OnItemDataBound="rptCoaches_ItemDataBound">
             <HeaderTemplate>
                 <table class="table table-striped" id="coachesTable">
                     <thead>
@@ -42,13 +42,26 @@
                     <td><%# Eval("Coach_Name") %></td>
                     <td><%# Eval("Coach_Email") %></td>
                     <td>
-                        <asp:LinkButton ID="hlViewDetails" runat="server" CssClass="btn btn-info btn-sm"
-                            CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>' Text="View Details" />
-                        &nbsp;
-            <!-- Only show Remove action (with confirmation) for approved coaches -->
-                        <asp:LinkButton ID="btnRemove" runat="server" CssClass="btn btn-danger btn-sm"
-                            CommandName="Remove" CommandArgument='<%# Eval("Coach_Id") %>' Text="Remove"
-                            OnClientClick="return confirm('Do you want to remove this coach?');" />
+                        <asp:Panel ID="pnlApproveCoach" runat="server">
+                            <asp:LinkButton ID="btnViewDetails" runat="server" CssClass="btn btn-info btn-sm"
+                                CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>' Text="View Details" />
+                            &nbsp;
+                            <asp:LinkButton ID="btnApprove" runat="server" CssClass="btn btn-success btn-sm"
+                                CommandName="Approve" CommandArgument='<%# Eval("Coach_Id") %>' Text="Approve" />
+                            &nbsp;
+                            <asp:LinkButton ID="btnReject" runat="server" CssClass="btn btn-danger btn-sm"
+                                CommandName="Remove" CommandArgument='<%# Eval("Coach_Id") %>' Text="Reject"
+                                OnClientClick="return confirm('Do you want to reject this coach?');" />
+                        </asp:Panel>
+
+                        <asp:Panel ID="pnlRemoveCoach" runat="server">
+                            <asp:LinkButton ID="LinkButton1" runat="server" CssClass="btn btn-info btn-sm"
+                                CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>' Text="View Details" />
+                            &nbsp;
+                            <asp:LinkButton ID="btnRemove" runat="server" CssClass="btn btn-danger btn-sm"
+                                CommandName="Remove" CommandArgument='<%# Eval("Coach_Id") %>' Text="Remove"
+                                OnClientClick="return confirm('Do you want to remove this coach?');" />
+                        </asp:Panel>
                     </td>
                 </tr>
             </ItemTemplate>

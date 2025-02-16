@@ -61,9 +61,11 @@ namespace badpjProject
             else
             {
                 rptCoaches.Visible = false;
-                litNoCoaches.Text = $"<div class='alert alert-warning text-center' role='alert'>" +
-                                    $"<strong>Oops!</strong> There are currently no {statusFilter.ToLower()} coaches to display. Please check back later." +
-                                    $"</div>";
+                litNoCoaches.Text = $@"
+                    <div class='alert alert-warning text-center' role='alert'>
+                        <strong>Oops!</strong> There are currently no {statusFilter.ToLower()} coaches to display. 
+                        Please check back later.
+                    </div>";
             }
         }
 
@@ -77,6 +79,35 @@ namespace badpjProject
             BindCoaches();
         }
 
+        /// <summary>
+        /// Toggle panels in ItemDataBound based on the current filter (Pending or Approved).
+        /// </summary>
+        protected void rptCoaches_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Find the panels in this row
+                Panel pnlApproveCoach = (Panel)e.Item.FindControl("pnlApproveCoach");
+                Panel pnlRemoveCoach = (Panel)e.Item.FindControl("pnlRemoveCoach");
+
+                // Check the filter
+                string currentFilter = ddlStatusFilter.SelectedValue; // e.g. "Pending" or "Approved"
+
+                if (currentFilter.Equals("Pending", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Show Approve/Reject panel, hide Remove panel
+                    pnlApproveCoach.Visible = true;
+                    pnlRemoveCoach.Visible = false;
+                }
+                else if (currentFilter.Equals("Approved", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Hide Approve/Reject panel, show Remove panel
+                    pnlApproveCoach.Visible = false;
+                    pnlRemoveCoach.Visible = true;
+                }
+            }
+        }
+
         protected void rptCoaches_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             string coachID = e.CommandArgument.ToString();
@@ -85,8 +116,31 @@ namespace badpjProject
             {
                 Response.Redirect($"SignUpCoachesDetails.aspx?id={coachID}");
             }
+            else if (e.CommandName == "Approve")
+            {
+                // Approve the coach
+                bool coachApproved = coachManager.ApproveCoach(coachID);
+                if (coachApproved)
+                {
+                    // After approving, optionally update the CoachStatus record to set isCoach = true
+                    CoachStatus cs = new CoachStatus();
+                    bool statusUpdated = cs.UpdateIsCoachStatus(coachID);
+
+                    if (statusUpdated)
+                        ShowMessage("Coach approved successfully!", "success");
+                    else
+                        ShowMessage("Coach approved, but failed to update coach status.", "error");
+                }
+                else
+                {
+                    ShowMessage("Error approving coach.", "error");
+                }
+                BindCoaches();
+            }
             else if (e.CommandName == "Remove")
             {
+                // This handles both "Reject" (for Pending) and "Remove" (for Approved), 
+                // as you're reusing the same command
                 bool coachDeleted = coachManager.RejectCoach(coachID);
                 bool coachStatusDeleted = false;
                 if (coachDeleted)
