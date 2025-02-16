@@ -51,40 +51,22 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.DropDownList ddlSort;
 
         /// <summary>
-        /// rptPendingCoaches control.
+        /// rptCoaches control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPendingCoaches;
+        protected global::System.Web.UI.WebControls.Repeater rptCoaches;
 
         /// <summary>
-        /// litNoPendingCoaches control.
+        /// litNoCoaches control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litNoPendingCoaches;
-
-        /// <summary>
-        /// rptApprovedCoaches control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptApprovedCoaches;
-
-        /// <summary>
-        /// litNoApprovedCoaches control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litNoApprovedCoaches;
+        protected global::System.Web.UI.WebControls.Literal litNoCoaches;
 
         /// <summary>
         /// lblMessage control.
