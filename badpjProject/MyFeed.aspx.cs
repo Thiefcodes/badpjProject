@@ -28,6 +28,7 @@ namespace badpjProject
                 {
                     LoadRandomPosts();
                 }
+                LoadUserThreadStats();
                 LoadRandomThread();
                 
                 
@@ -72,12 +73,18 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 string query = @"
-            SELECT p.PostID, p.Content, COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, p.CreatedAt, 
-                   p.Likes, 
-                   CASE WHEN pl.UserID IS NOT NULL THEN 'Liked' ELSE 'Like' END AS LikeStatus
+            SELECT 
+            p.PostID, 
+            p.Content, 
+            COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
+            p.CreatedAt, 
+            p.ThreadID,
+            p.Likes, 
+            CASE WHEN pl.UserID IS NOT NULL THEN 'Liked' ELSE 'Like' END AS LikeStatus
             FROM Posts p
             LEFT JOIN [Table] u ON p.CreatedBy = u.Id
-            LEFT JOIN PostLikes pl ON p.PostID = pl.PostID AND pl.UserID = @UserID";
+            LEFT JOIN PostLikes pl ON p.PostID = pl.PostID AND pl.UserID = @UserID
+            WHERE p.CreatedBy = @UserID";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@UserID", userId);
@@ -87,6 +94,36 @@ namespace badpjProject
 
                 gvPosts.DataSource = dt;
                 gvPosts.DataBind();
+            }
+        }
+
+        protected void LoadUserThreadStats()
+        {
+            int userId = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"]) : 0; // Ensure the user is logged in
+            string query = @"
+        SELECT 
+            COALESCE(SUM(t.Views), 0) AS TotalViews,
+            COALESCE(COUNT(pl.PostID), 0) AS TotalLikes
+        FROM Threads t
+        LEFT JOIN Posts p ON t.ThreadID = p.ThreadID
+        LEFT JOIN PostLikes pl ON p.PostID = pl.PostID
+        WHERE t.CreatedBy = @UserID;
+    ";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserID", userId);
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        lblTotalViews.Text = reader["TotalViews"].ToString();
+                        lblTotalLikes.Text = reader["TotalLikes"].ToString();
+                    }
+                }
             }
         }
         protected void gvThreads_RowCommand(object sender, GridViewCommandEventArgs e)

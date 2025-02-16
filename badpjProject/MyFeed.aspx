@@ -4,6 +4,13 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <link href="ForumStyles.css" rel="stylesheet" type="text/css" />
     <h2>My Feed</h2>
+    <h3>Your Stats</h3>
+    <h5>Views on your threads:</h5>
+    <asp:Label ID="lblTotalViews" runat="server" CssClass="stat-label" Style="font-size: 24px; font-weight: bold;"></asp:Label>
+    <br />
+    <h5>Likes on your posts:</h5>
+    <asp:Label ID="lblTotalLikes" runat="server" CssClass="stat-label" Style="font-size: 24px; font-weight: bold;"></asp:Label>
+    <br />
     <h3>Top 3 Threads</h3>
     <asp:GridView ID="gvRandomThreads" runat="server" CellPadding="10" AutoGenerateColumns="False" OnRowCommand="gvRandomThreads_RowCommand"
         DataKeyNames="ThreadID" OnSelectedIndexChanged="gvRandomThreads_SelectedIndexChanged">
@@ -14,6 +21,7 @@
           <asp:ButtonField Text="Select" ItemStyle-CssClass="btn-custom" CommandName="SelectThread" ButtonType="Button" />
         </Columns>
     </asp:GridView>
+    <br />
     <h3>Selected Posts:</h3>
     <asp:GridView ID="gvRandomPosts" runat="server" CellPadding="10" AutoGenerateColumns="False" OnRowCommand="gvRandomPosts_RowCommand"
         OnRowDataBound="gvRandomPosts_RowDataBound"
