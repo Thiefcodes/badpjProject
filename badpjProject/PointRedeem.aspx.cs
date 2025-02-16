@@ -3,6 +3,8 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Net.Mail;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.UI.WebControls;
 
 namespace badpjProject
@@ -23,9 +25,6 @@ namespace badpjProject
             }
         }
 
-        /// <summary>
-        /// Loads the current user's points from the database.
-        /// </summary>
         private void LoadUserPoints()
         {
             int userId = Convert.ToInt32(Session["UserId"]);
@@ -44,16 +43,13 @@ namespace badpjProject
             }
         }
 
-        /// <summary>
-        /// Loads the list of redeemable products from the RedeemProduct table.
-        /// </summary>
         private void LoadRedeemProducts()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                // Query now references RedeemProduct instead of Products.
+                // Query now references RedeemProduct
                 string query = "SELECT ProductId, ProductName, ProductImage, CostPoints FROM RedeemProduct";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -66,9 +62,6 @@ namespace badpjProject
             }
         }
 
-        /// <summary>
-        /// Redeems a product if the user has enough points.
-        /// </summary>
         protected void btnRedeem_Command(object sender, CommandEventArgs e)
         {
             int productId = Convert.ToInt32(e.CommandArgument);
@@ -132,10 +125,10 @@ namespace badpjProject
                 }
             }
 
-            // Optionally, record the redemption transaction here.
+            // Record the transaction in the blockchain ledger.
+            AddTransactionBlock(userId, -cost, "Redeem");
 
-            // Send email confirmation using your custom email sending method.
-            // Retrieve the user's email first.
+            // Retrieve the user's email.
             string email = "";
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -167,7 +160,6 @@ namespace badpjProject
 
         /// <summary>
         /// Sends an email confirmation for the redemption.
-        /// Uses the same SMTP method as your OTP email.
         /// </summary>
         private bool SendRedemptionEmail(string recipientEmail, string productName, int cost)
         {
@@ -181,8 +173,8 @@ namespace badpjProject
                 mail.Subject = "Redemption Confirmation";
                 mail.Body = $"Dear User,\n\nYou have successfully redeemed '{productName}' for {cost} points.\n\nThank you for using our service!";
 
-                smtpServer.Port = 587; // Use 465 for SSL if needed
-                smtpServer.Credentials = new NetworkCredential("ruihernh@gmail.com", "yqqh pwcr byeq sseo"); // Replace with your credentials or App Password
+                smtpServer.Port = 587;
+                smtpServer.Credentials = new NetworkCredential("ruihernh@gmail.com", "yqqh pwcr byeq sseo"); // Use your credentials or App Password
                 smtpServer.EnableSsl = true;
 
                 smtpServer.Send(mail);
@@ -190,9 +182,77 @@ namespace badpjProject
             }
             catch (Exception ex)
             {
-                // Optionally log the error
                 Console.WriteLine($"Error sending redemption email: {ex.Message}");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Adds a new transaction block to the PointsTransactionLedger table.
+        /// </summary>
+        private void AddTransactionBlock(int userId, int pointsChanged, string transactionType)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            DateTime transactionDate = DateTime.Now;
+            string previousHash = GetLastBlockHash(connectionString);
+            string blockData = $"{userId}{transactionType}{pointsChanged}{transactionDate}{previousHash}";
+            string currentHash = ComputeSHA256Hash(blockData);
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = @"INSERT INTO PointsTransactionLedger (UserId, TransactionType, PointsChanged, TransactionDate, PreviousHash, CurrentHash)
+                                 VALUES (@UserId, @TransactionType, @PointsChanged, @TransactionDate, @PreviousHash, @CurrentHash)";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@TransactionType", transactionType);
+                    cmd.Parameters.AddWithValue("@PointsChanged", pointsChanged);
+                    cmd.Parameters.AddWithValue("@TransactionDate", transactionDate);
+                    cmd.Parameters.AddWithValue("@PreviousHash", previousHash);
+                    cmd.Parameters.AddWithValue("@CurrentHash", currentHash);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the CurrentHash of the most recent transaction block.
+        /// If none exists, returns "0".
+        /// </summary>
+        private string GetLastBlockHash(string connectionString)
+        {
+            string lastHash = "0";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT TOP 1 CurrentHash FROM PointsTransactionLedger ORDER BY TransactionId DESC";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        lastHash = result.ToString();
+                    }
+                }
+            }
+            return lastHash;
+        }
+
+        /// <summary>
+        /// Computes a SHA256 hash of the given input string.
+        /// </summary>
+        private string ComputeSHA256Hash(string rawData)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                StringBuilder builder = new StringBuilder();
+                foreach (var b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
     }
