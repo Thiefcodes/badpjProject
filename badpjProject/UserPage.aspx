@@ -10,12 +10,15 @@
             <h5 class="text-center text-muted">
                 <asp:Label ID="UserEmailLabel" runat="server" Text="user@example.com"></asp:Label>
             </h5>
-             <h5 class="text-center text-muted">
-     <asp:Label ID="RoleDisplay" runat="server" Text="user@example.com"></asp:Label>
- </h5>
-             <h5 class="text-center text-muted">
-     <asp:Label ID="DescriptionDisplay" runat="server" Text="user@example.com"></asp:Label>
- </h5>
+            <h5 class="text-center text-muted">
+                <asp:Label ID="RoleDisplay" runat="server" Text="User Role"></asp:Label>
+            </h5>
+            <h5 class="text-center text-muted">
+                <asp:Label ID="DescriptionDisplay" runat="server" Text="User Description"></asp:Label>
+            </h5>
+            <asp:Button ID="EditProfileButton" runat="server" Text="Edit Profile" CssClass="btn btn-success mt-3 mb-2" OnClick="EditProfileButton_Click" />
+            <!-- New button for enabling facial authentication -->
+            <asp:Button ID="EnableFacialAuthButton" runat="server" Text="Enable Facial Authentication" CssClass="btn btn-warning mt-2 mb-4" OnClick="EnableFacialAuthButton_Click" />
         </div>
 
         <div class="card shadow-sm p-4 mt-3" style="width: 100%; max-width: 600px; border-radius: 10px;">
@@ -23,23 +26,22 @@
             <hr />
             <!-- Comments Section -->
             <asp:Repeater ID="CommentsRepeater" runat="server">
-    <ItemTemplate>
-        <div class="comment mb-3">
-            <p><strong><%# Eval("CommenterName") %>:</strong> <%# Eval("CommentText") %></p>
-            <small class="text-muted"><%# Eval("DateCreated", "{0:MMM dd, yyyy HH:mm}") %></small>
-            <asp:LinkButton 
-                ID="DeleteCommentButton" 
-                runat="server" 
-                CommandArgument='<%# Eval("CommentId") %>' 
-                CssClass="btn btn-danger btn-sm float-end" 
-                Text="Delete" 
-                OnClick="DeleteCommentButton_Click" 
-                Visible='<%# Convert.ToBoolean(Eval("IsOwner")) %>'>
-            </asp:LinkButton>
-        </div>
-    </ItemTemplate>
-</asp:Repeater>
-
+                <ItemTemplate>
+                    <div class="comment mb-3">
+                        <p><strong><%# Eval("CommenterName") %>:</strong> <%# Eval("CommentText") %></p>
+                        <small class="text-muted"><%# Eval("DateCreated", "{0:MMM dd, yyyy HH:mm}") %></small>
+                        <asp:LinkButton 
+                            ID="DeleteCommentButton" 
+                            runat="server" 
+                            CommandArgument='<%# Eval("CommentId") %>' 
+                            CssClass="btn btn-danger btn-sm float-end" 
+                            Text="Delete" 
+                            OnClick="DeleteCommentButton_Click" 
+                            Visible='<%# Convert.ToBoolean(Eval("IsOwner")) %>'>
+                        </asp:LinkButton>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
 
             <!-- Add Comment Form -->
             <asp:TextBox ID="CommentTextBox" runat="server" CssClass="form-control mt-3" placeholder="Leave a comment..." TextMode="MultiLine"></asp:TextBox>

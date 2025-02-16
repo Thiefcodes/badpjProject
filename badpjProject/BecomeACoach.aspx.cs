@@ -13,60 +13,179 @@ namespace badpjProject
         {
             return Guid.NewGuid().ToString();
         }
-
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                // Retrieve the logged-in user's ID from session
+                if (Session["UserID"] == null)
+                {
+                    // If not logged in, redirect to login page
+                    Response.Redirect("~/Login.aspx");
+                    return;
+                }
+                int userId = int.Parse(Session["UserID"].ToString());
+                CoachStatus cs = new CoachStatus();
 
+                // Check if the logged-in user already has a coach application
+                if (cs.IsUserAlreadyCoach(userId))
+                {
+                    // Hide the form and show the "Pending" status message
+                    formDiv.Visible = false;
+                    lblStatus.Text = "Your application is pending.";
+                    lblStatus.Visible = true;
+                }
+                else
+                {
+                    formDiv.Visible = true;
+                    lblStatus.Visible = false;
+                }
+            }
         }
-
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
-            // Debugging: Check if any required fields are missing
-            if (string.IsNullOrWhiteSpace(tb_Name.Text) ||
-                string.IsNullOrWhiteSpace(tb_Email.Text) ||
-                string.IsNullOrWhiteSpace(tb_Hp.Text) ||
-                string.IsNullOrWhiteSpace(tb_AboutYou.Text) ||
-                string.IsNullOrWhiteSpace(ddl_Qualification.SelectedValue) ||
-                !fu_Coach.HasFile)
+            ClearErrorStyles();
+
+            if (!IsValid)
             {
-                Response.Write("<script>alert('All fields are required');</script>");
+                ApplyErrorStyles();
                 return;
             }
 
-            string[] allowedExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
-            string fileExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
-
-            if (!allowedExtensions.Contains(fileExtension))
+            if (Session["UserID"] == null)
             {
-                Response.Write("<script>alert('Please upload a valid video file (e.g., .mp4, .avi, .mov, .wmv)');</script>");
+                Response.Redirect("~/Login.aspx");
                 return;
             }
+            int userId = int.Parse(Session["UserID"].ToString());
 
-            int result = 0;
-            string uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+            string generatedCoachId = GenerateCoachId();
 
-            // Debugging: Generate coach ID and output to the alert
-            string generatedId = GenerateCoachId();
+            string[] allowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
+            string videoExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
+
+            if (!allowedVideoExtensions.Contains(videoExtension))
+            {
+                return;
+            }
+            string uniqueVideoFileName = Guid.NewGuid().ToString() + videoExtension;
+            string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueVideoFileName;
+
+            string profilePicFileName = "";
+            string profilePicSavePath = "";
+            if (fu_ProfilePic.HasFile)
+            {
+                string[] allowedImageExtensions = { ".jpg", ".jpeg", ".png" };
+                string imageExtension = Path.GetExtension(fu_ProfilePic.FileName).ToLower();
+                if (!allowedImageExtensions.Contains(imageExtension))
+                {
+                    return;
+                }
+                profilePicFileName = Guid.NewGuid().ToString() + imageExtension;
+                profilePicSavePath = Server.MapPath("~/Uploads/") + profilePicFileName;
+            }
+
+
 
             string status = "Pending";
 
-            Coaches coach = new Coaches(generatedId, tb_Name.Text, tb_Email.Text,
-                                        int.Parse(tb_Hp.Text), tb_AboutYou.Text, ddl_Qualification.Text, uniqueFileName, status);
+            Coaches coach = new Coaches(
+                generatedCoachId,
+                tb_Name.Text.Trim(),
+                tb_Email.Text.Trim(),
+                int.Parse(tb_Hp.Text.Trim()),
+                tb_AboutYou.Text.Trim(),
+                ddl_Qualification.SelectedValue,
+                uniqueVideoFileName,
+                status,
+                profilePicFileName,
+                ddl_AreaOfExpertise.SelectedValue  
+            );
 
-            result = coach.CoachesInsert();
-
-            // Debugging: Check if the insertion was successful
-            if (result > 0)
+            try
             {
-                string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueFileName;
-
-                fu_Coach.SaveAs(saveVideoPath);
-                Response.Write("<script>alert('Submission successful');</script>");
+                int result = coach.CoachesInsert();
+                if (result > 0)
+                {
+                    CoachStatus cs = new CoachStatus();
+                    bool insertStatus = cs.InsertCoachStatus(userId, generatedCoachId);
+                    if (insertStatus)
+                    {
+                        fu_Coach.SaveAs(saveVideoPath);
+                        if (fu_ProfilePic.HasFile)
+                        {
+                            fu_ProfilePic.SaveAs(profilePicSavePath);
+                        }
+                        Response.Redirect("~/CoachSubmitted.aspx");
+                    }
+                    else
+                    {
+                        lblStatus.Text = "Error: Failed to insert coach status record. Please try again later.";
+                        lblStatus.Visible = true;
+                    }
+                }
+                else
+                {
+                    lblStatus.Text = "Error: Failed to insert coach record. Please try again later.";
+                    lblStatus.Visible = true;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Debugging: In case the insertion failed
-                Response.Write("<script>alert('Submission NOT successful');</script>");
+                lblStatus.Text = "An unexpected error occurred: " + ex.Message;
+                lblStatus.Visible = true;
+            }
+        }
+
+        private void ClearErrorStyles()
+        {
+            // Remove the error class and reset to default (black) border
+            tb_Name.CssClass = tb_Name.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_Email.CssClass = tb_Email.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_Hp.CssClass = tb_Hp.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            tb_AboutYou.CssClass = tb_AboutYou.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            ddl_Qualification.CssClass = ddl_Qualification.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            ddl_AreaOfExpertise.CssClass = ddl_AreaOfExpertise.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            fu_Coach.CssClass = fu_Coach.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+        }
+
+        private void ApplyErrorStyles()
+        {
+            if (!rfv_Name.IsValid)
+            {
+                tb_Name.CssClass += " input-validation-error";
+            }
+            if (!rfv_Email.IsValid)
+            {
+                tb_Email.CssClass += " input-validation-error";
+            }
+            if (!rev_Email.IsValid)
+            {
+                tb_Email.CssClass += " input-validation-error";
+            }
+            if (!rfv_Hp.IsValid)
+            {
+                tb_Hp.CssClass += " input-validation-error";
+            }
+            if (!rev_Hp.IsValid)
+            {
+                tb_Hp.CssClass += " input-validation-error";
+            }
+            if (!rfv_AboutYou.IsValid)
+            {
+                tb_AboutYou.CssClass += " input-validation-error";
+            }
+            if (!rfv_Qualification.IsValid)
+            {
+                ddl_Qualification.CssClass += " input-validation-error";
+            }
+            if (!rfv_AreaOfExpertise.IsValid)
+            {
+                ddl_AreaOfExpertise.CssClass += " input-validation-error";
+            }
+            if (!rfv_Coach.IsValid)
+            {
+                fu_Coach.CssClass += " input-validation-error";
             }
         }
     }

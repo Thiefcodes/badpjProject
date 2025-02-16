@@ -22,4 +22,6 @@
 
         </div>
     </div>
+    <asp:Button ID="Button2" runat="server" Text="Login" CssClass="btn btn-primary w-100" OnClick="Button2_Click1" />
+
 </asp:Content>

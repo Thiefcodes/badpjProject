@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -49,14 +51,79 @@ namespace badpjProject
                 }
                 else
                 {
-                    Response.Redirect("ShoppingCart.aspx"); // Redirect if cart is empty
+                    Response.Redirect("ShoppingCart.aspx");
                 }
             }
             else
             {
-                Response.Redirect("ShoppingCart.aspx"); // Redirect if session expired
+                Response.Redirect("ShoppingCart.aspx");
             }
         }
+        protected void btnPlaceOrder_Click(object sender, EventArgs e)
+        {
+            // Check if the Page is valid
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
+            if (Session["Cart"] == null)
+            {
+                Response.Write("<script>alert('Your cart is empty.');</script>");
+                return;
+            }
+
+            List<CartItem> cart = (List<CartItem>)Session["Cart"];
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                using (SqlTransaction transaction = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // Generate a unique OrderID
+                        int orderId = new Random().Next(1000, 9999);
+
+                        string insertQuery = @"
+                    INSERT INTO Orders (OrderID, UserID, ProductName, Quantity, Price, Address, City, PostalCode, OrderDate, Status)
+                    VALUES (@OrderID, @UserID, @ProductName, @Quantity, @Price, @Address, @City, @PostalCode, GETDATE(), 'Pending')";
+
+                        foreach (var item in cart)
+                        {
+                            SqlCommand cmd = new SqlCommand(insertQuery, conn, transaction);
+                            cmd.Parameters.AddWithValue("@OrderID", orderId);
+                            cmd.Parameters.AddWithValue("@UserID", Session["UserID"]);
+                            cmd.Parameters.AddWithValue("@ProductName", item.ProductName);
+                            cmd.Parameters.AddWithValue("@Quantity", item.Quantity);
+                            cmd.Parameters.AddWithValue("@Price", item.Price);
+                            cmd.Parameters.AddWithValue("@Address", txtAddress.Text);
+                            cmd.Parameters.AddWithValue("@City", txtCity.Text);
+                            cmd.Parameters.AddWithValue("@PostalCode", txtPostalCode.Text);
+
+                            cmd.ExecuteNonQuery();
+                        }
+                        transaction.Commit();
+                        Session["Cart"] = null;
+                        Response.Redirect("ThankYou.aspx");
+                    }
+                    catch (Exception ex)
+                    {
+                        if (transaction.Connection != null)
+                        {
+                            transaction.Rollback();
+                        }
+
+                        Response.Write("<script>alert('An error occurred while placing the order: " + ex.Message + "');</script>");
+                    }
+                }
+            }
+        }
+
+
+
         public class OrderSummaryItem
         {
             public string ProductName { get; set; }

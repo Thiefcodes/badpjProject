@@ -41,7 +41,7 @@
                                 Height="50px" Width="50px" />
                         </asp:HyperLink>
                     </td>
-                    <td><%# Eval("ProductName") %></td>
+
                      <td>
                         <%# Eval("ProductName") %>
                         <asp:Label ID="lblWishlistIndicator" runat="server"

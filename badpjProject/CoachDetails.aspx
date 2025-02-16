@@ -1,43 +1,25 @@
-﻿<%@ Page Title="Coach Details" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="CoachDetails.aspx.cs" Inherits="badpjProject.CoachDetail" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <h2>COACH DETAILS</h2>
-    <div class="details-container">
-        <!-- Video Section -->
-        <div class="video-container" ID="videoContainer" runat="server">
-            <video ID="videoPlayer" runat="server" controls>
-                <source ID="videoSource" runat="server" type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        <!-- Details Section -->
-        <table class="details-table">
-            <tr>
-                <td><b>Name:</b></td>
-                <td><asp:Label ID="lbl_CoachName" runat="server" Text="[lbl_CoachName]"></asp:Label></td>
-            </tr>
-            <tr>
-                <td><b>Email:</b></td>
-                <td><asp:Label ID="lbl_CoachEmail" runat="server" Text="[lbl_CoachEmail]"></asp:Label></td>
-            </tr>
-            <tr>
-                <td><b>Phone:</b></td>
-                <td><asp:Label ID="lbl_CoachHp" runat="server" Text="[lbl_CoachHp]"></asp:Label></td>
-            </tr>
-            <tr>
-                <td><b>Description:</b></td>
-                <td><asp:Label ID="lbl_CoachDesc" runat="server" Text="[lbl_CoachDesc]"></asp:Label></td>
-            </tr>
-            <tr>
-                <td><b>Qualification:</b></td>
-                <td><asp:Label ID="lbl_CoachQualification" runat="server" Text="[lbl_CoachQualification]"></asp:Label></td>
-            </tr>
-            <tr>
-                <td><b>Status:</b></td>
-                <td><asp:Label ID="lbl_CoachStatus" runat="server" Text="[lbl_CoachStatus]"></asp:Label></td>
-            </tr>
-        </table>
+﻿<%@ Page Title="Coach Details" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="CoachDetails.aspx.cs" Inherits="badpjProject.CoachDetails" %>
 
-        <!-- Back Button -->
-        <asp:Button ID="Btn_Back" runat="server" CssClass="btn-back" Text="Back to Coaches" OnClick="Btn_Back_Click" />
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-body text-center">
+            <asp:Image ID="imgProfile" runat="server" CssClass="rounded-circle mb-3" 
+                       style="width:200px; height:200px; object-fit:cover;" />
+            <h1 id="lblName" runat="server" class="card-title"></h1>
+            <p id="lblExpertise" runat="server" class="lead"></p>
+            <p id="lblQualification" runat="server" class="mb-3"></p>
+            <hr />
+            <p id="lblDescription" runat="server" class="text-left"></p>
+          </div>
+          <div class="card-footer text-center">
+            <asp:Button ID="btnBack" runat="server" Text="Back" CssClass="btn btn-secondary mr-2" OnClick="btnBack_Click" />
+            <asp:Button ID="btnChat" runat="server" Text="Chat" CssClass="btn btn-primary" OnClick="btnChat_Click" />
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </asp:Content>

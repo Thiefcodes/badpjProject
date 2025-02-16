@@ -13,7 +13,7 @@
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link rel="stylesheet" href="CSS/Coaches.css" />
+    
 </head>
 <body>
     <form runat="server">
@@ -35,12 +35,16 @@
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
                         <a href="AllProfiles.aspx" class="nav-link">All Profiles</a>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/UserPage.aspx">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link"href="~/Coaches.aspx">Coaches</a></li>
+                        <li class="nav-item" runat="server" id="liPublicCoaches"><a class="nav-link" runat="server" href="~/Coaches.aspx">Coaches</a></li>
+                        <li class="nav-item" runat="server" id="liCoachProfile"><a class="nav-link" runat="server" href="~/CoachProfile.aspx">Coach Profile</a></li>
                         <li class="nav-item" runat="server" id="liUserBecomeACoach"><a class="nav-link" runat="server" href="~/BecomeACoach.aspx">Become a Coach</a></li>
                         <li class="nav-item" runat="server" id="liStaffViewCoaches"><a class="nav-link" runat="server" href="~/ViewCoaches.aspx">View Coaches</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Forum.aspx">Forum</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/MyFeed.aspx">MyFeed</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Shop.aspx">Shop</a></li>
+                        <li class="nav-item" runat="server" id="liUserOrders"><a class="nav-link" runat="server" href="~/Orders.aspx">My orders</a></li>
                         <li class="nav-item" runat="server" id="liStaffManageProduct"><a class="nav-link" runat="server" href="~/ManageProduct.aspx">Manage Products</a></li>
+                        <li class="nav-item" runat="server" id="liStaffAllorders"><a class="nav-link" runat="server" href="Allorders.aspx">All orders</a></li>
                     </ul>
                     <!-- User Profile Picture -->
                     <div class="d-flex align-items-center">
@@ -53,6 +57,9 @@
             </div>
         </nav>
 
+        <!-- Header Content Placeholder -->
+        <asp:ContentPlaceHolder ID="HeaderContent" runat="server"></asp:ContentPlaceHolder>
+
         <!-- Main Content Placeholder -->
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
@@ -62,5 +69,16 @@
             <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
         </footer>
     </form>
+    <!-- Start of ChatBot (www.chatbot.com) code -->
+<script>
+  window.__ow = window.__ow || {};
+  window.__ow.organizationId = "dee62c2d-14c0-4b07-a938-46dda57f4523";
+  window.__ow.template_id = "f5944cf0-2060-47c1-96f8-c63c0929ca0e";
+  window.__ow.integration_name = "manual_settings";
+  window.__ow.product_name = "chatbot";   
+  ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[OpenWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.openwidget.com/openwidget.js",t.head.appendChild(n)}};!n.__ow.asyncInit&&e.init(),n.OpenWidget=n.OpenWidget||e}(window,document,[].slice))
+</script>
+<noscript>You need to <a href="https://www.chatbot.com/help/chat-widget/enable-javascript-in-your-browser/" rel="noopener nofollow">enable JavaScript</a> in order to use the AI chatbot tool powered by <a href="https://www.chatbot.com/" rel="noopener nofollow" target="_blank">ChatBot</a></noscript>
+<!-- End of ChatBot code -->
 </body>
 </html>

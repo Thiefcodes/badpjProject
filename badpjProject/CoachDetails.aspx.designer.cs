@@ -11,97 +11,70 @@ namespace badpjProject
 {
 
 
-    public partial class CoachDetail
+    public partial class CoachDetails
     {
 
         /// <summary>
-        /// videoContainer control.
+        /// imgProfile control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl videoContainer;
+        protected global::System.Web.UI.WebControls.Image imgProfile;
 
         /// <summary>
-        /// videoPlayer control.
+        /// lblName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlVideo videoPlayer;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblName;
 
         /// <summary>
-        /// videoSource control.
+        /// lblExpertise control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSource videoSource;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblExpertise;
 
         /// <summary>
-        /// lbl_CoachName control.
+        /// lblQualification control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_CoachName;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblQualification;
 
         /// <summary>
-        /// lbl_CoachEmail control.
+        /// lblDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_CoachEmail;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblDescription;
 
         /// <summary>
-        /// lbl_CoachHp control.
+        /// btnBack control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_CoachHp;
+        protected global::System.Web.UI.WebControls.Button btnBack;
 
         /// <summary>
-        /// lbl_CoachDesc control.
+        /// btnChat control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_CoachDesc;
-
-        /// <summary>
-        /// lbl_CoachQualification control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_CoachQualification;
-
-        /// <summary>
-        /// lbl_CoachStatus control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_CoachStatus;
-
-        /// <summary>
-        /// Btn_Back control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Btn_Back;
+        protected global::System.Web.UI.WebControls.Button btnChat;
     }
 }

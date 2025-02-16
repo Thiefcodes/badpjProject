@@ -1,60 +1,53 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace badpjProject
 {
-    public partial class CoachDetail : Page
+    public partial class CoachDetails : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                string coachID = Request.QueryString["Id"];
-                if (!string.IsNullOrEmpty(coachID))
+                string coachId = Request.QueryString["id"];
+                if (!string.IsNullOrEmpty(coachId))
                 {
-                    
-                    Coaches coach = new Coaches().getCoaches(coachID);
+                    // Retrieve the coach details using your Coaches class
+                    Coaches coach = new Coaches().getCoaches(coachId);
                     if (coach != null)
                     {
-                        lbl_CoachName.Text = coach.Coach_Name;
-                        lbl_CoachEmail.Text = coach.Coach_Email;
-                        lbl_CoachHp.Text = coach.Coach_Hp.ToString();
-                        lbl_CoachDesc.Text = coach.Coach_Desc;
-                        lbl_CoachQualification.Text = coach.Coach_Qualification;
-                        lbl_CoachStatus.Text = coach.Coach_Status;
+                        // Set profile image; if missing, use the default image.
+                        imgProfile.ImageUrl = string.IsNullOrEmpty(coach.Coach_ProfileImage)
+                            ? "~/Uploads/default-image.png"
+                            : "~/Uploads/" + coach.Coach_ProfileImage;
 
-                        string videoPath = $"~/Uploads/{coach.Coach_Video}";
-
-                        // Debugging: Show the resolved video path in an alert
-                        string resolvedVideoPath = Server.MapPath(videoPath);
-                        if (File.Exists(resolvedVideoPath))
-                        {
-                            videoSource.Attributes["src"] = ResolveUrl(videoPath);
-                            videoContainer.Visible = true;
-                            videoPlayer.Visible = true;
-                            videoPlayer.DataBind();
-                        }
-                        else
-                        {
-                            videoContainer.Visible = false;
-                        }
+                        // Set other details
+                        lblName.InnerText = coach.Coach_Name;
+                        lblExpertise.InnerText = coach.Coach_AreaOfExpertise;
+                        lblQualification.InnerText = coach.Coach_Qualification;
+                        lblDescription.InnerText = coach.Coach_Desc;
                     }
                     else
                     {
-                      Response.Redirect("ViewCoaches.aspx");
+                        // Optionally handle a case where no coach is found
                     }
-                }
-                else
-                {
-                   Response.Redirect("ViewCoaches.aspx");
                 }
             }
         }
 
-        protected void Btn_Back_Click(object sender, EventArgs e)
+        protected void btnBack_Click(object sender, EventArgs e)
         {
-            Response.Redirect("ViewCoaches.aspx");
+            Response.Redirect("Coaches.aspx");
+        }
+
+        protected void btnChat_Click(object sender, EventArgs e)
+        {
+            string coachId = Request.QueryString["id"];
+            Response.Redirect("Chat.aspx?coachId=" + coachId);
         }
     }
 }

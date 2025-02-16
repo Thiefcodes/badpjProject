@@ -1,0 +1,58 @@
+﻿body {
+}
+
+/* styles.css */
+.btn-custom {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn-read {
+    background-color: #007bff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+    .btn-read:hover {
+        background-color: #0056b3;
+    }
+
+.btn-update {
+    background-color: #fd7e14;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+    .btn-update:hover {
+        background-color: #e86000;
+    }
+
+.btn-delete {
+    background-color: #dc3545;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }

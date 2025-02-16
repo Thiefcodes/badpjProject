@@ -18,9 +18,18 @@ namespace badpjProject
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            string threadId = Request.QueryString["ThreadID"];
             string content = txtContent.Text.Trim();
+            string validationMessage = ValidationHelper.ValidateContent(content);
+
+            if (validationMessage != null) // If there is an error
+            {
+                lblMessage.Text = validationMessage;
+                return;
+            }
+            string threadId = Request.QueryString["ThreadID"];
             int userId = Convert.ToInt32(Session["UserId"]); // Replace with actual logged-in user ID
+
+
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -47,8 +56,16 @@ namespace badpjProject
 
                 Response.Write("<script>alert('Post submitted successfully.'); window.location='Thread.aspx?ThreadID=" + threadId + "';</script>");
             }
+            
         }
 
+        protected void cvContentLength_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (args.Value.Length > 500) // Max 500 characters
+            {
+                args.IsValid = false;
+            }
+        }
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {

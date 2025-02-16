@@ -15,14 +15,16 @@
                 <h4>Management Portal</h4>
                 <hr />
                 <p>Welcome to the Management Portal! Use the buttons below to manage staff and users.</p>
+                <!-- Add the new button for enabling facial authentication here -->
+                <asp:Button ID="EnableFacialAuthButton" runat="server" Text="Enable Facial Authentication" CssClass="btn btn-warning mt-3" OnClick="EnableFacialAuthButton_Click" />
             </div>
         </div>
 
         <!-- Bottom-left buttons -->
         <div class="position-absolute" style="bottom: 20px; left: 20px;">
-    <asp:Button ID="ManageStaffButton" runat="server" Text="Manage Staff" CssClass="btn btn-primary mb-2 w-100" OnClick="ManageStaffButton_Click" />
-    <asp:Button ID="ManageUsersButton" runat="server" Text="Manage Users" CssClass="btn btn-secondary mb-2 w-100" OnClick="ManageUsersButton_Click" />
-    <asp:Button ID="ConfigureRewardsButton" runat="server" Text="Configure Rewards" CssClass="btn btn-info w-100" OnClick="ConfigureRewardsButton_Click" />
-</div>
+            <asp:Button ID="ManageStaffButton" runat="server" Text="Manage Staff" CssClass="btn btn-primary mb-2 w-100" OnClick="ManageStaffButton_Click" />
+            <asp:Button ID="ManageUsersButton" runat="server" Text="Manage Users" CssClass="btn btn-secondary mb-2 w-100" OnClick="ManageUsersButton_Click" />
+            <asp:Button ID="ConfigureRewardsButton" runat="server" Text="Configure Rewards" CssClass="btn btn-info w-100" OnClick="ConfigureRewardsButton_Click" />
+        </div>
     </div>
 </asp:Content>
