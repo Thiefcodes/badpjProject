@@ -23,7 +23,8 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT RewardId, RewardName, RewardImage, StreakHours FROM Rewards";
+                // Updated query to use StreakDays
+                string query = "SELECT RewardId, RewardName, RewardImage, StreakDays FROM Rewards";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -37,8 +38,17 @@ namespace badpjProject
 
         protected void AddRewardButton_Click(object sender, EventArgs e)
         {
-            string rewardName = RewardNameTextBox.Text.Trim();
-            string streakHours = StreakHoursTextBox.Text.Trim();
+            // Validate that RewardName (which now represents points) is an integer.
+            string pointsText = RewardNameTextBox.Text.Trim();
+            if (!int.TryParse(pointsText, out int points))
+            {
+                // Display an error if the input is not a valid integer.
+                Response.Write("<script>alert('Please enter a valid integer for points.');</script>");
+                return;
+            }
+
+            // Get the streak days value from the textbox.
+            string streakDays = StreakDaysTextBox.Text.Trim();  // Consider renaming your textbox ID to StreakDaysTextBox
             string rewardImagePath = "~/Uploads/default-reward.png";
 
             if (RewardImageUpload.HasFile)
@@ -54,12 +64,14 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "INSERT INTO Rewards (RewardName, RewardImage, StreakHours) VALUES (@RewardName, @RewardImage, @StreakHours)";
+                // Updated query to use StreakDays
+                string query = "INSERT INTO Rewards (RewardName, RewardImage, StreakDays) VALUES (@RewardName, @RewardImage, @StreakDays)";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@RewardName", rewardName);
+                    // Store the integer points as a string (if you're keeping the column type as NVARCHAR).
+                    cmd.Parameters.AddWithValue("@RewardName", points.ToString());
                     cmd.Parameters.AddWithValue("@RewardImage", rewardImagePath);
-                    cmd.Parameters.AddWithValue("@StreakHours", streakHours);
+                    cmd.Parameters.AddWithValue("@StreakDays", streakDays);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -67,7 +79,7 @@ namespace badpjProject
 
             LoadRewards();
             RewardNameTextBox.Text = string.Empty;
-            StreakHoursTextBox.Text = string.Empty;
+            StreakDaysTextBox.Text = string.Empty;
         }
 
         protected void RewardsRepeater_ItemCommand(object source, RepeaterCommandEventArgs e)
@@ -91,7 +103,8 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT RewardId, RewardName, RewardImage, StreakHours FROM Rewards WHERE RewardId = @RewardId";
+                // Updated query to use StreakDays
+                string query = "SELECT RewardId, RewardName, RewardImage, StreakDays FROM Rewards WHERE RewardId = @RewardId";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@RewardId", rewardId);
@@ -102,7 +115,7 @@ namespace badpjProject
                         {
                             EditRewardId.Value = rewardId;
                             EditRewardNameTextBox.Text = reader["RewardName"].ToString();
-                            EditStreakHoursTextBox.Text = reader["StreakHours"].ToString();
+                            EditStreakDaysTextBox.Text = reader["StreakDays"].ToString();
                         }
                     }
                 }
@@ -112,12 +125,18 @@ namespace badpjProject
             EditRewardSection.Style["display"] = "block";
         }
 
-
         protected void UpdateRewardButton_Click(object sender, EventArgs e)
         {
             string rewardId = EditRewardId.Value;
-            string rewardName = EditRewardNameTextBox.Text.Trim();
-            string streakHours = EditStreakHoursTextBox.Text.Trim();
+            string pointsText = EditRewardNameTextBox.Text.Trim();
+            if (!int.TryParse(pointsText, out int points))
+            {
+                Response.Write("<script>alert('Please enter a valid integer for points.');</script>");
+                return;
+            }
+
+            // Get the streak days value from the edit textbox.
+            string streakDays = EditStreakDaysTextBox.Text.Trim();
             string rewardImagePath = null;
 
             if (EditRewardImageUpload.HasFile)
@@ -133,15 +152,17 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "UPDATE Rewards SET RewardName = @RewardName, StreakHours = @StreakHours" +
+                // Updated query to use StreakDays
+                string query = "UPDATE Rewards SET RewardName = @RewardName, StreakDays = @StreakDays" +
                                (rewardImagePath != null ? ", RewardImage = @RewardImage" : "") +
                                " WHERE RewardId = @RewardId";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@RewardId", rewardId);
-                    cmd.Parameters.AddWithValue("@RewardName", rewardName);
-                    cmd.Parameters.AddWithValue("@StreakHours", streakHours);
+                    // Store the integer points as a string.
+                    cmd.Parameters.AddWithValue("@RewardName", points.ToString());
+                    cmd.Parameters.AddWithValue("@StreakDays", streakDays);
 
                     if (rewardImagePath != null)
                     {
@@ -175,5 +196,3 @@ namespace badpjProject
         }
     }
 }
-
-
