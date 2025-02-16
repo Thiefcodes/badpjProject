@@ -1,7 +1,8 @@
-﻿using System;
+﻿using badpjProject.Models;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -17,9 +18,6 @@ namespace badpjProject
             }
         }
 
-        /// <summary>
-        /// Loads submissions based on selected filter and sort.
-        /// </summary>
         private void LoadSubmissions()
         {
             string statusFilter = ddlStatusFilter.SelectedValue;
@@ -27,8 +25,21 @@ namespace badpjProject
 
             // Retrieve submissions filtered by status and sorted by the selected field.
             List<RankingVideoSubmission> submissions = RankingVideoSubmission.GetSubmissionsByStatus(statusFilter, sortField);
-            rptSubmissions.DataSource = submissions;
-            rptSubmissions.DataBind();
+
+            if (submissions.Count > 0)
+            {
+                rptSubmissions.DataSource = submissions;
+                rptSubmissions.DataBind();
+                rptSubmissions.Visible = true;
+                litNoSubmissions.Text = "";
+            }
+            else
+            {
+                rptSubmissions.Visible = false;
+                litNoSubmissions.Text = "<div class='alert alert-warning text-center' role='alert'>" +
+                                        $"<strong>Oops!</strong> There are currently no {statusFilter.ToLower()} submissions. Please check back later." +
+                                        "</div>";
+            }
         }
 
         protected void ddlStatusFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -53,40 +64,38 @@ namespace badpjProject
 
         protected void rptSubmissions_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.Item ||
-                e.Item.ItemType == ListItemType.AlternatingItem)
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 // Cast the data item to your model.
                 RankingVideoSubmission submission = (RankingVideoSubmission)e.Item.DataItem;
 
-                // Find the panels.
-                Panel pnlApproveReject = (Panel)e.Item.FindControl("pnlApproveReject");
-                Panel pnlDelete = (Panel)e.Item.FindControl("pnlDelete");
+                // Find the controls using the new panel names.
+                Panel pnlPendingActions = (Panel)e.Item.FindControl("pnlPendingActions");
+                Panel pnlDeleteActions = (Panel)e.Item.FindControl("pnlDeleteAction");
                 TextBox tbPoints = (TextBox)e.Item.FindControl("tbPoints");
 
-                // Set the points TextBox based on status.
+                // Set the points textbox based on status.
                 if (submission.Status.Equals("Approved", StringComparison.OrdinalIgnoreCase))
                 {
                     tbPoints.Enabled = false;
                     tbPoints.Text = submission.AssignedPoints.ToString();
                 }
-                else if (submission.Status.Equals("Rejected", StringComparison.OrdinalIgnoreCase) ||
-                         submission.Status.Equals("Removed", StringComparison.OrdinalIgnoreCase))
+                else if (submission.Status.Equals("Rejected", StringComparison.OrdinalIgnoreCase))
                 {
                     tbPoints.Enabled = false;
                     tbPoints.Text = "0";
                 }
 
-                // Toggle panels based on status:
+                // Toggle panels:
                 if (submission.Status.Equals("Pending", StringComparison.OrdinalIgnoreCase))
                 {
-                    pnlApproveReject.Visible = true;
-                    pnlDelete.Visible = false;
+                    pnlPendingActions.Visible = true;
+                    pnlDeleteActions.Visible = false;
                 }
-                else // For Approved, Rejected, or Removed
+                else // Approved, Rejected, or Removed.
                 {
-                    pnlApproveReject.Visible = false;
-                    pnlDelete.Visible = true;
+                    pnlPendingActions.Visible = false;
+                    pnlDeleteActions.Visible = true;
                 }
             }
         }
@@ -109,13 +118,19 @@ namespace badpjProject
             // Locate the points textbox within the repeater item.
             TextBox tbPoints = (TextBox)e.Item.FindControl("tbPoints");
             int points = 0;
-            if (tbPoints != null && !string.IsNullOrEmpty(tbPoints.Text))
-            {
-                int.TryParse(tbPoints.Text, out points);
-            }
-
             if (e.CommandName == "Approve")
             {
+                // Check if the assign point field is empty.
+                if (string.IsNullOrWhiteSpace(tbPoints.Text))
+                {
+                    lblMessage.Text = "Please assign points before approving.";
+                    lblMessage.CssClass = "alert alert-warning text-center";
+                    lblMessage.Visible = true;
+                    return;
+                }
+
+                int.TryParse(tbPoints.Text, out points);
+
                 // If already approved, do not allow re-approval.
                 if (submission.Status.Equals("Approved", StringComparison.OrdinalIgnoreCase))
                 {
@@ -173,7 +188,6 @@ namespace badpjProject
                     lblMessage.Visible = true;
                 }
             }
-
             else if (e.CommandName == "DeleteSubmission")
             {
                 // Call your delete method
@@ -189,7 +203,6 @@ namespace badpjProject
                     lblMessage.CssClass = "alert alert-danger";
                 }
                 lblMessage.Visible = true;
-                LoadSubmissions();
             }
 
             // Refresh the submissions list.
