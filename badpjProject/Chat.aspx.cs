@@ -75,17 +75,26 @@ namespace badpjProject
                 return;
             }
 
-            int userId = Convert.ToInt32(Request.QueryString["userId"]);  // Get UserId from URL
-            Guid coachId = Guid.Parse(Request.QueryString["coachId"]);  // Get CoachId from URL
+            int userId = Convert.ToInt32(Request.QueryString["userId"]);
+            Guid coachId = Guid.Parse(Request.QueryString["coachId"]);
 
             string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connStr))
             {
+                // ✅ FIX: Ensure correct sender name (User or Coach)
                 string query = @"
-            SELECT Message, Timestamp, Sender 
-            FROM Chat 
-            WHERE UserId = @UserId AND CoachId = @CoachId 
-            ORDER BY Timestamp ASC";
+            SELECT 
+                c.UserId, 
+                c.Message, 
+                c.Timestamp, 
+                c.Sender, 
+                CASE 
+                    WHEN c.Sender = 'User' THEN (SELECT Login_Name FROM [Table] WHERE Id = c.UserId)
+                    WHEN c.Sender = 'Coach' THEN (SELECT Name FROM Coach WHERE Id = c.CoachId)
+                END AS SenderName
+            FROM Chat c
+            WHERE c.UserId = @UserId AND c.CoachId = @CoachId
+            ORDER BY c.Timestamp ASC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@UserId", userId);
@@ -101,7 +110,6 @@ namespace badpjProject
             }
         }
 
-
         protected void btnSend_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(txtMessage.Text))
@@ -116,11 +124,11 @@ namespace badpjProject
                 Guid coachId = Guid.Parse(Request.QueryString["coachId"]);  // Get CoachId from URL
                 string senderType;
 
-                if (Session["UserId"] != null)  // If a User is sending a message
+                if (Session["UserId"] != null)
                 {
                     senderType = "User";
                 }
-                else if (Session["CoachId"] != null)  // If a Coach is sending a message
+                else if (Session["CoachId"] != null)
                 {
                     senderType = "Coach";
                 }
@@ -147,9 +155,10 @@ namespace badpjProject
                 }
 
                 txtMessage.Text = "";
-                LoadMessages();  // Ensure messages are loaded immediately
-                UpdatePanelChat.Update(); // Refresh UI with the new message (if using AJAX)
+                LoadMessages();  // Reload chat to show new message
+                UpdatePanelChat.Update();  // Manually refresh the UpdatePanel
             }
         }
+
     }
 }
