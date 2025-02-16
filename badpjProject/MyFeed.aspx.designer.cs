@@ -15,6 +15,24 @@ namespace badpjProject
     {
 
         /// <summary>
+        /// lblTotalViews control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalViews;
+
+        /// <summary>
+        /// lblTotalLikes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalLikes;
+
+        /// <summary>
         /// gvRandomThreads control.
         /// </summary>
         /// <remarks>

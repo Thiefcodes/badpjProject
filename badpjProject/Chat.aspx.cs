@@ -114,28 +114,25 @@ namespace badpjProject
         {
             if (!string.IsNullOrWhiteSpace(txtMessage.Text))
             {
-                if ((Session["UserId"] == null && Session["CoachId"] == null) || Request.QueryString["userId"] == null || Request.QueryString["coachId"] == null)
+                if (Session["UserId"] == null || Request.QueryString["userId"] == null || Request.QueryString["coachId"] == null)
                 {
                     Response.Write("<script>alert('Session expired or invalid parameters. Please log in again.');</script>");
                     return;
                 }
 
+                int sessionUserId = Convert.ToInt32(Session["UserId"]);  // Get logged-in user's ID
                 int userId = Convert.ToInt32(Request.QueryString["userId"]);  // Get UserId from URL
                 Guid coachId = Guid.Parse(Request.QueryString["coachId"]);  // Get CoachId from URL
                 string senderType;
 
-                if (Session["UserId"] != null)
+                // ✅ If session user ID matches userId from query -> it's a User
+                if (sessionUserId == userId)
                 {
                     senderType = "User";
                 }
-                else if (Session["CoachId"] != null)
-                {
-                    senderType = "Coach";
-                }
                 else
                 {
-                    Response.Write("<script>alert('Session error. Please log in again.');</script>");
-                    return;
+                    senderType = "Coach";  // ✅ If it does not match, it's a Coach
                 }
 
                 string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
