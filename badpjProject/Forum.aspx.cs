@@ -54,7 +54,8 @@ namespace badpjProject
                 COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
                 t.CreatedAt,
                 t.Views, 
-                COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount
+                COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount,
+                t.ImagePath  
                 FROM Threads t
                 LEFT JOIN [Table] u ON t.CreatedBy = u.Id";
 

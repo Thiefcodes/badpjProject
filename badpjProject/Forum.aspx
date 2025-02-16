@@ -7,6 +7,9 @@
     OnRowCommand="gvThreads_RowCommand">
     <Columns>
         <asp:BoundField DataField="ThreadID" HeaderText="ID" />
+        <asp:ImageField DataImageUrlField="ImagePath" HeaderText="">
+        <ControlStyle Width="100px" Height="100px" />
+        </asp:ImageField>
         <asp:BoundField DataField="Title" HeaderText="Title" />
         <asp:BoundField DataField="CreatedBy" HeaderText="Author" />
         <asp:BoundField DataField="CreatedAt" HeaderText="Date Created" DataFormatString="{0:yyyy-MM-dd}" />
