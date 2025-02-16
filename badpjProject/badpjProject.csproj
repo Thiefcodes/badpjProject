@@ -108,12 +108,15 @@
     <Content Include="bin\badpjProject.dll" />
     <Content Include="bin\badpjProject.pdb" />
     <Content Include="CameraAccess.aspx" />
+    <Content Include="Chat.aspx" />
+    <Content Include="ChatList.aspx" />
     <Content Include="Checkout.aspx" />
     <Content Include="CoachDetails.aspx" />
     <Content Include="CoachEditProfile.aspx" />
     <Content Include="CoachProfile.aspx" />
     <Content Include="EnableFacialAuthentication.aspx" />
     <Content Include="FacialLogin.aspx" />
+    <Content Include="LeaveReview.aspx" />
     <Content Include="ForumStyles.css" />
     <Content Include="MyFeed.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
@@ -288,6 +291,20 @@
     <Compile Include="CameraAccess.aspx.designer.cs">
       <DependentUpon>CameraAccess.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Chat.aspx.cs">
+      <DependentUpon>Chat.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Chat.aspx.designer.cs">
+      <DependentUpon>Chat.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ChatList.aspx.cs">
+      <DependentUpon>ChatList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ChatList.aspx.designer.cs">
+      <DependentUpon>ChatList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Checkout.aspx.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -329,6 +346,13 @@
     </Compile>
     <Compile Include="FacialLogin.aspx.designer.cs">
       <DependentUpon>FacialLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LeaveReview.aspx.cs">
+      <DependentUpon>LeaveReview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LeaveReview.aspx.designer.cs">
+      <DependentUpon>LeaveReview.aspx</DependentUpon>
     </Compile>
     <Compile Include="MyFeed.aspx.cs">
       <DependentUpon>MyFeed.aspx</DependentUpon>

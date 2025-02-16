@@ -9,19 +9,11 @@ namespace badpjProject
 {
     public partial class ManageProduct : System.Web.UI.Page
     {
-        private string _connString =
-            ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+        private string _connString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
-            {
-                this.MasterPageFile = "~/Site.Master";
-            }
-            else
-            {
-                this.MasterPageFile = "~/Site1loggedin.Master";
-            }
+            this.MasterPageFile = Session["UserID"] == null ? "~/Site.Master" : "~/Site1loggedin.Master";
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -30,7 +22,6 @@ namespace badpjProject
             {
                 Response.Redirect("~/Shop.aspx");
             }
-
             if (!IsPostBack)
             {
                 LoadProducts();
@@ -40,7 +31,6 @@ namespace badpjProject
         private void LoadProducts()
         {
             List<Product> productList = new List<Product>();
-
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 string sql = "SELECT ProductID, ProductName, Price FROM dbo.Products ORDER BY ProductID";
@@ -61,7 +51,6 @@ namespace badpjProject
                     }
                 }
             }
-
             gvProducts.DataSource = productList;
             gvProducts.DataBind();
         }
@@ -75,9 +64,18 @@ namespace badpjProject
         protected void gvProducts_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             int productId = (int)gvProducts.DataKeys[e.RowIndex].Value;
-
             using (SqlConnection conn = new SqlConnection(_connString))
             {
+                // Delete associated reviews first to avoid FK conflicts.
+                string deleteReviewsQuery = "DELETE FROM Reviews WHERE ProductID = @ProductID";
+                using (SqlCommand cmd = new SqlCommand(deleteReviewsQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+                // Delete associated wishlist entries.
                 string deleteWishlistQuery = "DELETE FROM Wishlist WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(deleteWishlistQuery, conn))
                 {
@@ -86,7 +84,7 @@ namespace badpjProject
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
-
+                // Now delete the product.
                 string sql = "DELETE FROM dbo.Products WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -96,7 +94,6 @@ namespace badpjProject
                     conn.Close();
                 }
             }
-
             LoadProducts();
         }
     }
