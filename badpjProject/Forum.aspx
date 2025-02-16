@@ -9,9 +9,10 @@
         <asp:BoundField DataField="Title" HeaderText="Title" />
         <asp:BoundField DataField="CreatedBy" HeaderText="Author" />
         <asp:BoundField DataField="CreatedAt" HeaderText="Date Created" DataFormatString="{0:yyyy-MM-dd}" />
+        <asp:BoundField DataField="Views" HeaderText="Views" /> 
         <asp:ButtonField CommandName="ViewThread" Text="Select" />
-        <asp:ButtonField CommandName="UpdateThread" Text="Update" />
-        <asp:ButtonField CommandName="DeleteThread" Text="Delete" />
+        <asp:ButtonField CommandName="UpdateThread" Text="Update" ButtonType="Button" />
+        <asp:ButtonField CommandName="DeleteThread" Text="Delete" ButtonType="Button" />
     </Columns>
 </asp:GridView>
     <asp:Button ID="btnNewThread" runat="server" Text="New Thread" OnClick="btnNewThread_Click" />

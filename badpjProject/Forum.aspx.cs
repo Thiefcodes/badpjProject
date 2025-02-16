@@ -27,18 +27,19 @@ namespace badpjProject
                 if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
                 {
                     // Make the Delete button visible if the role is "Admin"
-                    gvThreads.Columns[5].Visible = true;  // Assuming the Delete button is in the 6th column (index 5)
-                    gvThreads.Columns[6].Visible = true; // Assuming the Update button is in the 7th column(index 6)
+                    gvThreads.Columns[6].Visible = true;  // Assuming the Delete button is in the 7th column (index 6)
+                    gvThreads.Columns[7].Visible = true; // Assuming the Update button is in the 8th column(index 7)
                 }
                 else
                 {
                     // Hide the Delete button for non-admin roles
-                    gvThreads.Columns[5].Visible = false;
                     gvThreads.Columns[6].Visible = false;
+                    gvThreads.Columns[7].Visible = false;
                 }
                 LoadThreads();
             }
         }
+
 
         private void LoadThreads()
         {
@@ -48,11 +49,12 @@ namespace badpjProject
             {
                 // Fix syntax error by enclosing "Table" in square brackets
                 string query = @"
-            SELECT t.ThreadID, t.Title, 
-                   COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
-                   t.CreatedAt
-            FROM Threads t
-            LEFT JOIN [Table] u ON t.CreatedBy = u.Id";
+                 SELECT t.ThreadID, t.Title, 
+                 COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
+                 t.CreatedAt,
+                 t.Views   -- Added Views column
+                 FROM Threads t
+                 LEFT JOIN [Table] u ON t.CreatedBy = u.Id";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
@@ -64,29 +66,39 @@ namespace badpjProject
             }
         }
 
-        protected void gvThreads_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
+        protected void gvThreads_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "DeleteThread")
-            {
-                int index = Convert.ToInt32(e.CommandArgument);
-                string threadId = gvThreads.Rows[index].Cells[0].Text;
+            int index = Convert.ToInt32(e.CommandArgument);
+            string threadId = gvThreads.Rows[index].Cells[0].Text;
 
-                DeleteThread(threadId);
-                LoadThreads();
-            }
-            else if (e.CommandName == "ViewThread")
+            if (e.CommandName == "ViewThread")
             {
-                int index = Convert.ToInt32(e.CommandArgument);
-                string threadId = gvThreads.Rows[index].Cells[0].Text;
+                IncrementThreadViews(threadId);
                 Response.Redirect($"Thread.aspx?ThreadID={threadId}");
             }
             else if (e.CommandName == "UpdateThread")
             {
-                int index = Convert.ToInt32(e.CommandArgument);
-                string threadId = gvThreads.Rows[index].Cells[0].Text;
-
-                // Redirect to an update page (or use inline editing as an alternative)
                 Response.Redirect($"UpdateThread.aspx?ThreadID={threadId}");
+            }
+            else if (e.CommandName == "DeleteThread")
+            {
+                DeleteThread(threadId);
+                LoadThreads();
+            }
+        }
+
+        private void IncrementThreadViews(string threadId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE Threads SET Views = Views + 1 WHERE ThreadID = @ThreadID";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@ThreadID", threadId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
 

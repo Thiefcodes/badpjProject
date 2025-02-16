@@ -69,7 +69,6 @@ namespace badpjProject
             }
         }
 
-
         protected void ManageStaffButton_Click(object sender, EventArgs e)
         {
             Response.Redirect("ManageStaff.aspx");
@@ -84,10 +83,16 @@ namespace badpjProject
         {
             Response.Redirect("EditProfilePage.aspx");
         }
+
         protected void ConfigureRewardsButton_Click(object sender, EventArgs e)
         {
             Response.Redirect("ConfigureRewards.aspx");
         }
 
+        // Event handler for the new "Enable Facial Authentication" button
+        protected void EnableFacialAuthButton_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("EnableFacialAuthentication.aspx");
+        }
     }
 }

@@ -47,10 +47,6 @@ namespace badpjProject
                             RoleDisplay.Text = reader["Role"].ToString();
                             DescriptionDisplay.Text = reader["Description"].ToString();
 
-                            // Set login name and email for header
-                            UsernameLabel.Text = reader["Login_Name"].ToString();
-                            UserEmailLabel.Text = reader["Email"].ToString();
-
                             // Set profile picture
                             string profilePicturePath = reader["ProfilePicture"]?.ToString();
                             if (!string.IsNullOrEmpty(profilePicturePath))
@@ -67,10 +63,17 @@ namespace badpjProject
             }
         }
 
-        protected void UpdateButton_Click(object sender, EventArgs e)
+        protected void EditProfileButton_Click(object sender, EventArgs e)
         {
             Response.Redirect("EditProfilePage.aspx");
         }
+
+        // New event handler for enabling facial authentication
+        protected void EnableFacialAuthButton_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("EnableFacialAuthentication.aspx");
+        }
+
         private void LoadComments()
         {
             string currentUserId = Session["UserId"]?.ToString(); // Logged-in user's ID
@@ -87,15 +90,15 @@ namespace badpjProject
             {
                 conn.Open();
                 string query = @"
-            SELECT c.CommentId, 
-                   c.CommentText, 
-                   c.DateCreated, 
-                   u.Login_Name AS CommenterName,
-                   CAST(CASE WHEN c.UserId = @ProfileOwnerId THEN 1 ELSE 0 END AS BIT) AS IsOwner
-            FROM Comments c
-            INNER JOIN [Table] u ON c.CommenterId = u.Id
-            WHERE c.UserId = @ProfileOwnerId
-            ORDER BY c.DateCreated DESC";
+                    SELECT c.CommentId, 
+                           c.CommentText, 
+                           c.DateCreated, 
+                           u.Login_Name AS CommenterName,
+                           CAST(CASE WHEN c.UserId = @ProfileOwnerId THEN 1 ELSE 0 END AS BIT) AS IsOwner
+                    FROM Comments c
+                    INNER JOIN [Table] u ON c.CommenterId = u.Id
+                    WHERE c.UserId = @ProfileOwnerId
+                    ORDER BY c.DateCreated DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -111,12 +114,10 @@ namespace badpjProject
             }
         }
 
-
-
         protected void AddCommentButton_Click(object sender, EventArgs e)
         {
             string currentUserId = Session["UserId"]?.ToString(); // Logged-in user's ID
-            string profileOwnerId = currentUserId; // On `UserPage`, comments are made on the logged-in user's profile
+            string profileOwnerId = currentUserId; // On UserPage, comments are made on the logged-in user's profile
             string commentText = CommentTextBox.Text.Trim();
 
             if (string.IsNullOrEmpty(commentText))
@@ -144,7 +145,6 @@ namespace badpjProject
             LoadComments();
             CommentTextBox.Text = string.Empty;
         }
-
 
         protected void DeleteCommentButton_Click(object sender, EventArgs e)
         {
@@ -174,15 +174,5 @@ namespace badpjProject
             // Refresh comments
             LoadComments();
         }
-        protected void EditProfileButton_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("EditProfilePage.aspx");
-        }
-
-
     }
 }
-
-
-
-
