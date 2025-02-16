@@ -13,35 +13,39 @@ namespace badpjProject
         {
             return Guid.NewGuid().ToString();
         }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Retrieve the logged-in user's ID from session
+                // Check if the logged-in user's ID exists in Session.
                 if (Session["UserID"] == null)
                 {
-                    // If not logged in, redirect to login page
+                    // Not logged in, redirect to login page.
                     Response.Redirect("~/Login.aspx");
                     return;
                 }
+
                 int userId = int.Parse(Session["UserID"].ToString());
                 CoachStatus cs = new CoachStatus();
 
-                // Check if the logged-in user already has a coach application
-                if (cs.IsUserAlreadyCoach(userId))
+                // Check if the logged-in user already has a coach application.
+                if (cs.IsUserAlreadySignUp(userId))
                 {
-                    // Hide the form and show the "Pending" status message
+                    // Hide the form and show the pending status message (using the Bootstrap alert div).
                     formDiv.Visible = false;
-                    lblStatus.Text = "Your application is pending.";
-                    lblStatus.Visible = true;
+                    litPendingStatus.Text = "Your application is pending approval.";
+                    divPendingStatus.Style["display"] = "block";
                 }
                 else
                 {
+                    // Show the form and hide the pending status alert.
                     formDiv.Visible = true;
-                    lblStatus.Visible = false;
+                    divPendingStatus.Style["display"] = "none";
                 }
             }
         }
+
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
             ClearErrorStyles();
@@ -58,14 +62,14 @@ namespace badpjProject
                 return;
             }
             int userId = int.Parse(Session["UserID"].ToString());
-
             string generatedCoachId = GenerateCoachId();
 
+            // Validate the coach video file upload.
             string[] allowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
             string videoExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
-
             if (!allowedVideoExtensions.Contains(videoExtension))
             {
+                // Optionally, display an error message here.
                 return;
             }
             string uniqueVideoFileName = Guid.NewGuid().ToString() + videoExtension;
@@ -79,13 +83,12 @@ namespace badpjProject
                 string imageExtension = Path.GetExtension(fu_ProfilePic.FileName).ToLower();
                 if (!allowedImageExtensions.Contains(imageExtension))
                 {
+                    // Optionally, display an error message.
                     return;
                 }
                 profilePicFileName = Guid.NewGuid().ToString() + imageExtension;
                 profilePicSavePath = Server.MapPath("~/Uploads/") + profilePicFileName;
             }
-
-
 
             string status = "Pending";
 
@@ -99,7 +102,7 @@ namespace badpjProject
                 uniqueVideoFileName,
                 status,
                 profilePicFileName,
-                ddl_AreaOfExpertise.SelectedValue  
+                ddl_AreaOfExpertise.SelectedValue
             );
 
             try
@@ -116,30 +119,34 @@ namespace badpjProject
                         {
                             fu_ProfilePic.SaveAs(profilePicSavePath);
                         }
+                        // After successful submission, redirect to a confirmation page.
                         Response.Redirect("~/CoachSubmitted.aspx");
                     }
                     else
                     {
-                        lblStatus.Text = "Error: Failed to insert coach status record. Please try again later.";
-                        lblStatus.Visible = true;
+                        litPendingStatus.Text = "Error: Failed to insert coach status record. Please try again later.";
+                        divPendingStatus.CssClass = "alert alert-danger text-center";
+                        divPendingStatus.Style["display"] = "block";
                     }
                 }
                 else
                 {
-                    lblStatus.Text = "Error: Failed to insert coach record. Please try again later.";
-                    lblStatus.Visible = true;
+                    litPendingStatus.Text = "Error: Failed to insert coach record. Please try again later.";
+                    divPendingStatus.CssClass = "alert alert-danger text-center";
+                    divPendingStatus.Style["display"] = "block";
                 }
             }
             catch (Exception ex)
             {
-                lblStatus.Text = "An unexpected error occurred: " + ex.Message;
-                lblStatus.Visible = true;
+                litPendingStatus.Text = "An unexpected error occurred: " + ex.Message;
+                divPendingStatus.CssClass = "alert alert-danger text-center";
+                divPendingStatus.Style["display"] = "block";
             }
         }
 
         private void ClearErrorStyles()
         {
-            // Remove the error class and reset to default (black) border
+            // Remove error classes from controls
             tb_Name.CssClass = tb_Name.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             tb_Email.CssClass = tb_Email.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             tb_Hp.CssClass = tb_Hp.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");

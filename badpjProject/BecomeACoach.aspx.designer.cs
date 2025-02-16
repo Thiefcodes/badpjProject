@@ -186,12 +186,21 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.Button btn_Submit;
 
         /// <summary>
-        /// lblStatus control.
+        /// divPendingStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblStatus;
+        protected global::System.Web.UI.WebControls.Panel divPendingStatus;
+
+        /// <summary>
+        /// litPendingStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPendingStatus;
     }
 }
