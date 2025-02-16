@@ -53,6 +53,8 @@ namespace badpjProject
 
                 // Load or refresh the leaderboard
                 LoadLeaderboard();
+
+                LoadRankInfo();
             }
         }
 
@@ -126,6 +128,63 @@ namespace badpjProject
                             imgRank.AlternateText = "Unranked";
                             break;
                     }
+                }
+            }
+        }
+
+        public class RankInfo
+        {
+            public string RankName { get; set; }
+            public int PointsRequired { get; set; }
+            public string IconFile { get; set; }
+
+            public RankInfo(string rankName, int pointsRequired, string iconFile)
+            {
+                RankName = rankName;
+                PointsRequired = pointsRequired;
+                IconFile = iconFile;
+            }
+        }
+
+        private void LoadRankInfo()
+        {
+            // Create a list of rank data
+            var rankInfoList = new List<RankInfo>
+            {
+                new RankInfo("Bronze Barbeller", 100, "bronze.png"),
+                new RankInfo("Silver Squatter", 200, "silver.png"),
+                new RankInfo("Golden Gainer", 500, "golden.png"),
+                new RankInfo("Emerald Exerciser", 1000, "emerald.png"),
+                new RankInfo("Platinum Pumper", 2500, "platinum.png"),
+                new RankInfo("Grandmaster Grinder", 5000, "grandmaster.png")
+            };
+
+            // Bind the repeater
+            rptRankInfo.DataSource = rankInfoList;
+            rptRankInfo.DataBind();
+        }
+
+        protected void rptRankInfo_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Get the data item as RankInfo
+                var rankData = (RankInfo)e.Item.DataItem;
+
+                // Find controls
+                Image imgRankIcon = (Image)e.Item.FindControl("imgRankIcon");
+                Label lblRankText = (Label)e.Item.FindControl("lblRankText");
+
+                if (imgRankIcon != null)
+                {
+                    // Build the file path. E.g. "~/Uploads/bronze.png"
+                    imgRankIcon.ImageUrl = "~/Uploads/" + rankData.IconFile;
+                    imgRankIcon.AlternateText = rankData.RankName;
+                }
+
+                if (lblRankText != null)
+                {
+                    lblRankText.Text = $@"<strong>{rankData.RankName}</strong> &ndash; {rankData.PointsRequired}+ Points";
                 }
             }
         }
