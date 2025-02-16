@@ -10,39 +10,34 @@ namespace badpjProject
 {
     public partial class ProductDetails : System.Web.UI.Page
     {
-        private string _connString =
-            ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+        private string _connString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
         private int _productId;
         private int _currentUserID;
+
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
-            {
-                this.MasterPageFile = "~/Site.Master";
-            }
-            else
-            {
-                this.MasterPageFile = "~/Site1loggedin.Master";
-            }
+            this.MasterPageFile = Session["UserID"] == null ? "~/Site.Master" : "~/Site1loggedin.Master";
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["UserID"] != null)
-                _currentUserID = Convert.ToInt32(Session["UserID"]);
-            else
-                _currentUserID = -1;
+            // Always set _productId from the query string, even on postback.
+            if (!int.TryParse(Request.QueryString["productID"], out _productId))
+            {
+                Response.Write("<script>alert('Invalid product.'); window.location='Shop.aspx';</script>");
+                return;
+            }
+
+            _currentUserID = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"]) : -1;
 
             if (!IsPostBack)
             {
-                if (int.TryParse(Request.QueryString["productID"], out _productId))
-                {
-                    LoadProduct(_productId);
-                    UpdateCartCount();
-
-                    bool isInWishlist = IsProductInWishlist(_productId, _currentUserID);
-                    lblWishlistIndicator.Visible = isInWishlist;
-                }
+                LoadProduct(_productId);
+                hfProductID.Value = _productId.ToString();
+                UpdateCartCount();
+                bool isInWishlist = IsProductInWishlist(_productId, _currentUserID);
+                lblWishlistIndicator.Visible = isInWishlist;
+                LoadReviews(_productId);
             }
         }
 
@@ -52,12 +47,11 @@ namespace badpjProject
             {
                 string sql = @"SELECT ProductName, Description, ImageUrl, Price 
                                FROM dbo.Products
-                               WHERE ProductID=@ProductID";
+                               WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@ProductID", productId);
                     conn.Open();
-
                     using (SqlDataReader rdr = cmd.ExecuteReader())
                     {
                         if (rdr.Read())
@@ -73,26 +67,23 @@ namespace badpjProject
             }
         }
 
-        private bool IsProductInWishlist(int productID, int userID)
+        protected bool IsProductInWishlist(int productID, int userID)
         {
-            if (userID == 0)
+            if (userID <= 0)
                 return false;
 
-            bool exists = false;
             using (SqlConnection conn = new SqlConnection(_connString))
             {
-                string sql = @"SELECT COUNT(*) FROM dbo.Wishlist
-                               WHERE ProductID = @ProductID AND UserID = @UserID";
+                string sql = @"SELECT COUNT(*) FROM dbo.Wishlist WHERE ProductID = @ProductID AND UserID = @UserID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@ProductID", productID);
                     cmd.Parameters.AddWithValue("@UserID", userID);
                     conn.Open();
                     int count = (int)cmd.ExecuteScalar();
-                    exists = (count > 0);
+                    return count > 0;
                 }
             }
-            return exists;
         }
 
         protected void btnAddToCart_Click(object sender, EventArgs e)
@@ -102,24 +93,19 @@ namespace badpjProject
                 Response.Write("<script>alert('Please log in first!'); window.location='Login.aspx';</script>");
                 return;
             }
-            int productId;
-            if (!int.TryParse(hfProductID.Value, out productId))
+            if (!int.TryParse(hfProductID.Value, out int productId))
             {
                 Response.Write("<script>alert('Invalid product selection.');</script>");
                 return;
             }
-
-            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
-            string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
-
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlConnection conn = new SqlConnection(_connString))
             {
-                conn.Open();
+                string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@ProductID", productId);
+                    conn.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
-
                     if (reader.Read())
                     {
                         CartItem newItem = new CartItem
@@ -133,9 +119,7 @@ namespace badpjProject
                         };
 
                         List<CartItem> cart = (List<CartItem>)Session["Cart"] ?? new List<CartItem>();
-
                         CartItem existingItem = cart.Find(item => item.ProductID == newItem.ProductID);
-
                         if (existingItem != null)
                         {
                             existingItem.Quantity++;
@@ -144,7 +128,6 @@ namespace badpjProject
                         {
                             cart.Add(newItem);
                         }
-
                         Session["Cart"] = cart;
                         UpdateCartCount();
                         Response.Write("<script>alert('Item added to cart!');</script>");
@@ -156,10 +139,10 @@ namespace badpjProject
                 }
             }
         }
+
         private void UpdateCartCount()
         {
             int cartCount = 0;
-
             if (Session["Cart"] != null)
             {
                 List<CartItem> cart = (List<CartItem>)Session["Cart"];
@@ -167,6 +150,60 @@ namespace badpjProject
             }
         }
 
+        private void LoadReviews(int productId)
+        {
+            decimal averageRating = 0;
+            int totalReviews = 0;
+            var reviews = new List<dynamic>();
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                // Get average rating and count.
+                string avgSql = "SELECT AVG(CAST(StarRating AS DECIMAL(10,2))) AS AvgRating, COUNT(*) AS TotalReviews FROM Reviews WHERE ProductID = @ProductID";
+                using (SqlCommand cmd = new SqlCommand(avgSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+                    conn.Open();
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        if (rdr.Read())
+                        {
+                            averageRating = rdr["AvgRating"] != DBNull.Value ? Convert.ToDecimal(rdr["AvgRating"]) : 0;
+                            totalReviews = Convert.ToInt32(rdr["TotalReviews"]);
+                        }
+                    }
+                    conn.Close();
+                }
+                // Get individual reviews with customer name.
+                string reviewSql = @"
+                  SELECT r.StarRating, r.ReviewMessage, r.ReviewDate, u.Login_Name AS CustomerName 
+                  FROM Reviews r 
+                  INNER JOIN [Table] u ON r.UserID = u.Id 
+                  WHERE r.ProductID = @ProductID 
+                  ORDER BY r.ReviewDate DESC";
+                using (SqlCommand cmd = new SqlCommand(reviewSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+                    conn.Open();
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            reviews.Add(new
+                            {
+                                StarRating = rdr["StarRating"],
+                                ReviewMessage = rdr["ReviewMessage"],
+                                ReviewDate = rdr["ReviewDate"],
+                                CustomerName = rdr["CustomerName"]
+                            });
+                        }
+                    }
+                }
+            }
+            lblAverageRating.Text = totalReviews > 0
+                ? $"Average Rating: {averageRating:F1} ({totalReviews} reviews)"
+                : "No reviews yet.";
+            rptReviews.DataSource = reviews;
+            rptReviews.DataBind();
+        }
     }
 }
-

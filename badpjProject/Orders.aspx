@@ -41,6 +41,15 @@
                             CommandArgument='<%# Eval("OrderID") %>' 
                             CssClass="btn btn-warning btn-sm" 
                             OnClientClick="return confirm('Are you sure you want to mark this order as refunded?');" />
+                        &nbsp;
+                        <asp:Button 
+                            ID="btnLeaveReview" 
+                            runat="server" 
+                            Text="Leave Review" 
+                            CommandName="LeaveReview" 
+                            CommandArgument='<%# Eval("OrderID") %>' 
+                            CssClass="btn btn-info btn-sm"
+                            Visible='<%# Eval("Status").ToString() == "Shipped" %>' />
                     </td>
                 </tr>
             </ItemTemplate>

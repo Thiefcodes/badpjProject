@@ -97,7 +97,6 @@ namespace badpjProject
                         // Check if the order is eligible for a refund
                         if (currentStatus == "Shipping" || currentStatus == "Shipped")
                         {
-                            // Inform the user that refund is not allowed for this status
                             Response.Write("<script>alert('Refunds are not allowed for orders with status Shipping or Shipped.');</script>");
                             return;
                         }
@@ -109,7 +108,83 @@ namespace badpjProject
                 LoadOrders();
                 Response.Write("<script>alert('Order has been marked as refunded.');</script>");
             }
+            else if (e.CommandName == "LeaveReview")
+            {
+                int orderId = Convert.ToInt32(e.CommandArgument);
+                string orderStatus = "";
+
+                using (SqlConnection conn = new SqlConnection(_connString))
+                {
+                    conn.Open();
+                    string statusQuery = "SELECT Status FROM Orders WHERE OrderID = @OrderID";
+                    using (SqlCommand cmd = new SqlCommand(statusQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@OrderID", orderId);
+                        orderStatus = cmd.ExecuteScalar()?.ToString();
+                    }
+                }
+
+                // Enforce that reviews can only be left if status is "Shipped"
+                if (orderStatus != "Shipped")
+                {
+                    Response.Write("<script>alert('You can only leave a review for orders that have been shipped.');</script>");
+                    return;
+                }
+
+                int productId = GetProductIdFromOrder(orderId);
+                if (productId > 0)
+                {
+                    Response.Redirect("LeaveReview.aspx?productID=" + productId);
+                }
+                else
+                {
+                    Response.Write("<script>alert('Unable to retrieve product for review.');</script>");
+                }
+            }
         }
+
+        private int GetProductIdFromOrder(int orderId)
+        {
+            int productId = 0;
+            string productName = "";
+
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                string sql = "SELECT TOP 1 ProductName FROM Orders WHERE OrderID = @OrderID";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@OrderID", orderId);
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        productName = result.ToString();
+                    }
+                    conn.Close();
+                }
+            }
+
+            // Use the ProductName to get the ProductID from the Products table using a case-insensitive comparison.
+            if (!string.IsNullOrEmpty(productName))
+            {
+                using (SqlConnection conn = new SqlConnection(_connString))
+                {
+                    string sql = "SELECT ProductID FROM Products WHERE LOWER(ProductName) = LOWER(@ProductName)";
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ProductName", productName);
+                        conn.Open();
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
+                        {
+                            productId = Convert.ToInt32(result);
+                        }
+                    }
+                }
+            }
+            return productId;
+        }
+
 
         private void UpdateOrderStatusToRefund(int orderId)
         {
