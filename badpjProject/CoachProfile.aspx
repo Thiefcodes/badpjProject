@@ -29,6 +29,7 @@
                         <p class="card-text"><strong>Area of Expertise:</strong> <span id="lblExpertise" runat="server"></span></p>
                         <div class="mt-4 text-center">
                             <asp:Button ID="btnEdit" runat="server" Text="Edit Profile" CssClass="btn btn-primary" OnClick="btnEdit_Click" />
+                            <asp:Button ID="btnChatUsers" runat="server" Text="Chat with Users" CssClass="btn btn-success ml-3" OnClick="btnChatUsers_Click" />
                         </div>
                     </div>
                 </div>

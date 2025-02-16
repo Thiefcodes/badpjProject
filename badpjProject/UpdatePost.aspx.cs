@@ -57,5 +57,11 @@ namespace badpjProject
             Response.Write($"<script>alert('Post Updated Successfully'); window.location='Thread.aspx?ThreadID={Request.QueryString["ThreadID"]}';</script>");
 
         }
+
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+            string threadId = Request.QueryString["ThreadID"];
+            Response.Redirect($"Thread.aspx?ThreadID={threadId}");
+        }
     }
 }

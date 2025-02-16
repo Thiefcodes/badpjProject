@@ -337,5 +337,10 @@ namespace badpjProject
                 gvRandomPosts.DataBind();
             }
         }
+
+        protected void gvRandomThreads_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

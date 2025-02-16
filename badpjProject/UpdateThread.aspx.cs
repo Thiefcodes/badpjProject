@@ -68,7 +68,7 @@ namespace badpjProject
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             string threadId = Request.QueryString["ThreadID"];
-            Response.Redirect($"Thread.aspx?ThreadID={threadId}");
+            Response.Redirect($"Forum.aspx?ThreadID={threadId}");
         }
     }
 }
