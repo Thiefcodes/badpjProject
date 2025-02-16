@@ -81,14 +81,12 @@ namespace badpjProject
 
             if (_totalPoints >= 5000)
                 _rank = "Grandmaster Grinder";
-            else if (_totalPoints >= 3000)
-                _rank = "Emerald Exerciser";
-            else if (_totalPoints >= 2000)
-                _rank = "Diamond Deadlifter";
-            else if (_totalPoints >= 1000)
+            else if (_totalPoints >= 2500)
                 _rank = "Platinum Pumper";
+            else if (_totalPoints >= 1000)
+                _rank = "Emerald Exerciser";
             else if (_totalPoints >= 500)
-                _rank = "Gold Gainer";
+                _rank = "Golden Gainer";
             else if (_totalPoints >= 200)
                 _rank = "Silver Squatter";
             else if (_totalPoints >= 100)
