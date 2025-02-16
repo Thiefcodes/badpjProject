@@ -5,7 +5,7 @@
 
 <!-- Thread Title TextBox -->
 <asp:TextBox ID="txtTitle" runat="server" Placeholder="Thread Title"></asp:TextBox>
-
+<asp:Label ID="lblMessage" runat="server" ForeColor="Red"></asp:Label>
 <!-- Create Button -->
 <asp:Button ID="btnCreate" runat="server" Text="Create" OnClick="btnCreate_Click" />
         </div>

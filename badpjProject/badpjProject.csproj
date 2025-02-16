@@ -597,6 +597,7 @@
     <Compile Include="UserPage.aspx.designer.cs">
       <DependentUpon>UserPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ValidationHelper.cs" />
     <Compile Include="ViewCoaches.aspx.cs">
       <DependentUpon>ViewCoaches.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
