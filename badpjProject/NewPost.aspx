@@ -5,7 +5,7 @@
     <asp:Label ID="lblMessage" runat="server" ForeColor="Red"></asp:Label>
     <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Rows="10" Width="500px"></asp:TextBox>
     <br />
-    <asp:Button ID="btnSubmit" runat="server" Text="Submit" OnClick="btnSubmit_Click" />
-    <asp:Button ID="btnCancel" runat="server" Text="Back" OnClick="btnCancel_Click" />
+    <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary btn-sm" Text="Submit" OnClick="btnSubmit_Click" />
+    <asp:Button ID="btnCancel" runat="server" CssClass="btn btn-warning" Text="Back" OnClick="btnCancel_Click" />
         </div>
 </asp:Content>

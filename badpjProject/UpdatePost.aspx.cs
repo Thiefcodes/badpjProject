@@ -37,6 +37,13 @@ namespace badpjProject
         {
             string postId = Request.QueryString["PostID"];
             string content = txtContent.Text.Trim();
+            string validationMessage = ValidationHelper.ValidateContent(content);
+
+            if (validationMessage != null) // If there is an error
+            {
+                lblMessage.Text = validationMessage;
+                return;
+            }
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {

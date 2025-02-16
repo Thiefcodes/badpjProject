@@ -117,6 +117,7 @@
     <Content Include="FacialLogin.aspx" />
     <Content Include="LeaveReview.aspx" />
     <Content Include="ManageSales.aspx" />
+    <Content Include="ForumStyles.css" />
     <Content Include="MyFeed.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
     <Content Include="Coaches.aspx" />
@@ -621,6 +622,7 @@
     <Compile Include="UserPage.aspx.designer.cs">
       <DependentUpon>UserPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ValidationHelper.cs" />
     <Compile Include="ViewCoaches.aspx.cs">
       <DependentUpon>ViewCoaches.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

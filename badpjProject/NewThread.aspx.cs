@@ -12,6 +12,14 @@ namespace badpjProject
         }
         protected void btnCreate_Click(object sender, EventArgs e)
         {
+            string content = txtTitle.Text.Trim();
+            string validationMessage = ValidationHelper.ValidateContent(content);
+
+            if (validationMessage != null) // If there is an error
+            {
+                lblMessage.Text = validationMessage;
+                return;
+            }
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connectionString))
