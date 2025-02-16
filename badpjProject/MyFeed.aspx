@@ -4,6 +4,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <link href="ForumStyles.css" rel="stylesheet" type="text/css" />
     <h2>My Feed</h2>
+    <h3>Top 3 Threads</h3>
     <asp:GridView ID="gvRandomThreads" runat="server" AutoGenerateColumns="False" OnRowCommand="gvRandomThreads_RowCommand"
         DataKeyNames="ThreadID">
         <Columns>
@@ -12,6 +13,7 @@
           <asp:ButtonField Text="Select" CommandName="SelectThread" ButtonType="Button" />
         </Columns>
     </asp:GridView>
+    <h3>Selected Posts:</h3>
     <asp:GridView ID="gvRandomPosts" runat="server" AutoGenerateColumns="False" OnRowCommand="gvRandomPosts_RowCommand"
         OnRowDataBound="gvRandomPosts_RowDataBound"
     DataKeyNames="PostID">

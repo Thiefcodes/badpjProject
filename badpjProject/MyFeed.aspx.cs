@@ -29,6 +29,8 @@ namespace badpjProject
                     LoadRandomPosts();
                 }
                 LoadRandomThread();
+                
+                
 
                 // Load threads and posts created by the user
                 LoadThreads();
@@ -217,9 +219,9 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 string query = @"
-        SELECT TOP 1 t.ThreadID, t.ThreadID, t.Title
+        SELECT TOP 3 t.ThreadID, t.Views, t.Title
         FROM Threads t
-        ORDER BY NEWID();"; // Select one random thread
+        ORDER BY t.Views;"; // Select one random thread
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
