@@ -47,11 +47,11 @@ namespace badpjProject
                 }
                 else
                 {
-                    // If not logged in, you may redirect to login or handle accordingly
+                    // If not logged in, redirect or handle accordingly
                     Response.Redirect("~/Login.aspx");
                 }
 
-                // Optionally, load or refresh the leaderboard here
+                // Load or refresh the leaderboard
                 LoadLeaderboard();
             }
         }
@@ -80,6 +80,53 @@ namespace badpjProject
                     <div class='alert alert-warning text-center mx-auto w-50' role='alert'>
                         <strong>Oops!</strong> No rankings available at this time. Please check back later.
                     </div>";
+            }
+        }
+
+        protected void rptLeaderboard_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Get the rank string from the data item.
+                string rank = DataBinder.Eval(e.Item.DataItem, "Rank") as string;
+
+                // Find the imgRank control in the current row.
+                Image imgRank = (Image)e.Item.FindControl("imgRank");
+                if (imgRank != null)
+                {
+                    // Map rank strings to icon filenames.
+                    switch (rank)
+                    {
+                        case "Bronze Barbeller":
+                            imgRank.ImageUrl = "~/Uploads/bronze.png";
+                            imgRank.AlternateText = "Bronze Barbeller";
+                            break;
+                        case "Silver Squatter":
+                            imgRank.ImageUrl = "~/Uploads/silver.png";
+                            imgRank.AlternateText = "Silver Squatter";
+                            break;
+                        case "Golden Gainer":
+                            imgRank.ImageUrl = "~/Uploads/golden.png";
+                            imgRank.AlternateText = "Golden Gainer";
+                            break;
+                        case "Emerald Exerciser":
+                            imgRank.ImageUrl = "~/Uploads/emerald.png";
+                            imgRank.AlternateText = "Emerald Exerciser";
+                            break;
+                        case "Platinum Pumper":
+                            imgRank.ImageUrl = "~/Uploads/platinum.png";
+                            imgRank.AlternateText = "Platinum Pumper";
+                            break;
+                        case "Grandmaster Grinder":
+                            imgRank.ImageUrl = "~/Uploads/grandmaster.png";
+                            imgRank.AlternateText = "Grandmaster Grinder";
+                            break;
+                        default:
+                            imgRank.ImageUrl = "~/Uploads/unranked.png";
+                            imgRank.AlternateText = "Unranked";
+                            break;
+                    }
+                }
             }
         }
 
@@ -172,8 +219,14 @@ namespace badpjProject
                     // Optionally refresh the leaderboard
                     LoadLeaderboard();
 
-                    // Close the modal
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal", "$('#videoModal').modal('hide');", true);
+                    // Hide the modal in Bootstrap 5 style
+                    // Use bootstrap.Modal.getInstance(...) to close the existing modal
+                    string closeModalScript = @"
+                        var videoModal = bootstrap.Modal.getInstance(document.getElementById('videoModal'));
+                        if(videoModal){
+                            videoModal.hide();
+                        }";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal", closeModalScript, true);
                 }
                 else
                 {
