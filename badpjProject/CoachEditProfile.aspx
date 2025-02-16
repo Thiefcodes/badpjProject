@@ -57,8 +57,6 @@
         <h2 class="text-center mb-4">Edit Coach Profile</h2>
         <asp:Panel ID="pnlEditProfile" runat="server">
             <div class="card shadow-lg p-4" style="max-width: 450px; width: 100%; border-radius: 10px; margin: 0 auto;">
-               
-                
                 <!-- Profile Picture -->
                 <div class="form-group mb-3 text-center">
                     <div class="image-wrapper" onclick="document.getElementById('fu_ProfilePic').click(); return false;" style="position: relative; display: inline-block; width: 200px; height: 200px;">
@@ -121,7 +119,7 @@
                     </asp:DropDownList>
                     <asp:RequiredFieldValidator ID="rfv_AreaOfExpertise" runat="server" ControlToValidate="ddl_AreaOfExpertise" CssClass="text-danger" InitiMessage="Please select an area of expertise." Display="Dynamic" Style="display: block; width: 100%; max-width: 325px; margin: 0 auto;" />
                 </div>
-                <!-- Submit Button -->
+                <!-- Submit and Back Button -->
                 <div class="text-center">
                     <asp:Button ID="btnBack" runat="server" Text="Back" CssClass="btn btn-secondary" OnClick="btnBack_Click" />
                     <asp:Button ID="btn_Submit" runat="server" Text="Update Profile" CssClass="btn btn-primary" OnClick="btn_Submit_Click" />
