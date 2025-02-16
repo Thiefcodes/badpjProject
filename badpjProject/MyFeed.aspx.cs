@@ -45,10 +45,11 @@ namespace badpjProject
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             string query = @"
-            SELECT ThreadID, Title, CreatedAt, Views
-            FROM Threads
-            WHERE CreatedBy = @UserID
-            ORDER BY CreatedAt DESC"; // Order by date created (latest first)
+            SELECT t.ThreadID, t.Title, t.CreatedAt, t.Views,
+            COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount
+            FROM Threads t
+            WHERE t.CreatedBy = @UserID
+            ORDER BY t.CreatedAt DESC"; // Order by date created (latest first)
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -120,7 +121,6 @@ namespace badpjProject
 
                     if (reader.Read())
                     {
-                        lblTotalViews.Text = reader["TotalViews"].ToString();
                         lblTotalLikes.Text = reader["TotalLikes"].ToString();
                     }
                 }
@@ -256,9 +256,12 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 string query = @"
-        SELECT TOP 3 t.ThreadID, t.Views, t.Title
-        FROM Threads t
-        ORDER BY t.Views;"; // Select one random thread
+              SELECT TOP 3 t.ThreadID, 
+              t.Views, 
+              t.Title, 
+              COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount
+              FROM Threads t
+              ORDER BY t.Views DESC, PostCount DESC;"; // Select one random thread
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
