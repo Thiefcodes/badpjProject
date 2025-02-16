@@ -36,7 +36,7 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 string sql = @"
-                  SELECT p.ProductID, p.ProductName, p.Description, p.ImageUrl, p.Price,
+                  SELECT ProductID, ProductName, Description, ImageUrl, Price, Category,
                   (SELECT AVG(CAST(StarRating AS DECIMAL(10,2))) FROM Reviews r WHERE r.ProductID = p.ProductID) AS AverageRating
                   FROM dbo.Products p";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -53,7 +53,8 @@ namespace badpjProject
                                 Description = rdr.GetString(2),
                                 ImageUrl = rdr.GetString(3),
                                 Price = rdr.GetDecimal(4),
-                                AverageRating = rdr["AverageRating"] != DBNull.Value ? Convert.ToDecimal(rdr["AverageRating"]) : (decimal?)null
+                                AverageRating = rdr["AverageRating"] != DBNull.Value ? Convert.ToDecimal(rdr["AverageRating"]) : (decimal?)null,
+                                Category = rdr.IsDBNull(5) ? "" : rdr.GetString(5)
                             };
                             productList.Add(p);
                         }

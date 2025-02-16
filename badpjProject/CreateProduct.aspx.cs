@@ -47,7 +47,8 @@ namespace badpjProject
 
         private void LoadProduct(int productId)
         {
-            string sql = @"SELECT ProductName, Description, ImageUrl, Price
+            // Updated query to include Category.
+            string sql = @"SELECT ProductName, Description, ImageUrl, Price, Category
                            FROM dbo.Products
                            WHERE ProductID = @ProductID";
 
@@ -64,6 +65,7 @@ namespace badpjProject
                         txtName.Text = rdr["ProductName"].ToString();
                         txtDescription.Text = rdr["Description"].ToString();
                         txtPrice.Text = rdr["Price"].ToString();
+                        txtCategory.Text = rdr["Category"] == DBNull.Value ? "" : rdr["Category"].ToString();
 
                         string imageUrl = rdr["ImageUrl"].ToString();
                         if (!string.IsNullOrEmpty(imageUrl))
@@ -80,6 +82,7 @@ namespace badpjProject
         {
             string name = txtName.Text.Trim();
             string description = txtDescription.Text.Trim();
+            string category = txtCategory.Text.Trim();
             decimal price;
             if (!decimal.TryParse(txtPrice.Text, out price))
             {
@@ -108,32 +111,32 @@ namespace badpjProject
                 }
             }
 
-
             if (!string.IsNullOrEmpty(Request.QueryString["productID"]))
             {
                 if (int.TryParse(Request.QueryString["productID"], out _productId))
                 {
-                    UpdateProduct(_productId, name, description, finalImageUrl, price);
+                    UpdateProduct(_productId, name, description, category, finalImageUrl, price);
                 }
             }
             else
             {
-                InsertProduct(name, description, finalImageUrl, price);
+                InsertProduct(name, description, category, finalImageUrl, price);
             }
 
             Response.Redirect("ManageProduct.aspx");
         }
 
-        private void InsertProduct(string name, string description, string imageUrl, decimal price)
+        private void InsertProduct(string name, string description, string category, string imageUrl, decimal price)
         {
-            string sql = @"INSERT INTO dbo.Products (ProductName, Description, ImageUrl, Price)
-                           VALUES (@Name, @Description, @ImageUrl, @Price)";
+            string sql = @"INSERT INTO dbo.Products (ProductName, Description, Category, ImageUrl, Price)
+                           VALUES (@Name, @Description, @Category, @ImageUrl, @Price)";
 
             using (SqlConnection conn = new SqlConnection(_connString))
             using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@Name", name);
                 cmd.Parameters.AddWithValue("@Description", description);
+                cmd.Parameters.AddWithValue("@Category", category);
                 cmd.Parameters.AddWithValue("@ImageUrl", imageUrl);
                 cmd.Parameters.AddWithValue("@Price", price);
 
@@ -142,11 +145,12 @@ namespace badpjProject
             }
         }
 
-        private void UpdateProduct(int productId, string name, string description, string imageUrl, decimal price)
+        private void UpdateProduct(int productId, string name, string description, string category, string imageUrl, decimal price)
         {
             string sql = @"UPDATE dbo.Products
                            SET ProductName = @Name,
                                Description = @Description,
+                               Category = @Category,
                                ImageUrl = @ImageUrl,
                                Price = @Price
                            WHERE ProductID = @ProductID";
@@ -157,6 +161,7 @@ namespace badpjProject
                 cmd.Parameters.AddWithValue("@ProductID", productId);
                 cmd.Parameters.AddWithValue("@Name", name);
                 cmd.Parameters.AddWithValue("@Description", description);
+                cmd.Parameters.AddWithValue("@Category", category);
                 cmd.Parameters.AddWithValue("@ImageUrl", imageUrl);
                 cmd.Parameters.AddWithValue("@Price", price);
 

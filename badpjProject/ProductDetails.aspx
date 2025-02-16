@@ -11,6 +11,7 @@
       </div>
       <div class="col-md-6">
         <asp:Label ID="lblName" runat="server" Font-Bold="true" Font-Size="Large" CssClass="d-block mb-2" />
+          <asp:Label ID="lblCategory" runat="server" CssClass="d-block mb-2" />
         <asp:Label ID="lblPrice" runat="server" Font-Size="Medium" CssClass="d-block mb-4" />
         <asp:Label ID="lblDescription" runat="server" CssClass="d-block mb-4" />
         <asp:Label ID="lblWishlistIndicator" runat="server" CssClass="text-success fw-bold" Visible="false" Text="(On your Wishlist!)"/>

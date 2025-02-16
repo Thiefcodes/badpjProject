@@ -13,5 +13,6 @@ namespace badpjProject.Models
         public string ImageUrl { get; set; }
         public decimal Price { get; set; }
         public decimal? AverageRating { get; set; }
+        public string Category { get; set; }
     }
 }

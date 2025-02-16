@@ -25,6 +25,7 @@
             <tr>
               <th>Image</th>
               <th>Name</th>
+              <th>Category</th>
               <th>Price</th>
               <th>Rating</th>
               <th>Actions</th>
@@ -49,6 +50,9 @@
               Visible="false"
               Text="(On your Wishlist!)"></asp:Label>
           </td>
+          <td>
+              <%# Eval("Category") %>
+           </td>
           <td><%# Eval("Price", "{0:C}") %></td>
           <td>
             <%# Eval("AverageRating") != DBNull.Value ? String.Format("{0:F1}", Eval("AverageRating")) : "N/A" %>

@@ -21,7 +21,6 @@ namespace badpjProject
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Always set _productId from the query string, even on postback.
             if (!int.TryParse(Request.QueryString["productID"], out _productId))
             {
                 Response.Write("<script>alert('Invalid product.'); window.location='Shop.aspx';</script>");
@@ -45,7 +44,7 @@ namespace badpjProject
         {
             using (SqlConnection conn = new SqlConnection(_connString))
             {
-                string sql = @"SELECT ProductName, Description, ImageUrl, Price 
+                string sql = @"SELECT ProductName, Description, ImageUrl, Price, Category
                                FROM dbo.Products
                                WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -61,6 +60,7 @@ namespace badpjProject
                             imgProduct.ImageUrl = rdr["ImageUrl"].ToString();
                             decimal price = Convert.ToDecimal(rdr["Price"]);
                             lblPrice.Text = price.ToString("C");
+                            lblCategory.Text = "Category: " + rdr["Category"].ToString();
                         }
                     }
                 }
