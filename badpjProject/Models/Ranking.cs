@@ -22,7 +22,7 @@ namespace badpjProject
         {
             _rankingID = Guid.NewGuid();
             _totalPoints = 0;
-            _rank = "Beginner";
+            _rank = "Unranked";
             _lastUpdated = DateTime.Now;
         }
 
