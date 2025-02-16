@@ -78,26 +78,26 @@ namespace badpjProject
 
         protected void gvPosts_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+             // Get PostID from the first cell (make sure it's the correct column)
+
             if (e.CommandName == "DeletePost")
             {
-                int rowIndex = Convert.ToInt32(e.CommandArgument);
-                string postId = gvPosts.DataKeys[rowIndex].Value.ToString();
+                int index = Convert.ToInt32(e.CommandArgument);
+                string postId = gvPosts.Rows[index].Cells[0].Text;
                 DeletePost(postId);
                 LoadPosts();
             }
             else if (e.CommandName == "EditPost")
             {
+                int index = Convert.ToInt32(e.CommandArgument);
+                string postId = gvPosts.Rows[index].Cells[0].Text;
                 string threadId = Request.QueryString["ThreadID"];
-                int rowIndex = Convert.ToInt32(e.CommandArgument);
-                string postId = gvPosts.DataKeys[rowIndex].Value.ToString();
                 Response.Redirect($"UpdatePost.aspx?PostID={postId}&ThreadID={threadId}");
             }
             else if (e.CommandName == "LikePost")
             {
-                int rowIndex = Convert.ToInt32(e.CommandArgument);
-                // Get the PostID from CommandArgument
-                int postId;
-                if (!int.TryParse(e.CommandArgument.ToString(), out postId))
+                int index = Convert.ToInt32(e.CommandArgument);
+                if (!int.TryParse(e.CommandArgument.ToString(), out int postId))
                 {
                     Response.Write("Invalid Post ID.");
                     return;
