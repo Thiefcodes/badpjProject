@@ -42,13 +42,13 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.FileUpload RewardImageUpload;
 
         /// <summary>
-        /// StreakHoursTextBox control.
+        /// StreakDaysTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox StreakHoursTextBox;
+        protected global::System.Web.UI.WebControls.TextBox StreakDaysTextBox;
 
         /// <summary>
         /// AddRewardButton control.
@@ -105,13 +105,13 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.FileUpload EditRewardImageUpload;
 
         /// <summary>
-        /// EditStreakHoursTextBox control.
+        /// EditStreakDaysTextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox EditStreakHoursTextBox;
+        protected global::System.Web.UI.WebControls.TextBox EditStreakDaysTextBox;
 
         /// <summary>
         /// UpdateRewardButton control.
