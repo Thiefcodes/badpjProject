@@ -5,6 +5,7 @@
 <asp:GridView ID="gvPosts" runat="server" OnRowDataBound="gvPosts_RowDataBound" AutoGenerateColumns="False" 
     OnRowCommand="gvPosts_RowCommand" DataKeyNames="PostID">
     <Columns>
+        <asp:BoundField DataField="PostID" HeaderText="ID" />
         <asp:BoundField DataField="Content" HeaderText="Content" />
         <asp:BoundField DataField="CreatedBy" HeaderText="Author" />
         <asp:BoundField DataField="CreatedAt" HeaderText="Date Created" DataFormatString="{0:yyyy-MM-dd}" />
@@ -13,20 +14,12 @@
           <ItemTemplate>
            <asp:Button ID="btnLike" runat="server" 
               CommandName="LikePost" 
-              CommandArgument='<%# Eval("PostID") %>' 
+              CommandArgument='<%# Eval("PostID") %>'
               Text="Like" />
           </ItemTemplate>
         </asp:TemplateField>
-        <asp:TemplateField HeaderText="">
-        <ItemTemplate>
-        <asp:Button ID="btnEdit" runat="server" CommandName="EditPost" Text="Edit" ButtonType="Button" />
-        </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="">
-        <ItemTemplate>
-        <asp:Button ID="btnDelete" runat="server" CommandName="DeletePost" Text="Delete" ButtonType="Button" />
-        </ItemTemplate>
-        </asp:TemplateField>
+        <asp:ButtonField CommandName="EditPost" Text="Edit" ButtonType="Button" />
+       <asp:ButtonField CommandName="DeletePost" Text="Delete" ButtonType="Button" />
     </Columns>
 </asp:GridView>
 

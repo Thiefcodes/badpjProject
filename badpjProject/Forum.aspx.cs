@@ -23,33 +23,23 @@ namespace badpjProject
         {
             if (!IsPostBack)
             {
+                // Check the session role
+                if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
+                {
+                    // Make the Delete button visible if the role is "Admin"
+                    gvThreads.Columns[6].Visible = true;  // Assuming the Delete button is in the 7th column (index 6)
+                    gvThreads.Columns[7].Visible = true; // Assuming the Update button is in the 8th column(index 7)
+                }
+                else
+                {
+                    // Hide the Delete button for non-admin roles
+                    gvThreads.Columns[6].Visible = false;
+                    gvThreads.Columns[7].Visible = false;
+                }
                 LoadThreads();
             }
         }
 
-        protected void gvThreads_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                // Find the buttons in the current row using CommandName
-                Button btnUpdate = (Button)e.Row.FindControl("btnUpdate");
-                Button btnDelete = (Button)e.Row.FindControl("btnDelete");
-
-                // Check the session role
-                if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
-                {
-                    // Make the buttons visible for staff users
-                    btnUpdate.Visible = true;
-                    btnDelete.Visible = true;
-                }
-                else
-                {
-                    // Hide the buttons for non-staff users
-                    btnUpdate.Visible = false;
-                    btnDelete.Visible = false;
-                }
-            }
-        }
 
         private void LoadThreads()
         {
