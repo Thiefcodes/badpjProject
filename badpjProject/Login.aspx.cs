@@ -10,6 +10,11 @@ namespace badpjProject
         {
             // Optionally add page load logic here
         }
+        protected void Button2_Click1(object sender, EventArgs e)
+        {
+            
+            Response.Redirect("FacialLogin.aspx");
+        }
 
         protected void Button1_Click1(object sender, EventArgs e)
         {

@@ -2,9 +2,8 @@
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Web;
-using System.Web.Services;
-using System.Web.Script.Services;
-using Newtonsoft.Json; // Ensure Newtonsoft.Json is installed via NuGet
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace badpjProject
 {
@@ -12,39 +11,33 @@ namespace badpjProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+            // Ensure the user is logged in; if not, redirect to login
+            if (Session["UserId"] == null || Session["Username"] == null)
+            {
+                Response.Redirect("Login.aspx");
+            }
         }
 
-
-        // WebMethod to enroll the facial authentication data
-        [WebMethod(EnableSession = true)]
-        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public static string EnrollFacialAuth(float[] descriptor)
+        // Button click event to enroll the facial descriptor from the hidden field
+        protected void btnEnroll_Click(object sender, EventArgs e)
         {
+            string descriptorJson = hfDescriptor.Value;
+
+            if (string.IsNullOrEmpty(descriptorJson))
+            {
+                lblMessage.Text = "No facial data captured. Please try again.";
+                return;
+            }
+
             try
             {
-                // Debug: Print session variables to the Output window
-                var sessionUserId = HttpContext.Current.Session["UserId"] != null
-                                    ? HttpContext.Current.Session["UserId"].ToString()
-                                    : "null";
-                var sessionUsername = HttpContext.Current.Session["Username"] != null
-                                      ? HttpContext.Current.Session["Username"].ToString()
-                                      : "null";
-                System.Diagnostics.Debug.WriteLine("EnrollFacialAuth - Session UserId: " + sessionUserId);
-                System.Diagnostics.Debug.WriteLine("EnrollFacialAuth - Session Username: " + sessionUsername);
-
-                
-
-                int userId = Convert.ToInt32(HttpContext.Current.Session["UserId"]);
-                string username = HttpContext.Current.Session["Username"].ToString();
-
-                // Convert the face descriptor array to a JSON string for storage
-                string descriptorJson = JsonConvert.SerializeObject(descriptor);
+                int userId = Convert.ToInt32(Session["UserId"]);
+                string username = Session["Username"].ToString();
                 string connString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
-                // Insert the facial authentication data into the new table
                 using (SqlConnection conn = new SqlConnection(connString))
                 {
+                    // Insert the face descriptor (JSON) into the database
                     string sql = "INSERT INTO UserFacialAuth (UserId, Login_Name, FaceDescriptor) VALUES (@UserId, @Login_Name, @FaceDescriptor)";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
@@ -56,13 +49,12 @@ namespace badpjProject
                     }
                 }
 
-                return "Facial authentication enabled successfully.";
+                lblMessage.Text = "Facial descriptor enrolled successfully for user: " + username;
             }
             catch (Exception ex)
             {
-                return "Error: " + ex.Message;
+                lblMessage.Text = "Error: " + ex.Message;
             }
         }
-
     }
 }
