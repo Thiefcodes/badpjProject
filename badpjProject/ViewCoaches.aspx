@@ -2,8 +2,29 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <h2 class="mt-4">Pending Coaches</h2>
-
+        <h2 class="mt-4 text-center">Manage Coaches</h2>
+        
+        <!-- Filter Section -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <asp:Label ID="lblFilter" runat="server" Text="Filter by Status:" CssClass="font-weight-bold"></asp:Label>
+                <asp:DropDownList ID="ddlStatusFilter" runat="server" AutoPostBack="true" 
+                    OnSelectedIndexChanged="ddlStatusFilter_SelectedIndexChanged" CssClass="form-control">
+                    <asp:ListItem Value="Pending" Text="Pending" Selected="True" />
+                    <asp:ListItem Value="Approved" Text="Approved" />
+                </asp:DropDownList>
+            </div>
+            <div class="col-md-4">
+                <asp:Label ID="lblSort" runat="server" Text="Sort by:" CssClass="font-weight-bold"></asp:Label>
+                <asp:DropDownList ID="ddlSort" runat="server" AutoPostBack="true" 
+                    OnSelectedIndexChanged="ddlSort_SelectedIndexChanged" CssClass="form-control">
+                    <asp:ListItem Value="Name" Text="Name" />
+                    <asp:ListItem Value="Email" Text="Email" />
+                </asp:DropDownList>
+            </div>
+        </div>
+        
+        <!-- Pending Coaches Section -->
         <asp:Repeater ID="rptPendingCoaches" runat="server" OnItemCommand="rptPendingCoaches_ItemCommand">
             <HeaderTemplate>
                 <table class="table table-hover" id="pendingCoachesTable">
@@ -24,15 +45,13 @@
                         <asp:LinkButton ID="btnApprove" runat="server" 
                             CssClass="btn btn-success btn-sm"
                             CommandName="Approve" CommandArgument='<%# Eval("Coach_Id") %>' 
-                            Text="Approve" 
-                            OnClientClick="return confirm('Do you want to approve this coach?');" />
-
+                            Text="Approve" />
+                        &nbsp;
                         <asp:LinkButton ID="btnReject" runat="server" 
                             CssClass="btn btn-danger btn-sm"
                             CommandName="Reject" CommandArgument='<%# Eval("Coach_Id") %>' 
-                            Text="Reject" 
-                            OnClientClick="return confirm('Do you want to reject this coach?');" />
-
+                            Text="Reject" OnClientClick="return confirm('Do you want to reject this coach?');" />
+                        &nbsp;
                         <asp:LinkButton ID="hlViewDetails" runat="server" 
                             CssClass="btn btn-info btn-sm"
                             CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>' 
@@ -45,11 +64,10 @@
                 </table>
             </FooterTemplate>
         </asp:Repeater>
-
+        
         <asp:Literal ID="litNoPendingCoaches" runat="server" Text="" />
-
-        <h2 class="mt-5">Approved Coaches</h2>
-
+        
+        <!-- Approved Coaches Section -->
         <asp:Repeater ID="rptApprovedCoaches" runat="server" OnItemCommand="rptApprovedCoaches_ItemCommand">
             <HeaderTemplate>
                 <table class="table table-striped" id="approvedCoachesTable">
@@ -71,12 +89,11 @@
                             CssClass="btn btn-info btn-sm"
                             CommandName="ViewDetails" CommandArgument='<%# Eval("Coach_Id") %>' 
                             Text="View Details" />
-
+                        &nbsp;
                         <asp:LinkButton ID="btnRemove" runat="server" 
                             CssClass="btn btn-danger btn-sm"
                             CommandName="Remove" CommandArgument='<%# Eval("Coach_Id") %>' 
-                            Text="Remove"
-                            OnClientClick="return confirm('Do you want to remove this coach?');" />
+                            Text="Remove" OnClientClick="return confirm('Do you want to remove this coach?');" />
                     </td>
                 </tr>
             </ItemTemplate>
@@ -85,10 +102,10 @@
                 </table>
             </FooterTemplate>
         </asp:Repeater>
-
+        
         <asp:Literal ID="litNoApprovedCoaches" runat="server" Text="" />
-
-        <!-- Label to show success or error messages -->
+        
+        <!-- Label to show success or error messages consistently -->
         <asp:Label ID="lblMessage" runat="server" CssClass="alert" Visible="false"></asp:Label>
     </div>
 </asp:Content>
