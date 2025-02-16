@@ -60,13 +60,13 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.TextBox tb_Comment;
 
         /// <summary>
-        /// lblVideoStatus control.
+        /// litVideoStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblVideoStatus;
+        protected global::System.Web.UI.WebControls.Literal litVideoStatus;
 
         /// <summary>
         /// btnSubmitVideo control.
@@ -85,5 +85,14 @@ namespace badpjProject
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptLeaderboard;
+
+        /// <summary>
+        /// litMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litMessage;
     }
 }
