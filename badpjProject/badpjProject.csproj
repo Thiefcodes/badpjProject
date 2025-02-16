@@ -159,6 +159,7 @@
     <Content Include="LogSession.aspx" />
     <Content Include="ManageRank.aspx" />
     <Content Include="MyFeed.aspx" />
+    <Content Include="PointRedeem.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
     <Content Include="Coaches.aspx" />
     <Content Include="CoachSubmitted.aspx" />
@@ -431,6 +432,13 @@
       <DependentUpon>MyFeed.aspx</DependentUpon>
     </Compile>
     <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Include="PointRedeem.aspx.cs">
+      <DependentUpon>PointRedeem.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PointRedeem.aspx.designer.cs">
+      <DependentUpon>PointRedeem.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SignUpCoachesDetails.aspx.cs">
       <DependentUpon>SignUpCoachesDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
