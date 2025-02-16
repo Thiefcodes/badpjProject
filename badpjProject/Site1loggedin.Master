@@ -45,6 +45,7 @@
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/MyFeed.aspx">MyFeed</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Shop.aspx">Shop</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/LogSession.aspx">Log Sessions</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/PointRedeem.aspx">Redeem Point</a></li>
                         <li class="nav-item" runat="server" id="liUserOrders"><a class="nav-link" runat="server" href="~/Orders.aspx">My orders</a></li>
                         <li class="nav-item" runat="server" id="liStaffManageProduct"><a class="nav-link" runat="server" href="~/ManageProduct.aspx">Manage Products</a></li>
                         <li class="nav-item" runat="server" id="liStaffAllorders"><a class="nav-link" runat="server" href="Allorders.aspx">All orders</a></li>
