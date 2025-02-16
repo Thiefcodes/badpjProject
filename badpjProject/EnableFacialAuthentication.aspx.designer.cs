@@ -22,5 +22,8 @@ namespace badpjProject
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label UserLabel;
+        protected global::System.Web.UI.WebControls.HiddenField hfFaceImage;
+        protected global::System.Web.UI.WebControls.Label lblMessage;
+        protected global::System.Web.UI.WebControls.HiddenField hfDescriptor;
     }
 }

@@ -105,12 +105,16 @@
     </Content>
     <Content Include="Authentication.aspx" />
     <Content Include="BecomeACoach.aspx" />
+    <Content Include="bin\badpjProject.dll" />
+    <Content Include="bin\badpjProject.pdb" />
     <Content Include="CameraAccess.aspx" />
     <Content Include="Checkout.aspx" />
     <Content Include="CoachDetails.aspx" />
     <Content Include="CoachEditProfile.aspx" />
     <Content Include="CoachProfile.aspx" />
     <Content Include="EnableFacialAuthentication.aspx" />
+    <Content Include="FacialLogin.aspx" />
+    <Content Include="MyFeed.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
     <Content Include="Coaches.aspx" />
     <Content Include="CoachSubmitted.aspx" />
@@ -161,7 +165,39 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="TestPage.aspx" />
     <Content Include="ThankYou.aspx" />
+    <Content Include="Uploads\2a7b6595-6e52-4e31-ba02-c5c2e4caa19b.png" />
+    <Content Include="Uploads\APPLE.png" />
+    <Content Include="Uploads\art4.jpeg" />
+    <Content Include="Uploads\bob1.PNG" />
+    <Content Include="Uploads\boober.jpg" />
+    <Content Include="Uploads\c2.PNG" />
+    <Content Include="Uploads\china.jpg" />
+    <Content Include="Uploads\Coach-Header.jpg" />
+    <Content Include="Uploads\default-image.png" />
+    <Content Include="UserImages\awda_20250213102155.png" />
+    <Content Include="UserImages\bryan saev_20250213105106.png" />
+    <Content Include="UserImages\dsasdwad_20250213102250.png" />
+    <Content Include="UserImages\dsasdwad_20250213102258.png" />
+    <Content Include="UserImages\wdad_20250213105043.png" />
     <Content Include="Wishlist.aspx" />
+    <Content Include="Facialmodels\age_gender_model-shard1" />
+    <Content Include="Facialmodels\age_gender_model-weights_manifest.json" />
+    <Content Include="Facialmodels\face_expression_model-shard1" />
+    <Content Include="Facialmodels\face_expression_model-weights_manifest.json" />
+    <Content Include="Facialmodels\face_landmark_68_model-shard1" />
+    <Content Include="Facialmodels\face_landmark_68_model-weights_manifest.json" />
+    <Content Include="Facialmodels\face_landmark_68_tiny_model-shard1" />
+    <Content Include="Facialmodels\face_landmark_68_tiny_model-weights_manifest.json" />
+    <Content Include="Facialmodels\face_recognition_model-shard1" />
+    <Content Include="Facialmodels\face_recognition_model-shard2" />
+    <Content Include="Facialmodels\face_recognition_model-weights_manifest.json" />
+    <Content Include="Facialmodels\mtcnn_model-shard1" />
+    <Content Include="Facialmodels\mtcnn_model-weights_manifest.json" />
+    <Content Include="Facialmodels\ssd_mobilenetv1_model-shard1" />
+    <Content Include="Facialmodels\ssd_mobilenetv1_model-shard2" />
+    <Content Include="Facialmodels\ssd_mobilenetv1_model-weights_manifest.json" />
+    <Content Include="Facialmodels\tiny_face_detector_model-shard1" />
+    <Content Include="Facialmodels\tiny_face_detector_model-weights_manifest.json" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -286,6 +322,21 @@
     <Compile Include="EnableFacialAuthentication.aspx.designer.cs">
       <DependentUpon>EnableFacialAuthentication.aspx</DependentUpon>
     </Compile>
+    <Compile Include="FacialLogin.aspx.cs">
+      <DependentUpon>FacialLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FacialLogin.aspx.designer.cs">
+      <DependentUpon>FacialLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MyFeed.aspx.cs">
+      <DependentUpon>MyFeed.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MyFeed.aspx.designer.cs">
+      <DependentUpon>MyFeed.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
     <Compile Include="SignUpCoachesDetails.aspx.cs">
       <DependentUpon>SignUpCoachesDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -575,9 +626,7 @@
       <DependentUpon>Wishlist.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Uploads\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />
