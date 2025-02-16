@@ -354,6 +354,7 @@
     <Compile Include="LeaveReview.aspx.designer.cs">
       <DependentUpon>LeaveReview.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Ranking.cs" />
     <Compile Include="MyFeed.aspx.cs">
       <DependentUpon>MyFeed.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
