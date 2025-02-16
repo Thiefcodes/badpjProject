@@ -14,14 +14,35 @@
         <asp:UpdatePanel ID="UpdatePanelChat" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
                 <div class="chat-box" id="chatBox">
-                    <asp:Repeater ID="rptMessages" runat="server">
+                   <asp:Repeater ID="rptMessages" runat="server">
     <ItemTemplate>
         <div class="message-container">
             <div class="chat-message">
                 <div class="message-sender">
-                    <strong><%# Eval("SenderName") %></strong> <!-- ✅ Always Show Sender Name -->
+                    <strong><%# Eval("SenderName") %></strong>
                 </div>
-                <div class="message-text"><%# Eval("Message") %></div>
+                <div class="message-text">
+                    <%# Eval("Message") %>
+
+                    <%-- Show "Send Offer" button only if Coach is logged in --%>
+                    <asp:Panel ID="pnlCoachOffer" runat="server" Visible='<%# Session["UserType"] != null && Session["UserType"].ToString() == "Coach" %>'>
+    <asp:TextBox ID="txtOfferPrice" runat="server" CssClass="offer-input" placeholder="Enter Offer Price"></asp:TextBox>
+    <asp:Button ID="btnSendOffer" runat="server" Text="Send Offer" CssClass="btn btn-warning" OnClick="btnSendOffer_Click" />
+</asp:Panel>
+
+
+                    <%-- Show "Accept" & "Reject" buttons only if User is logged in --%>
+                   <asp:Panel ID="pnlUserResponse" runat="server"
+    Visible='<%# Convert.ToInt32(Session["UserId"]) == Convert.ToInt32(Request.QueryString["userId"]) && Eval("Status") != DBNull.Value && Eval("Status").ToString() == "Pending" %>'>
+    <strong>Offer: $<%# Eval("OfferAmount") %></strong>
+    <asp:Button ID="btnAcceptOffer" runat="server" Text="Accept" CssClass="btn btn-primary"
+        CommandArgument='<%# Eval("PaymentId") %>' OnClick="btnAcceptOffer_Click" />
+    <asp:Button ID="btnRejectOffer" runat="server" Text="Reject" CssClass="btn btn-danger"
+        CommandArgument='<%# Eval("PaymentId") %>' OnClick="btnRejectOffer_Click" />
+</asp:Panel>
+
+
+                </div>
                 <div class="message-timestamp"><%# Eval("Timestamp", "{0:dd/MM/yyyy HH:mm}") %></div>
             </div>
         </div>
@@ -29,10 +50,18 @@
 </asp:Repeater>
                 </div>
 
-                <div class="message-input-container">
-                    <asp:TextBox ID="txtMessage" runat="server" CssClass="message-input" placeholder="Type a message..."></asp:TextBox>
-                    <asp:Button ID="btnSend" runat="server" Text="Send" CssClass="chat-button" OnClick="btnSend_Click" />
-                </div>
+               <div class="message-input-container">
+    <asp:TextBox ID="txtMessage" runat="server" CssClass="message-input" placeholder="Type a message..."></asp:TextBox>
+    <asp:Button ID="btnSend" runat="server" Text="Send" CssClass="chat-button" OnClick="btnSend_Click" />
+
+    <%-- ✅ Only show the Offer Price input & button if the logged-in user is the coach --%>
+    <asp:Panel ID="pnlOfferSection" runat="server" Visible='<%# Convert.ToInt32(Session["UserId"]) != Convert.ToInt32(Request.QueryString["userId"]) %>'>
+    <asp:TextBox ID="txtOfferPriceField" runat="server" CssClass="offer-input" placeholder="Enter Offer Price"></asp:TextBox>
+    <asp:Button ID="btnSendOffer" runat="server" Text="Send Offer" CssClass="btn btn-warning" OnClick="btnSendOffer_Click" />
+</asp:Panel>
+
+</div>
+
             </ContentTemplate>
         </asp:UpdatePanel>
     </div>

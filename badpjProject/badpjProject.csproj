@@ -156,6 +156,7 @@
     <Content Include="Leaderboard.aspx" />
     <Content Include="LeaveReview.aspx" />
     <Content Include="ForumStyles.css" />
+    <Content Include="LogSession.aspx" />
     <Content Include="ManageRank.aspx" />
     <Content Include="MyFeed.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
@@ -406,6 +407,13 @@
     </Compile>
     <Compile Include="LeaveReview.aspx.designer.cs">
       <DependentUpon>LeaveReview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LogSession.aspx.cs">
+      <DependentUpon>LogSession.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LogSession.aspx.designer.cs">
+      <DependentUpon>LogSession.aspx</DependentUpon>
     </Compile>
     <Compile Include="ManageRank.aspx.cs">
       <DependentUpon>ManageRank.aspx</DependentUpon>

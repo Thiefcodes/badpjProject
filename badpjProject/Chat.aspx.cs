@@ -81,18 +81,22 @@ namespace badpjProject
             string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                // ✅ FIX: Ensure correct sender name (User or Coach)
+                // ✅ Fix: Ensure correct sender name (User or Coach) & include Offer Status & Amount
                 string query = @"
             SELECT 
                 c.UserId, 
                 c.Message, 
                 c.Timestamp, 
                 c.Sender, 
+                p.Status, 
+                p.OfferAmount, 
+                p.PaymentId, -- Include PaymentId for Accept/Reject
                 CASE 
                     WHEN c.Sender = 'User' THEN (SELECT Login_Name FROM [Table] WHERE Id = c.UserId)
                     WHEN c.Sender = 'Coach' THEN (SELECT Name FROM Coach WHERE Id = c.CoachId)
                 END AS SenderName
             FROM Chat c
+            LEFT JOIN Payments p ON c.UserId = p.UserId AND c.CoachId = p.CoachId AND p.Status IN ('Pending', 'Accepted') 
             WHERE c.UserId = @UserId AND c.CoachId = @CoachId
             ORDER BY c.Timestamp ASC";
 
@@ -112,30 +116,53 @@ namespace badpjProject
 
         protected void btnSend_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(txtMessage.Text))
+            string message = txtMessage.Text.Trim();
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            if (message.ToLower() == "done")
             {
-                if (Session["UserId"] == null || Request.QueryString["userId"] == null || Request.QueryString["coachId"] == null)
+                using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    Response.Write("<script>alert('Session expired or invalid parameters. Please log in again.');</script>");
-                    return;
+                    string updateQuery = @"
+                UPDATE Payments 
+                SET Status = 'Completed', 
+                    TransferToCoach = PaymentHoldAmount * 0.9, 
+                    TransferToPlatform = PaymentHoldAmount * 0.1, 
+                    CompletedAt = GETDATE() 
+                WHERE UserId = @UserId AND CoachId = @CoachId AND Status = 'Accepted'";
+
+                    SqlCommand cmd = new SqlCommand(updateQuery, conn);
+                    cmd.Parameters.AddWithValue("@UserId", Request.QueryString["userId"]);
+                    cmd.Parameters.AddWithValue("@CoachId", Request.QueryString["coachId"]);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
                 }
 
-                int sessionUserId = Convert.ToInt32(Session["UserId"]);  // Get logged-in user's ID
-                int userId = Convert.ToInt32(Request.QueryString["userId"]);  // Get UserId from URL
-                Guid coachId = Guid.Parse(Request.QueryString["coachId"]);  // Get CoachId from URL
-                string senderType;
+                // ✅ Add System Message in Chat
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    string insertQuery = "INSERT INTO Chat (UserId, CoachId, Message, Timestamp, Sender) VALUES (@UserId, @CoachId, 'Session completed. Payment released.', GETDATE(), 'System')";
+                    SqlCommand cmd = new SqlCommand(insertQuery, conn);
+                    cmd.Parameters.AddWithValue("@UserId", Request.QueryString["userId"]);
+                    cmd.Parameters.AddWithValue("@CoachId", Request.QueryString["coachId"]);
 
-                // ✅ If session user ID matches userId from query -> it's a User
-                if (sessionUserId == userId)
-                {
-                    senderType = "User";
-                }
-                else
-                {
-                    senderType = "Coach";  // ✅ If it does not match, it's a Coach
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
                 }
 
-                string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+                Response.Write("<script>alert('Session complete. Payment released.');</script>");
+            }
+            else
+            {
+                // ✅ Regular Message Processing
+                int sessionUserId = Convert.ToInt32(Session["UserId"]);
+                int userId = Convert.ToInt32(Request.QueryString["userId"]);
+                Guid coachId = Guid.Parse(Request.QueryString["coachId"]);
+                string senderType = (sessionUserId == userId) ? "User" : "Coach";
+
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
                     string insertQuery = "INSERT INTO Chat (UserId, CoachId, Message, Timestamp, Sender) VALUES (@UserId, @CoachId, @Message, @Timestamp, @Sender)";
@@ -150,11 +177,114 @@ namespace badpjProject
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
-
-                txtMessage.Text = "";
-                LoadMessages();  // Reload chat to show new message
-                UpdatePanelChat.Update();  // Manually refresh the UpdatePanel
             }
+
+            txtMessage.Text = "";
+            LoadMessages();
+        }
+
+
+
+        protected void btnSendOffer_Click(object sender, EventArgs e)
+        {
+            // ✅ Ensure only the Coach can send offers
+            if (Convert.ToInt32(Session["UserId"]) == Convert.ToInt32(Request.QueryString["userId"]))
+            {
+                Response.Write("<script>alert('Only the Coach can send offers!');</script>");
+                return;
+            }
+
+            TextBox txtOfferPrice = (TextBox)FindControl("txtOfferPriceField");
+
+            if (txtOfferPrice == null)
+            {
+                Response.Write("<script>alert('Error: Offer price input not found.');</script>");
+                return;
+            }
+
+            decimal offerAmount;
+            if (!decimal.TryParse(txtOfferPrice.Text, out offerAmount))
+            {
+                Response.Write("<script>alert('Invalid price entered. Please enter a valid number.');</script>");
+                return;
+            }
+
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string insertQuery = "INSERT INTO Payments (CoachId, UserId, OfferAmount, Status) VALUES (@CoachId, @UserId, @OfferAmount, 'Pending')";
+                SqlCommand cmd = new SqlCommand(insertQuery, conn);
+
+                cmd.Parameters.AddWithValue("@CoachId", Convert.ToInt32(Session["UserId"])); // ✅ Ensure correct CoachId
+                cmd.Parameters.AddWithValue("@UserId", Convert.ToInt32(Request.QueryString["userId"])); // ✅ Ensure correct UserId
+                cmd.Parameters.AddWithValue("@OfferAmount", offerAmount);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+
+            txtOfferPrice.Text = ""; // Clear input field
+            Response.Write("<script>alert('Offer Sent Successfully!');</script>");
+            LoadMessages(); // Reload chat to show new offer
+        }
+
+
+
+
+        protected void btnAcceptOffer_Click(object sender, EventArgs e)
+        {
+            string paymentId = ((Button)sender).CommandArgument;
+
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string updateQuery = "UPDATE Payments SET Status = 'Accepted', PaymentHoldAmount = OfferAmount WHERE PaymentId = @PaymentId";
+                SqlCommand cmd = new SqlCommand(updateQuery, conn);
+                cmd.Parameters.AddWithValue("@PaymentId", Guid.Parse(paymentId));
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+
+            // ✅ Indicate in chat that the offer was accepted
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string insertQuery = "INSERT INTO Chat (UserId, CoachId, Message, Timestamp, Sender) VALUES (@UserId, @CoachId, 'Offer Accepted! Payment is on hold.', GETDATE(), 'System')";
+                SqlCommand cmd = new SqlCommand(insertQuery, conn);
+                cmd.Parameters.AddWithValue("@UserId", Request.QueryString["userId"]);
+                cmd.Parameters.AddWithValue("@CoachId", Request.QueryString["coachId"]);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+
+            Response.Write("<script>alert('Offer Accepted! Payment is on hold.');</script>");
+            LoadMessages();
+        }
+
+
+
+        protected void btnRejectOffer_Click(object sender, EventArgs e)
+        {
+            string paymentId = ((Button)sender).CommandArgument;
+
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string updateQuery = "UPDATE Payments SET Status = 'Rejected' WHERE PaymentId = @PaymentId";
+                SqlCommand cmd = new SqlCommand(updateQuery, conn);
+                cmd.Parameters.AddWithValue("@PaymentId", paymentId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+
+            Response.Write("<script>alert('Offer rejected.');</script>");
+            LoadMessages();
         }
 
     }
