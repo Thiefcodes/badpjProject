@@ -16,6 +16,24 @@ namespace badpjProject
                 // Load the thread and posts after role checks
                 LoadThread();
                 LoadPosts();
+
+            }
+            if (!IsPostBack)
+            {
+                // Check the session role
+                if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
+                {
+                    // Make the Delete button visible if the role is "Admin"
+                    gvPosts.Columns[6].Visible = true;  // Assuming the Delete button is in the 7th column (index 6)
+                    gvPosts.Columns[7].Visible = true; // Assuming the Update button is in the 8th column(index 7)
+                }
+                else
+                {
+                    // Hide the Delete button for non-admin roles
+                    gvPosts.Columns[6].Visible = false;
+                    gvPosts.Columns[7].Visible = false;
+                }
+                LoadPosts();
             }
 
         }
@@ -203,8 +221,7 @@ namespace badpjProject
                    CASE WHEN pl.UserID IS NOT NULL THEN 'Liked' ELSE 'Like' END AS LikeStatus
             FROM Posts p
             LEFT JOIN [Table] u ON p.CreatedBy = u.Id
-            LEFT JOIN PostLikes pl ON p.PostID = pl.PostID AND pl.UserID = @UserID
-            WHERE p.ThreadID = @ThreadID";
+            LEFT JOIN PostLikes pl ON p.PostID = pl.PostID AND pl.UserID = @UserID";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@ThreadID", threadId);

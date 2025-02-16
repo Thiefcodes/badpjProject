@@ -108,6 +108,7 @@
     <Content Include="CoachDetails.aspx" />
     <Content Include="CoachEditProfile.aspx" />
     <Content Include="CoachProfile.aspx" />
+    <Content Include="MyFeed.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
     <Content Include="Coaches.aspx" />
     <Content Include="CoachSubmitted.aspx" />
@@ -260,6 +261,13 @@
     </Compile>
     <Compile Include="CoachProfile.aspx.designer.cs">
       <DependentUpon>CoachProfile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MyFeed.aspx.cs">
+      <DependentUpon>MyFeed.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MyFeed.aspx.designer.cs">
+      <DependentUpon>MyFeed.aspx</DependentUpon>
     </Compile>
     <Compile Include="SignUpCoachesDetails.aspx.cs">
       <DependentUpon>SignUpCoachesDetails.aspx</DependentUpon>
