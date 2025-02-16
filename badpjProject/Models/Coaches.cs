@@ -597,6 +597,36 @@ namespace badpjProject
             return isAlreadyCoach;
         }
 
+        public bool IsUserAlreadySignUp(int userId)
+        {
+            bool isAlreadySignUp = false;
+
+            string queryStr = "SELECT COUNT(*) FROM [dbo].[CoachStatus] WHERE user_id = @UserId";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                try
+                {
+                    conn.Open();
+                    int result = (int)cmd.ExecuteScalar();
+
+                    if (result > 0)
+                    {
+                        isAlreadySignUp = true; // User already exists as a coach or has a pending application
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error: " + ex.Message);
+                }
+            }
+
+            return isAlreadySignUp;
+        }
+
 
         public bool InsertCoachStatus(int userId, string coachId)
         {

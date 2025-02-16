@@ -84,7 +84,10 @@
             </div>
         </asp:Panel>
 
-        <!-- Label for pending status -->
-        <asp:Label ID="lblStatus" runat="server" CssClass="text-center" ForeColor="red" Visible="false"></asp:Label>
+        <!-- Modern Pending Status Alert -->
+        <!-- Modern Pending Status Alert Panel -->
+        <asp:Panel ID="divPendingStatus" runat="server" CssClass="alert alert-warning text-center" Style="display: none;">
+            <asp:Literal ID="litPendingStatus" runat="server" />
+        </asp:Panel>
     </div>
 </asp:Content>
