@@ -102,7 +102,8 @@ namespace badpjProject
             {
                 liStaffManageProduct,
                 liStaffViewCoaches,
-                liStaffAllorders
+                liStaffAllorders,
+                liStaffManageRank
             };
 
             foreach (var tab in staffOnlyTabs)
@@ -118,7 +119,8 @@ namespace badpjProject
             List<Control> userOnlyTabs = new List<Control>
             {
                 liUserBecomeACoach,
-                liUserOrders
+                liUserOrders,
+                liUserLeaderboard
             };
 
             foreach (var tab in userOnlyTabs)
