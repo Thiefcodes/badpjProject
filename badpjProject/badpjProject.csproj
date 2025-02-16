@@ -114,6 +114,7 @@
     <Content Include="CoachProfile.aspx" />
     <Content Include="EnableFacialAuthentication.aspx" />
     <Content Include="FacialLogin.aspx" />
+    <Content Include="ForumStyles.css" />
     <Content Include="MyFeed.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
     <Content Include="Coaches.aspx" />

@@ -2,6 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <link href="ForumStyles.css" rel="stylesheet" type="text/css" />
     <h2>My Feed</h2>
     <asp:GridView ID="gvRandomThreads" runat="server" AutoGenerateColumns="False" OnRowCommand="gvRandomThreads_RowCommand"
         DataKeyNames="ThreadID">
@@ -24,7 +25,7 @@
                <asp:Button ID="btnLike" runat="server" 
                  CommandName="LikePost" 
                  CommandArgument='<%# Eval("PostID") %>'
-                 Text="Like" />
+                 CssClass="btn btn-success btn-sm" Text="Like" />
             </ItemTemplate>
           </asp:TemplateField>
         </Columns>
@@ -38,9 +39,9 @@
            <asp:BoundField DataField="Title" HeaderText="Title" />
            <asp:BoundField DataField="CreatedAt" HeaderText="Date Created" DataFormatString="{0:yyyy-MM-dd}" />
            <asp:BoundField DataField="Views" HeaderText="Views" /> 
-           <asp:ButtonField CommandName="ViewThread" Text="Select" />
-           <asp:ButtonField CommandName="UpdateThread" Text="Update" />
-           <asp:ButtonField CommandName="DeleteThread" Text="Delete" />
+           <asp:ButtonField CommandName="ViewThread" ItemStyle-CssClass="btn-custom" Text="Select" />
+           <asp:ButtonField CommandName="UpdateThread" ItemStyle-CssClass="btn-custom" Text="Update" />
+           <asp:ButtonField CommandName="DeleteThread" ItemStyle-CssClass="btn-custom" Text="Delete" />
         </Columns>
     </asp:GridView>
 
@@ -49,10 +50,11 @@
     <asp:GridView ID="gvPosts" runat="server" AutoGenerateColumns="False" OnRowCommand="gvPosts_RowCommand"
         DataKeyNames="PostID">
         <Columns>
+            <asp:BoundField DataField="PostID" HeaderText="ID" />
             <asp:BoundField DataField="Content" HeaderText="Content" />
             <asp:BoundField DataField="CreatedAt" HeaderText="Date Created" DataFormatString="{0:yyyy-MM-dd}" />
             <asp:BoundField DataField="Likes" HeaderText="Likes" />
-            <asp:ButtonField CommandName="DeletePost" Text="Delete" ButtonType="Button" />
+            <asp:ButtonField CommandName="DeletePost" ItemStyle-CssClass="btn-custom" Text="Delete" ButtonType="Button" />
         </Columns>
     </asp:GridView>
 </asp:Content>

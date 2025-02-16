@@ -7,6 +7,6 @@
 <asp:TextBox ID="txtTitle" runat="server" Placeholder="Thread Title"></asp:TextBox>
 <asp:Label ID="lblMessage" runat="server" ForeColor="Red"></asp:Label>
 <!-- Create Button -->
-<asp:Button ID="btnCreate" runat="server" Text="Create" OnClick="btnCreate_Click" />
+<asp:Button ID="btnCreate" runat="server" CssClass="btn btn-primary btn-sm" Text="Create" OnClick="btnCreate_Click" />
         </div>
 </asp:Content>
