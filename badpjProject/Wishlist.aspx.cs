@@ -139,6 +139,7 @@ namespace badpjProject
                     break;
                 case "AddToCart":
                     AddToCart(productId);
+                    Response.Write("<script>alert('Item added to cart!');</script>");
                     break;
             }
         }
@@ -211,6 +212,7 @@ namespace badpjProject
                         else
                         {
                             cart.Add(newItem);
+                            Response.Write("<script>alert('Item added to cart!');</script>");
                         }
                         Session["Cart"] = cart;
                     }

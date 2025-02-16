@@ -12,7 +12,7 @@ namespace badpjProject
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Always try to parse the productID from the query string
+            // Always parse the productID from the query string, even on postback.
             if (!int.TryParse(Request.QueryString["productID"], out _productId))
             {
                 Response.Write("<script>alert('Invalid product.'); window.location='Orders.aspx';</script>");
@@ -21,17 +21,15 @@ namespace badpjProject
 
             if (!IsPostBack)
             {
-                // Load product info for display
                 LoadProductName(_productId);
             }
         }
-
 
         private void LoadProductName(int productId)
         {
             using (SqlConnection conn = new SqlConnection(_connString))
             {
-                string sql = "SELECT ProductName FROM Products WHERE ProductID=@ProductID";
+                string sql = "SELECT ProductName FROM Products WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@ProductID", productId);
@@ -47,17 +45,37 @@ namespace badpjProject
 
         protected void btnSubmitReview_Click(object sender, EventArgs e)
         {
-            int starRating = int.Parse(ddlStarRating.SelectedValue);
-            string reviewMessage = txtReviewMessage.Text.Trim();
             int userId = Convert.ToInt32(Session["UserID"]);
 
-            // Ensure _productId (obtained from query string on Page_Load) is valid.
+            // Ensure _productId is valid
             if (_productId <= 0)
             {
                 Response.Write("<script>alert('Invalid product selected for review.');</script>");
                 return;
             }
 
+            // Check if a review already exists for this product by this user
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                string checkSql = "SELECT COUNT(*) FROM Reviews WHERE ProductID = @ProductID AND UserID = @UserID";
+                using (SqlCommand cmd = new SqlCommand(checkSql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", _productId);
+                    cmd.Parameters.AddWithValue("@UserID", userId);
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+                    if (count > 0)
+                    {
+                        Response.Write("<script>alert('You have already left a review for this product.');</script>");
+                        return;
+                    }
+                }
+            }
+
+            int starRating = int.Parse(ddlStarRating.SelectedValue);
+            string reviewMessage = txtReviewMessage.Text.Trim();
+
+            // Insert the new review
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 string sql = "INSERT INTO Reviews (ProductID, UserID, StarRating, ReviewMessage) " +
@@ -75,7 +93,5 @@ namespace badpjProject
 
             Response.Redirect("ProductDetails.aspx?productID=" + _productId);
         }
-
-
     }
 }

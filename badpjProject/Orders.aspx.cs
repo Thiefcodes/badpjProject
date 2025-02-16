@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -35,15 +34,15 @@ namespace badpjProject
             {
                 conn.Open();
 
-                string query = @"SELECT OrderID, OrderDate, Status, Address, City, PostalCode, ProductName, Quantity, Price
-                                 FROM Orders
-                                 WHERE UserID = @UserID
-                                 ORDER BY OrderID, OrderDate";
+                string query = @"
+                    SELECT OrderID, OrderDate, Status, Address, City, PostalCode, ProductName, Quantity, Price
+                    FROM Orders
+                    WHERE UserID = @UserID
+                    ORDER BY OrderID, OrderDate";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@UserID", Session["UserID"]);
-
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -60,7 +59,6 @@ namespace badpjProject
                                     FullAddress = $"{reader["Address"]}, {reader["City"]}, {reader["PostalCode"]}",
                                     Items = new List<OrderDetail>()
                                 };
-
                                 orders.Add(existingOrder);
                             }
                             existingOrder.Items.Add(new OrderDetail
@@ -86,15 +84,14 @@ namespace badpjProject
                 using (SqlConnection conn = new SqlConnection(_connString))
                 {
                     conn.Open();
-
-                    // Retrieve the current status of the order
+                    // Retrieve the current status of the order.
                     string query = "SELECT Status FROM Orders WHERE OrderID = @OrderID";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@OrderID", orderId);
                         string currentStatus = cmd.ExecuteScalar()?.ToString();
 
-                        // Check if the order is eligible for a refund
+                        // Refunds are not allowed if the order is in Shipping or Shipped status.
                         if (currentStatus == "Shipping" || currentStatus == "Shipped")
                         {
                             Response.Write("<script>alert('Refunds are not allowed for orders with status Shipping or Shipped.');</script>");
@@ -102,8 +99,6 @@ namespace badpjProject
                         }
                     }
                 }
-
-                // If eligible, update the order status to Refund
                 UpdateOrderStatusToRefund(orderId);
                 LoadOrders();
                 Response.Write("<script>alert('Order has been marked as refunded.');</script>");
@@ -124,7 +119,7 @@ namespace badpjProject
                     }
                 }
 
-                // Enforce that reviews can only be left if status is "Shipped"
+                // Enforce that reviews can only be left if the order is marked as "Shipped".
                 if (orderStatus != "Shipped")
                 {
                     Response.Write("<script>alert('You can only leave a review for orders that have been shipped.');</script>");
@@ -143,11 +138,47 @@ namespace badpjProject
             }
         }
 
+        private void UpdateOrderStatusToRefund(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                conn.Open();
+
+                // Check if the order is already refunded.
+                string checkQuery = "SELECT Status FROM Orders WHERE OrderID = @OrderID";
+                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                {
+                    checkCmd.Parameters.AddWithValue("@OrderID", orderId);
+                    string currentStatus = (string)checkCmd.ExecuteScalar();
+                    if (currentStatus == "Refund")
+                    {
+                        Response.Write("<script>alert('This order is already refunded.');</script>");
+                        return;
+                    }
+                }
+
+                // Update the order status to "Refund".
+                string updateQuery = "UPDATE Orders SET Status = 'Refund' WHERE OrderID = @OrderID";
+                using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@OrderID", orderId);
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected == 0)
+                    {
+                        Response.Write("<script>alert('Failed to update order status.');</script>");
+                    }
+                }
+            }
+        }
+
+        // Helper method to retrieve the ProductID for a given OrderID.
+        // Since the Orders table does not store ProductID directly, we retrieve the ProductName first and then look it up.
         private int GetProductIdFromOrder(int orderId)
         {
             int productId = 0;
             string productName = "";
 
+            // Retrieve the ProductName from the Orders table.
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 string sql = "SELECT TOP 1 ProductName FROM Orders WHERE OrderID = @OrderID";
@@ -164,7 +195,7 @@ namespace badpjProject
                 }
             }
 
-            // Use the ProductName to get the ProductID from the Products table using a case-insensitive comparison.
+            // Use the ProductName to get the ProductID from the Products table (using a case-insensitive comparison).
             if (!string.IsNullOrEmpty(productName))
             {
                 using (SqlConnection conn = new SqlConnection(_connString))
@@ -184,45 +215,9 @@ namespace badpjProject
             }
             return productId;
         }
-
-
-        private void UpdateOrderStatusToRefund(int orderId)
-        {
-            using (SqlConnection conn = new SqlConnection(_connString))
-            {
-                conn.Open();
-
-                // Check if the order already has "(Refund)" in the ID
-                string checkQuery = "SELECT Status FROM Orders WHERE OrderID = @OrderID";
-                using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
-                {
-                    checkCmd.Parameters.AddWithValue("@OrderID", orderId);
-                    string currentStatus = (string)checkCmd.ExecuteScalar();
-
-                    // If already marked as Refund, do nothing
-                    if (currentStatus == "Refund")
-                    {
-                        Response.Write("<script>alert('This order is already refunded.');</script>");
-                        return;
-                    }
-                }
-
-                // Update the order status to "Refund"
-                string updateQuery = "UPDATE Orders SET Status = 'Refund' WHERE OrderID = @OrderID";
-                using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
-                {
-                    cmd.Parameters.AddWithValue("@OrderID", orderId);
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                    if (rowsAffected == 0)
-                    {
-                        Response.Write("<script>alert('Failed to update order status.');</script>");
-                    }
-                }
-            }
-        }
     }
 
+    // Order and OrderDetail classes.
     public class Order
     {
         public int OrderID { get; set; }

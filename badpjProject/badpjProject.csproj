@@ -112,11 +112,9 @@
     <Content Include="CoachDetails.aspx" />
     <Content Include="CoachEditProfile.aspx" />
     <Content Include="CoachProfile.aspx" />
-    <Content Include="CreateSale.aspx" />
     <Content Include="EnableFacialAuthentication.aspx" />
     <Content Include="FacialLogin.aspx" />
     <Content Include="LeaveReview.aspx" />
-    <Content Include="ManageSales.aspx" />
     <Content Include="ForumStyles.css" />
     <Content Include="MyFeed.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
@@ -319,13 +317,6 @@
     <Compile Include="CoachProfile.aspx.designer.cs">
       <DependentUpon>CoachProfile.aspx</DependentUpon>
     </Compile>
-    <Compile Include="CreateSale.aspx.cs">
-      <DependentUpon>CreateSale.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="CreateSale.aspx.designer.cs">
-      <DependentUpon>CreateSale.aspx</DependentUpon>
-    </Compile>
     <Compile Include="EnableFacialAuthentication.aspx.cs">
       <DependentUpon>EnableFacialAuthentication.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -346,13 +337,6 @@
     </Compile>
     <Compile Include="LeaveReview.aspx.designer.cs">
       <DependentUpon>LeaveReview.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ManageSales.aspx.cs">
-      <DependentUpon>ManageSales.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ManageSales.aspx.designer.cs">
-      <DependentUpon>ManageSales.aspx</DependentUpon>
     </Compile>
     <Compile Include="MyFeed.aspx.cs">
       <DependentUpon>MyFeed.aspx</DependentUpon>
