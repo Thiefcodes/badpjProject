@@ -4,6 +4,9 @@
     <div class="container mt-5">
         <h2 class="text-center">Configure Rewards</h2>
         <div class="card shadow-sm p-4 mt-4" style="max-width: 800px; margin: 0 auto;">
+             <div class="text-center mt-4">
+     <asp:Button ID="BackButton" runat="server" Text="Back to Staff Page" CssClass="btn btn-secondary" PostBackUrl="~/staffpage.aspx" />
+ </div>
             <!-- Add Reward Form -->
             <h4>Add New Reward</h4>
             <asp:TextBox ID="RewardNameTextBox" runat="server" CssClass="form-control mb-2" Placeholder="Reward Name"></asp:TextBox>

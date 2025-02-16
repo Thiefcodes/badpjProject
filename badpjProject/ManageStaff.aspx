@@ -22,23 +22,24 @@
 
             <!-- List of Staff Accounts -->
             <h4>Existing Staff Accounts</h4>
-           <asp:GridView ID="StaffGridView" runat="server" CssClass="table table-bordered" AutoGenerateColumns="False" OnRowCommand="StaffGridView_RowCommand">
-    <Columns>
-        <asp:BoundField DataField="Id" HeaderText="Staff ID" ReadOnly="True" />
-        <asp:BoundField DataField="Login_Name" HeaderText="Username" />
-        <asp:BoundField DataField="Email" HeaderText="Email" />
-        <asp:TemplateField HeaderText="Actions">
-            <ItemTemplate>
-                <asp:Button ID="EditButton" runat="server" Text="Edit" CssClass="btn btn-warning btn-sm" CommandName="Edit" CommandArgument='<%# Eval("Id") %>' />
-               <asp:Button ID="DeleteButton" runat="server" Text="Delete" CssClass="btn btn-danger btn-sm" CommandName="DeleteStaff" CommandArgument='<%# Eval("Id") %>' />
+            <asp:GridView ID="StaffGridView" runat="server" CssClass="table table-bordered" AutoGenerateColumns="False" OnRowCommand="StaffGridView_RowCommand">
+                <Columns>
+                    <asp:BoundField DataField="Id" HeaderText="Staff ID" ReadOnly="True" />
+                    <asp:BoundField DataField="Login_Name" HeaderText="Username" />
+                    <asp:BoundField DataField="Email" HeaderText="Email" />
+                    <asp:TemplateField HeaderText="Actions">
+                        <ItemTemplate>
+                            <asp:Button ID="EditButton" runat="server" Text="Edit" CssClass="btn btn-warning btn-sm" CommandName="Edit" CommandArgument='<%# Eval("Id") %>' />
+                            <asp:Button ID="DeleteButton" runat="server" Text="Delete" CssClass="btn btn-danger btn-sm" CommandName="DeleteStaff" CommandArgument='<%# Eval("Id") %>' />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
 
-            </ItemTemplate>
-        </asp:TemplateField>
-    </Columns>
-</asp:GridView>
-
-
-
+            <!-- Back Button to go to staffpage.aspx -->
+            <div class="text-center mt-4">
+                <asp:Button ID="BackButton" runat="server" Text="Back to Staff Page" CssClass="btn btn-secondary" PostBackUrl="~/staffpage.aspx" />
+            </div>
         </div>
     </div>
 </asp:Content>

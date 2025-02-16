@@ -35,6 +35,9 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
+             <div class="text-center mt-4">
+     <asp:Button ID="BackButton" runat="server" Text="Back to Staff Page" CssClass="btn btn-secondary" PostBackUrl="~/staffpage.aspx" />
+ </div>
         </div>
     </div>
 </asp:Content>
