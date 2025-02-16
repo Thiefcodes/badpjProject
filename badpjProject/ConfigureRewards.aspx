@@ -19,8 +19,9 @@
             <asp:Repeater ID="RewardsRepeater" runat="server" OnItemCommand="RewardsRepeater_ItemCommand">
                 <ItemTemplate>
                     <div class="reward-item mb-3">
-                        <img src='<%# Eval("RewardImage") %>' alt="Reward Image" class="img-thumbnail mb-2" style="max-width: 150px;" />
-                        <h5><%# Eval("RewardName") %></h5>
+                   <img src='<%# ResolveUrl(Eval("RewardImage").ToString()) %>' alt="Reward Image" 
+     class="img-thumbnail mb-2" style="max-width: 150px;" />
+     <h5><%# Eval("RewardName") %></h5>
                         <p>Streak Hours: <%# Eval("StreakHours") %></p>
                         <asp:Button ID="EditRewardButton" runat="server" Text="Edit" CssClass="btn btn-warning btn-sm" CommandArgument='<%# Eval("RewardId") %>' CommandName="EditReward" />
                         <asp:Button ID="DeleteRewardButton" runat="server" Text="Delete" CssClass="btn btn-danger btn-sm" CommandArgument='<%# Eval("RewardId") %>' CommandName="DeleteReward" />
