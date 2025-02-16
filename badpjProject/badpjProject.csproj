@@ -116,8 +116,10 @@
     <Content Include="CoachProfile.aspx" />
     <Content Include="EnableFacialAuthentication.aspx" />
     <Content Include="FacialLogin.aspx" />
+    <Content Include="Leaderboard.aspx" />
     <Content Include="LeaveReview.aspx" />
     <Content Include="ForumStyles.css" />
+    <Content Include="ManageRank.aspx" />
     <Content Include="MyFeed.aspx" />
     <Content Include="SignUpCoachesDetails.aspx" />
     <Content Include="Coaches.aspx" />
@@ -347,6 +349,13 @@
     <Compile Include="FacialLogin.aspx.designer.cs">
       <DependentUpon>FacialLogin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Leaderboard.aspx.cs">
+      <DependentUpon>Leaderboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Leaderboard.aspx.designer.cs">
+      <DependentUpon>Leaderboard.aspx</DependentUpon>
+    </Compile>
     <Compile Include="LeaveReview.aspx.cs">
       <DependentUpon>LeaveReview.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -354,6 +363,14 @@
     <Compile Include="LeaveReview.aspx.designer.cs">
       <DependentUpon>LeaveReview.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ManageRank.aspx.cs">
+      <DependentUpon>ManageRank.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ManageRank.aspx.designer.cs">
+      <DependentUpon>ManageRank.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Ranking.cs" />
     <Compile Include="MyFeed.aspx.cs">
       <DependentUpon>MyFeed.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

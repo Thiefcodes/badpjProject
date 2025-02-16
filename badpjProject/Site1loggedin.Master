@@ -38,7 +38,9 @@
                         <li class="nav-item" runat="server" id="liPublicCoaches"><a class="nav-link" runat="server" href="~/Coaches.aspx">Coaches</a></li>
                         <li class="nav-item" runat="server" id="liCoachProfile"><a class="nav-link" runat="server" href="~/CoachProfile.aspx">Coach Profile</a></li>
                         <li class="nav-item" runat="server" id="liUserBecomeACoach"><a class="nav-link" runat="server" href="~/BecomeACoach.aspx">Become a Coach</a></li>
-                        <li class="nav-item" runat="server" id="liStaffViewCoaches"><a class="nav-link" runat="server" href="~/ViewCoaches.aspx">View Coaches</a></li>
+                        <li class="nav-item" runat="server" id="liStaffViewCoaches"><a class="nav-link" runat="server" href="~/ViewCoaches.aspx">Manage Coaches</a></li>
+                        <li class="nav-item" runat="server" id="liUserLeaderboard"><a class="nav-link" runat="server" href="~/Leaderboard.aspx">Leaderboard</a></li>
+                        <li class="nav-item" runat="server" id="liStaffManageRank"><a class="nav-link" runat="server" href="~/ManageRank.aspx">Manage Coaches</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Forum.aspx">Forum</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/MyFeed.aspx">MyFeed</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Shop.aspx">Shop</a></li>
