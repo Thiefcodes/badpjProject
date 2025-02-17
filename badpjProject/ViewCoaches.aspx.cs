@@ -1,12 +1,10 @@
 ﻿using badpjProject.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Web;
-using System.Web.Caching;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using WebGrease;
 
 namespace badpjProject
 {
@@ -22,102 +20,95 @@ namespace badpjProject
             }
         }
 
+        /// <summary>
+        /// Binds the coach data based on the selected filter and sort criteria.
+        /// Only one set (Pending OR Approved) is displayed at a time.
+        /// </summary>
         private void BindCoaches()
         {
-            // Fetch pending and approved coaches
-            List<Coaches> pendingCoaches = coachManager.GetPendingCoaches();
-            List<Coaches> approvedCoaches = coachManager.GetApprovedCoaches();
+            string statusFilter = ddlStatusFilter.SelectedValue;
+            string sortBy = ddlSort.SelectedValue;
+            List<Coaches> coachesList = new List<Coaches>();
 
-            // Bind data to repeaters
-            rptPendingCoaches.DataSource = pendingCoaches;
-            rptPendingCoaches.DataBind();
-
-            rptApprovedCoaches.DataSource = approvedCoaches;
-            rptApprovedCoaches.DataBind();
-
-            // Check if there is no data for pending coaches
-            if (pendingCoaches.Count == 0)
+            // Retrieve data based on the filter.
+            if (statusFilter.Equals("Pending", StringComparison.OrdinalIgnoreCase))
             {
-                // Hide the table if there are no pending coaches
-                rptPendingCoaches.Visible = false;
+                coachesList = coachManager.GetPendingCoaches();
+            }
+            else if (statusFilter.Equals("Approved", StringComparison.OrdinalIgnoreCase))
+            {
+                coachesList = coachManager.GetApprovedCoaches();
+            }
 
-                // Display the "No pending coaches" message
-                litNoPendingCoaches.Text = "<div class='alert alert-warning text-center' role='alert'>" +
-                                            "<strong>Oops!</strong> There are currently no pending coaches to review. Please check back later." +
-                                            "</div>";
+            // Apply sorting.
+            if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+            {
+                coachesList = coachesList.OrderBy(c => c.Coach_Name).ToList();
+            }
+            else if (sortBy.Equals("Email", StringComparison.OrdinalIgnoreCase))
+            {
+                coachesList = coachesList.OrderBy(c => c.Coach_Email).ToList();
+            }
+
+            // Bind data to repeater or display "no data" message.
+            if (coachesList.Count > 0)
+            {
+                rptCoaches.DataSource = coachesList;
+                rptCoaches.DataBind();
+                rptCoaches.Visible = true;
+                litNoCoaches.Text = "";
             }
             else
             {
-                // Show the table if there are pending coaches
-                rptPendingCoaches.Visible = true;
-
-                // Reset the "No pending coaches" message
-                litNoPendingCoaches.Text = "";
-            }
-
-            // Handle Approved Coaches (No data case)
-            if (approvedCoaches.Count == 0)
-            {
-                rptApprovedCoaches.Visible = false;
-                litNoApprovedCoaches.Text = "<div class='alert alert-warning text-center' role='alert'>" +
-                                            "<strong>Oops!</strong> There are currently no approved coaches. Please check back later." +
-                                            "</div>";
-            }
-            else
-            {
-                rptApprovedCoaches.Visible = true;
-                litNoApprovedCoaches.Text = "";
+                rptCoaches.Visible = false;
+                litNoCoaches.Text = $@"
+                    <div class='alert alert-warning text-center' role='alert'>
+                        <strong>Oops!</strong> There are currently no {statusFilter.ToLower()} coaches to display. 
+                        Please check back later.
+                    </div>";
             }
         }
 
-        protected void rptPendingCoaches_ItemCommand(object source, RepeaterCommandEventArgs e)
+        protected void ddlStatusFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string coachID = e.CommandArgument.ToString();
-
-            if (e.CommandName == "Approve")
-            {
-                // Update the Coach table status to "Approved"
-                bool coachApproved = coachManager.ApproveCoach(coachID);
-                if (coachApproved)
-                {
-                    // Now update the CoachStatus record to set isCoach = true
-                    CoachStatus cs = new CoachStatus();
-                    bool statusUpdated = cs.UpdateIsCoachStatus(coachID);
-                    if (statusUpdated)
-                        ShowAlert("Coach approved successfully!", "success");
-                    else
-                        ShowAlert("Coach approved, but failed to update coach status record.", "error");
-                }
-                else
-                {
-                    ShowAlert("Error approving coach.", "error");
-                }
-            }
-            else if (e.CommandName == "Reject")
-            {
-                bool coachDeleted = coachManager.RejectCoach(coachID);
-                bool coachStatusDeleted = false;
-
-                if (coachDeleted)
-                {
-                    CoachStatus cs = new CoachStatus();
-                    coachStatusDeleted = cs.DeleteCoachStatus(coachID);
-                }
-
-                ShowAlert(
-                    (coachDeleted && coachStatusDeleted) ? "Coach rejected successfully!" : "Error rejecting coach.",
-                    (coachDeleted && coachStatusDeleted) ? "success" : "error"
-                );
-            }
-            else if (e.CommandName == "ViewDetails")
-            {
-                Response.Redirect($"SignUpCoachesDetails.aspx?id={coachID}");
-            }
-
             BindCoaches();
         }
 
-        protected void rptApprovedCoaches_ItemCommand(object source, RepeaterCommandEventArgs e)
+        protected void ddlSort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindCoaches();
+        }
+
+        /// <summary>
+        /// Toggle panels in ItemDataBound based on the current filter (Pending or Approved).
+        /// </summary>
+        protected void rptCoaches_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                // Find the panels in this row
+                Panel pnlApproveCoach = (Panel)e.Item.FindControl("pnlApproveCoach");
+                Panel pnlRemoveCoach = (Panel)e.Item.FindControl("pnlRemoveCoach");
+
+                // Check the filter
+                string currentFilter = ddlStatusFilter.SelectedValue; // e.g. "Pending" or "Approved"
+
+                if (currentFilter.Equals("Pending", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Show Approve/Reject panel, hide Remove panel
+                    pnlApproveCoach.Visible = true;
+                    pnlRemoveCoach.Visible = false;
+                }
+                else if (currentFilter.Equals("Approved", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Hide Approve/Reject panel, show Remove panel
+                    pnlApproveCoach.Visible = false;
+                    pnlRemoveCoach.Visible = true;
+                }
+            }
+        }
+
+        protected void rptCoaches_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             string coachID = e.CommandArgument.ToString();
 
@@ -125,57 +116,50 @@ namespace badpjProject
             {
                 Response.Redirect($"SignUpCoachesDetails.aspx?id={coachID}");
             }
+            else if (e.CommandName == "Approve")
+            {
+                // Approve the coach
+                bool coachApproved = coachManager.ApproveCoach(coachID);
+                if (coachApproved)
+                {
+                    // After approving, optionally update the CoachStatus record to set isCoach = true
+                    CoachStatus cs = new CoachStatus();
+                    bool statusUpdated = cs.UpdateIsCoachStatus(coachID);
+
+                    if (statusUpdated)
+                        ShowMessage("Coach approved successfully!", "success");
+                    else
+                        ShowMessage("Coach approved, but failed to update coach status.", "error");
+                }
+                else
+                {
+                    ShowMessage("Error approving coach.", "error");
+                }
+                BindCoaches();
+            }
             else if (e.CommandName == "Remove")
             {
+                // This handles both "Reject" (for Pending) and "Remove" (for Approved), 
+                // as you're reusing the same command
                 bool coachDeleted = coachManager.RejectCoach(coachID);
                 bool coachStatusDeleted = false;
-
                 if (coachDeleted)
                 {
                     CoachStatus cs = new CoachStatus();
                     coachStatusDeleted = cs.DeleteCoachStatus(coachID);
                 }
-
-                ShowAlert(
-                    (coachDeleted && coachStatusDeleted) ? "Coach rejected successfully!" : "Error rejecting coach.",
-                    (coachDeleted && coachStatusDeleted) ? "success" : "error"
-                );
-
+                ShowMessage((coachDeleted && coachStatusDeleted) ? "Coach removed successfully!" : "Error removing coach.",
+                            (coachDeleted && coachStatusDeleted) ? "success" : "error");
                 BindCoaches();
             }
         }
 
-
-
-        private void ShowAlert(string message, string type)
+        private void ShowMessage(string message, string type)
         {
-            string colorClass = type == "success" ? "alert-success" : "alert-danger";
-
-            string script = $@"
-                var alertBox = document.createElement('div');
-                alertBox.className = 'alert {colorClass} alert-dismissible fade show text-center';
-                alertBox.role = 'alert';
-                alertBox.innerHTML = `{message} <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>`;
-
-                // Apply custom styles
-                alertBox.style.position = 'fixed';
-                alertBox.style.top = '80px';
-                alertBox.style.left = '50%';
-                alertBox.style.transform = 'translateX(-50%)';
-                alertBox.style.width = '300px';
-                alertBox.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
-                alertBox.style.zIndex = '1050';
-
-                document.body.appendChild(alertBox);
-
-                setTimeout(function() {{
-                    alertBox.remove();
-                }}, 5000);
-            ";
-
-            ClientScript.RegisterStartupScript(this.GetType(), "alert", script, true);
+            string alertClass = type.Equals("success", StringComparison.OrdinalIgnoreCase) ? "alert-success" : "alert-danger";
+            lblMessage.Text = message;
+            lblMessage.CssClass = "alert " + alertClass + " text-center";
+            lblMessage.Visible = true;
         }
-
-
     }
 }

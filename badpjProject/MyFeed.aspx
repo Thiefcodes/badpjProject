@@ -4,16 +4,23 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <link href="ForumStyles.css" rel="stylesheet" type="text/css" />
     <h2>My Feed</h2>
+    <br />
     <h3>Top 3 Threads</h3>
     <asp:GridView ID="gvRandomThreads" runat="server" CellPadding="10" AutoGenerateColumns="False" OnRowCommand="gvRandomThreads_RowCommand"
         DataKeyNames="ThreadID" OnSelectedIndexChanged="gvRandomThreads_SelectedIndexChanged">
         
         <Columns>
           <asp:BoundField DataField="ThreadID" HeaderText="ID   " />
+          <asp:ImageField DataImageUrlField="ImagePath" HeaderText="">
+          <ControlStyle Width="100px" Height="100px" />
+          </asp:ImageField>
           <asp:BoundField DataField="Title" HeaderText="Random Thread   " />
+          <asp:BoundField DataField="Views" HeaderText="Views   " />
+          <asp:BoundField DataField="PostCount" HeaderText="Posts   " />
           <asp:ButtonField Text="Select" ItemStyle-CssClass="btn-custom" CommandName="SelectThread" ButtonType="Button" />
         </Columns>
     </asp:GridView>
+    <br />
     <h3>Selected Posts:</h3>
     <asp:GridView ID="gvRandomPosts" runat="server" CellPadding="10" AutoGenerateColumns="False" OnRowCommand="gvRandomPosts_RowCommand"
         OnRowDataBound="gvRandomPosts_RowDataBound"
@@ -35,14 +42,23 @@
         </Columns>
     </asp:GridView>
     <asp:Label ID="lblMessage" runat="server" ForeColor="Red" Font-Bold="true"></asp:Label>
+    <br />
+    <h3>Your Stats</h3>
+    <h5>How Many Posts you Liked</h5>
+    <asp:Label ID="lblTotalLikes" runat="server" CssClass="stat-label" Style="font-size: 24px; font-weight: bold;"></asp:Label>
+    <br />
     <!-- Threads Section -->
     <h3>Your Threads</h3>
     <asp:GridView ID="gvThreads" runat="server" CellPadding="10" AutoGenerateColumns="False" OnRowCommand="gvThreads_RowCommand">
         <Columns>
            <asp:BoundField DataField="ThreadID" HeaderText="ID   " />
+           <asp:ImageField DataImageUrlField="ImagePath" HeaderText="">
+           <ControlStyle Width="100px" Height="100px" />
+           </asp:ImageField>
            <asp:BoundField DataField="Title" HeaderText="Title   " />
            <asp:BoundField DataField="CreatedAt" HeaderText="Date Created   " DataFormatString="{0:yyyy-MM-dd}" />
-           <asp:BoundField DataField="Views" HeaderText="Views   " /> 
+           <asp:BoundField DataField="Views" HeaderText="Views   " />
+           <asp:BoundField DataField="PostCount" HeaderText="Posts   " />
            <asp:ButtonField CommandName="ViewThread" ItemStyle-CssClass="btn-custom" Text="Select" ButtonType="Button"/>
            <asp:ButtonField CommandName="UpdateThread" ItemStyle-CssClass="btn-custom" Text="Update" ButtonType="Button"/>
            <asp:ButtonField CommandName="DeleteThread" ItemStyle-CssClass="btn-custom" Text="Delete" ButtonType="Button"/>

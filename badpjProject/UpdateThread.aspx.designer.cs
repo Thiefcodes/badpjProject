@@ -33,6 +33,24 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.TextBox txtTitle;
 
         /// <summary>
+        /// fuUpdateThreadImage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fuUpdateThreadImage;
+
+        /// <summary>
+        /// btnUpdateImage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnUpdateImage;
+
+        /// <summary>
         /// btnUpdate control.
         /// </summary>
         /// <remarks>

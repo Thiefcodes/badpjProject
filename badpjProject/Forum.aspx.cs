@@ -27,14 +27,14 @@ namespace badpjProject
                 if (Session["Role"] != null && Session["Role"].ToString() == "Staff")
                 {
                     // Make the Delete button visible if the role is "Admin"
-                    gvThreads.Columns[6].Visible = true;  // Assuming the Delete button is in the 7th column (index 6)
-                    gvThreads.Columns[7].Visible = true; // Assuming the Update button is in the 8th column(index 7)
+                    gvThreads.Columns[8].Visible = true;  // Assuming the Delete button is in the 9th column (index 8)
+                    gvThreads.Columns[9].Visible = true; // Assuming the Update button is in the 10th column(index 9)
                 }
                 else
                 {
                     // Hide the Delete button for non-admin roles
-                    gvThreads.Columns[6].Visible = false;
-                    gvThreads.Columns[7].Visible = false;
+                    gvThreads.Columns[8].Visible = false;
+                    gvThreads.Columns[9].Visible = false;
                 }
                 LoadThreads();
             }
@@ -49,12 +49,15 @@ namespace badpjProject
             {
                 // Fix syntax error by enclosing "Table" in square brackets
                 string query = @"
-                 SELECT t.ThreadID, t.Title, 
-                 COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
-                 t.CreatedAt,
-                 t.Views   -- Added Views column
-                 FROM Threads t
-                 LEFT JOIN [Table] u ON t.CreatedBy = u.Id";
+                 SELECT t.ThreadID, 
+                t.Title, 
+                COALESCE(u.Login_Name, 'Unknown') AS CreatedBy, 
+                t.CreatedAt,
+                t.Views, 
+                COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount,
+                t.ImagePath  
+                FROM Threads t
+                LEFT JOIN [Table] u ON t.CreatedBy = u.Id";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);

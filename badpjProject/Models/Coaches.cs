@@ -570,6 +570,36 @@ namespace badpjProject
         public bool IsUserAlreadyCoach(int userId)
         {
             bool isAlreadyCoach = false;
+            // Query to select the BIT column (IsCoach) for the user.
+            string queryStr = "SELECT TOP 1 IsCoach FROM [dbo].[CoachStatus] WHERE user_id = @UserId";
+
+            using (SqlConnection conn = new SqlConnection(_connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                try
+                {
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+                    // If a record is found, convert the BIT value to bool.
+                    if (result != null)
+                    {
+                        isAlreadyCoach = Convert.ToBoolean(result);
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    Debug.WriteLine("SQL Error: " + ex.Message);
+                }
+            }
+
+            return isAlreadyCoach;
+        }
+
+        public bool IsUserAlreadySignUp(int userId)
+        {
+            bool isAlreadySignUp = false;
 
             string queryStr = "SELECT COUNT(*) FROM [dbo].[CoachStatus] WHERE user_id = @UserId";
 
@@ -585,7 +615,7 @@ namespace badpjProject
 
                     if (result > 0)
                     {
-                        isAlreadyCoach = true; // User already exists as a coach or has a pending application
+                        isAlreadySignUp = true; // User already exists as a coach or has a pending application
                     }
                 }
                 catch (SqlException ex)
@@ -594,8 +624,9 @@ namespace badpjProject
                 }
             }
 
-            return isAlreadyCoach;
+            return isAlreadySignUp;
         }
+
 
         public bool InsertCoachStatus(int userId, string coachId)
         {

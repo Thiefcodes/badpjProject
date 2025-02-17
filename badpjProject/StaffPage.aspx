@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-5">
         <div class="d-flex justify-content-center align-items-center flex-column">
-            <asp:Image ID="ProfilePicture" runat="server" CssClass="rounded-circle mb-3" Width="150px" Height="150px" />
+            <asp:Image ID="ProfilePicture" runat="server" CssClass="rounded-circle" Width="150px" Height="150px" />
             <h2 class="text-center">
                 <asp:Label ID="StaffNameLabel" runat="server" Text="Staff Name"></asp:Label>
             </h2>
@@ -15,7 +15,9 @@
                 <h4>Management Portal</h4>
                 <hr />
                 <p>Welcome to the Management Portal! Use the buttons below to manage staff and users.</p>
-                <!-- Add the new button for enabling facial authentication here -->
+                <!-- New Export Transactions button for admin -->
+                
+                <!-- Existing button for enabling facial authentication -->
                 <asp:Button ID="EnableFacialAuthButton" runat="server" Text="Enable Facial Authentication" CssClass="btn btn-warning mt-3" OnClick="EnableFacialAuthButton_Click" />
             </div>
         </div>
@@ -25,6 +27,7 @@
             <asp:Button ID="ManageStaffButton" runat="server" Text="Manage Staff" CssClass="btn btn-primary mb-2 w-100" OnClick="ManageStaffButton_Click" />
             <asp:Button ID="ManageUsersButton" runat="server" Text="Manage Users" CssClass="btn btn-secondary mb-2 w-100" OnClick="ManageUsersButton_Click" />
             <asp:Button ID="ConfigureRewardsButton" runat="server" Text="Configure Rewards" CssClass="btn btn-info w-100" OnClick="ConfigureRewardsButton_Click" />
+        <asp:Button ID="ExportTransactionsButton" runat="server" Text="Export Transaction Data" CssClass="btn btn-dark mt-3" OnClick="ExportTransactionsButton_Click" />
         </div>
     </div>
 </asp:Content>
