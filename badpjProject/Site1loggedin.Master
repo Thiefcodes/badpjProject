@@ -16,6 +16,13 @@
     
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-nPCXgN6EdmWRxbklZKP2WXqOnN2fa0qkQT60PnIsNsZzPDqSY0R3C54SE7wc9p15ekKTdMGfY49Im+ctX1kE8Q==" 
+      crossorigin="anonymous" 
+      referrerpolicy="no-referrer" />
+
 </head>
 <body>
     <form runat="server">

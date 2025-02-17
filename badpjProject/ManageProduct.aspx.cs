@@ -36,7 +36,10 @@ namespace badpjProject
             List<Product> productList = new List<Product>();
             using (SqlConnection conn = new SqlConnection(_connString))
             {
-                string sql = "SELECT ProductID, ProductName, Price, DiscountPercent FROM dbo.Products ORDER BY ProductID";
+                string sql = @"
+                SELECT ProductID, ProductName, Price, DiscountPercent, ImageUrl
+                FROM dbo.Products
+                ORDER BY ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     conn.Open();
@@ -49,7 +52,8 @@ namespace badpjProject
                                 ProductID = rdr.GetInt32(0),
                                 ProductName = rdr.GetString(1),
                                 Price = rdr.GetDecimal(2),
-                                DiscountPercent = rdr.IsDBNull(3) ? 0 : rdr.GetInt32(3)
+                                DiscountPercent = rdr.IsDBNull(3) ? 0 : rdr.GetInt32(3),
+                                ImageUrl = rdr.IsDBNull(4) ? "" : rdr.GetString(4)
                             });
                         }
                     }
