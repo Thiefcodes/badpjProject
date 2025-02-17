@@ -141,6 +141,24 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.CustomValidator cvRank;
 
         /// <summary>
+        /// fu_CertDoc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fu_CertDoc;
+
+        /// <summary>
+        /// cvCertDoc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvCertDoc;
+
+        /// <summary>
         /// ddl_AreaOfExpertise control.
         /// </summary>
         /// <remarks>

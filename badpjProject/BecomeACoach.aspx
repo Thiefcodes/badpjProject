@@ -40,18 +40,31 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <asp:DropDownList ID="ddl_Qualification" runat="server" CssClass="form-control" Style="width: 100%; max-width: 325px; margin-left: auto; margin-right: auto;">
+                    <asp:DropDownList ID="ddl_Qualification" runat="server" onchange="toggleCertUpload();" CssClass="form-control" Style="width: 100%; max-width: 325px; margin-left: auto; margin-right: auto;">
                         <asp:ListItem Value="" Text="--Select Qualification--" />
                         <asp:ListItem Value="Certified-PT" Text="Certified Personal Trainer" />
                         <asp:ListItem Value="Rank" Text="Rank" />
                     </asp:DropDownList>
                     <asp:RequiredFieldValidator ID="rfv_Qualification" runat="server" ControlToValidate="ddl_Qualification" CssClass="text-danger" InitialValue="" ErrorMessage="Please select a qualification." Display="Dynamic" Style="display: block; width: 100%; max-width: 325px; margin: auto;"></asp:RequiredFieldValidator>
 
-                    <!-- Custom Validator for Placeholder Rank requirement -->
                     <asp:CustomValidator ID="cvRank" runat="server" ControlToValidate="ddl_Qualification" ErrorMessage="You must be Emerald Exerciser or higher (≥ 3000 points) to select this rank." OnServerValidate="cvRank_ServerValidate" Display="Dynamic" CssClass="text-danger" Style="display: block; width: 100%; max-width: 325px; margin: auto;">
                     </asp:CustomValidator>
                 </div>
 
+                <!-- Certification Document File Upload (hidden by default) -->
+                <div class="form-group mb-3" id="certDocSection" style="display: none;">
+                    <h5 class="text-center">Upload Your Certification Document</h5>
+                    <asp:FileUpload ID="fu_CertDoc" runat="server" CssClass="form-control"
+                        Style="width: 100%; max-width: 325px; margin: auto;" />
+                    <asp:CustomValidator ID="cvCertDoc" runat="server"
+                        ControlToValidate="ddl_Qualification"
+                        OnServerValidate="cvCertDoc_ServerValidate"
+                        Display="Dynamic" CssClass="text-danger"
+                        ErrorMessage="Please upload a valid certification document for Certified PT."
+                        Style="display: block; width: 100%; max-width: 325px; margin: auto;" >
+                    </asp:CustomValidator>
+
+                </div>
 
                 <div class="form-group mb-3">
                     <asp:DropDownList ID="ddl_AreaOfExpertise" runat="server" CssClass="form-control" Style="width: 100%; max-width: 325px; margin-left: auto; margin-right: auto;">
@@ -90,4 +103,22 @@
             <asp:Literal ID="litPendingStatus" runat="server" />
         </asp:Panel>
     </div>
+
+    <script>
+        function toggleCertUpload() {
+            var ddlQualification = document.getElementById("<%= ddl_Qualification.ClientID %>");
+            var certDocSection = document.getElementById("certDocSection");
+
+            if (ddlQualification.value === "Certified-PT") {
+                certDocSection.style.display = "block";
+            } else {
+                certDocSection.style.display = "none";
+            }
+        }
+
+        // This runs on page load to ensure the correct state after postback
+        window.onload = function () {
+            toggleCertUpload();
+        };
+    </script>
 </asp:Content>

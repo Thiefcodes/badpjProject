@@ -24,6 +24,7 @@ namespace badpjProject
         private string _coachStatus = "";
         private string _coachProfileImage = "";
         private string _coachAreaOfExpertise = "";
+        private string _coachCertificationFile = "";
 
 
         public Coaches()
@@ -32,7 +33,7 @@ namespace badpjProject
 
         public Coaches(string coachID, string coachName, string coachEmail,
                int coachHp, string coachDesc, string coachQualification, string coachVideo, string coachStatus,
-               string coachProfileImage, string coachAreaOfExpertise)
+               string coachProfileImage, string coachAreaOfExpertise, string coachCertificationFile)
         {
             _coachID = coachID;
             _coachName = coachName;
@@ -44,16 +45,18 @@ namespace badpjProject
             _coachStatus = coachStatus;
             _coachProfileImage = coachProfileImage;
             _coachAreaOfExpertise = coachAreaOfExpertise;
+            _coachCertificationFile = coachCertificationFile;
         }
 
         public Coaches(string coachName, string coachEmail,
-               int coachHp, string coachDesc, string coachQualification, string coachVideo, string coachStatus)
-            : this(null, coachName, coachEmail, coachHp, coachDesc, coachQualification, coachVideo, coachStatus, "", "")
+               int coachHp, string coachDesc, string coachQualification, string coachVideo, string coachStatus, string coachProfileImage,
+            string coachAreaOfExpertise)
+            : this(null, coachName, coachEmail, coachHp, coachDesc, coachQualification, coachVideo, coachStatus, coachProfileImage, coachAreaOfExpertise, "")
         {
         }
 
         public Coaches(string coachID)
-            : this(coachID, "", "", 0, "", "", "", "", "", "")
+            : this(coachID, "", "", 0, "", "", "", "", "", "","")
         {
         }
 
@@ -117,11 +120,17 @@ namespace badpjProject
             set { _coachAreaOfExpertise = value; }
         }
 
+        public string Coach_CertificationFile
+        {
+            get { return _coachCertificationFile; }
+            set { _coachCertificationFile = value; }
+        }
+
         public Coaches getCoaches(string coachID)
         {
             Coaches coachDetail = null;
 
-            string coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise;
+            string coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise, coach_CertificationFile;
             int coach_Hp;
 
             string queryStr = "SELECT * FROM Coach WHERE Id = @CoachID";
@@ -144,8 +153,9 @@ namespace badpjProject
                 coach_Status = dr["Status"].ToString();
                 coach_ProfileImage = dr["ProfileImage"].ToString();
                 coach_AreaOfExpertise = dr["AreaOfExpertise"].ToString();
+                coach_CertificationFile = dr["CertificationFile"] != DBNull.Value ? dr["CertificationFile"].ToString() : "";
 
-                coachDetail = new Coaches(coachID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise);
+                coachDetail = new Coaches(coachID, coach_Name, coach_Email, coach_Hp, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise, coach_CertificationFile);
             }
             else
             {
@@ -164,7 +174,7 @@ namespace badpjProject
         {
             List<Coaches> coachList = new List<Coaches>();
 
-            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise;
+            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise, coach_CertificationFile;
             int coach_Hp;
 
             string queryStr = "SELECT * FROM Coach Order By Name";
@@ -187,10 +197,11 @@ namespace badpjProject
                         coach_Status = dr["Status"].ToString();
                         coach_ProfileImage = dr["ProfileImage"].ToString();
                         coach_AreaOfExpertise = dr["AreaOfExpertise"].ToString();
+                        coach_CertificationFile = dr["CertificationFile"] != DBNull.Value ? dr["CertificationFile"].ToString() : "";
 
                         Coaches a = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp,
                                                 coach_Desc, coach_Qualification, coach_Video, coach_Status,
-                                                coach_ProfileImage, coach_AreaOfExpertise);
+                                                coach_ProfileImage, coach_AreaOfExpertise, coach_CertificationFile);
                         coachList.Add(a);
                     }
 
@@ -206,7 +217,7 @@ namespace badpjProject
         {
             List<Coaches> coachList = new List<Coaches>();
 
-            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise;
+            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise, coach_CertificationFile;
             int coach_Hp;
 
             string queryStr = "SELECT * FROM Coach WHERE Status = 'Pending' ORDER BY Name";
@@ -231,10 +242,11 @@ namespace badpjProject
                         coach_Status = dr["Status"].ToString();
                         coach_ProfileImage = dr["ProfileImage"].ToString();
                         coach_AreaOfExpertise = dr["AreaOfExpertise"].ToString();
+                        coach_CertificationFile = dr["CertificationFile"] != DBNull.Value ? dr["CertificationFile"].ToString() : "";
 
                         Coaches coach = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp,
                                                     coach_Desc, coach_Qualification, coach_Video, coach_Status,
-                                                    coach_ProfileImage, coach_AreaOfExpertise);
+                                                    coach_ProfileImage, coach_AreaOfExpertise, coach_CertificationFile);
                         coachList.Add(coach);
                     }
 
@@ -254,7 +266,7 @@ namespace badpjProject
         {
             List<Coaches> coachList = new List<Coaches>();
 
-            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise;
+            string coach_ID, coach_Name, coach_Email, coach_Desc, coach_Qualification, coach_Video, coach_Status, coach_ProfileImage, coach_AreaOfExpertise, coach_CertificationFile;
             int coach_Hp;
 
             string queryStr = "SELECT * FROM Coach WHERE Status = 'Approved' ORDER BY Name";
@@ -279,10 +291,11 @@ namespace badpjProject
                         coach_Status = dr["Status"].ToString();
                         coach_ProfileImage = dr["ProfileImage"].ToString();
                         coach_AreaOfExpertise = dr["AreaOfExpertise"].ToString();
+                        coach_CertificationFile = dr["CertificationFile"] != DBNull.Value ? dr["CertificationFile"].ToString() : "";
 
                         Coaches coach = new Coaches(coach_ID, coach_Name, coach_Email, coach_Hp,
                                                     coach_Desc, coach_Qualification, coach_Video, coach_Status,
-                                                    coach_ProfileImage, coach_AreaOfExpertise);
+                                                    coach_ProfileImage, coach_AreaOfExpertise, coach_CertificationFile);
                         coachList.Add(coach);
                     }
 
