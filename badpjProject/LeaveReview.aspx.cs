@@ -47,47 +47,55 @@ namespace badpjProject
         {
             int userId = Convert.ToInt32(Session["UserID"]);
 
-            // Ensure _productId is valid
+            // Ensure _productId is valid.
             if (_productId <= 0)
             {
                 Response.Write("<script>alert('Invalid product selected for review.');</script>");
                 return;
             }
 
-            // Check if a review already exists for this product by this user
+            int starRating = int.Parse(ddlStarRating.SelectedValue);
+            string reviewMessage = txtReviewMessage.Text.Trim();
+
             using (SqlConnection conn = new SqlConnection(_connString))
             {
+                conn.Open();
+                // Check if a review already exists for this product by this user.
                 string checkSql = "SELECT COUNT(*) FROM Reviews WHERE ProductID = @ProductID AND UserID = @UserID";
                 using (SqlCommand cmd = new SqlCommand(checkSql, conn))
                 {
                     cmd.Parameters.AddWithValue("@ProductID", _productId);
                     cmd.Parameters.AddWithValue("@UserID", userId);
-                    conn.Open();
                     int count = (int)cmd.ExecuteScalar();
+
                     if (count > 0)
                     {
-                        Response.Write("<script>alert('You have already left a review for this product.');</script>");
-                        return;
+                        // If a review exists, update it.
+                        string updateSql = "UPDATE Reviews SET StarRating = @StarRating, ReviewMessage = @ReviewMessage, ReviewDate = GETDATE() " +
+                                           "WHERE ProductID = @ProductID AND UserID = @UserID";
+                        using (SqlCommand updateCmd = new SqlCommand(updateSql, conn))
+                        {
+                            updateCmd.Parameters.AddWithValue("@ProductID", _productId);
+                            updateCmd.Parameters.AddWithValue("@UserID", userId);
+                            updateCmd.Parameters.AddWithValue("@StarRating", starRating);
+                            updateCmd.Parameters.AddWithValue("@ReviewMessage", reviewMessage);
+                            updateCmd.ExecuteNonQuery();
+                        }
                     }
-                }
-            }
-
-            int starRating = int.Parse(ddlStarRating.SelectedValue);
-            string reviewMessage = txtReviewMessage.Text.Trim();
-
-            // Insert the new review
-            using (SqlConnection conn = new SqlConnection(_connString))
-            {
-                string sql = "INSERT INTO Reviews (ProductID, UserID, StarRating, ReviewMessage) " +
-                             "VALUES (@ProductID, @UserID, @StarRating, @ReviewMessage)";
-                using (SqlCommand cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@ProductID", _productId);
-                    cmd.Parameters.AddWithValue("@UserID", userId);
-                    cmd.Parameters.AddWithValue("@StarRating", starRating);
-                    cmd.Parameters.AddWithValue("@ReviewMessage", reviewMessage);
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
+                    else
+                    {
+                        // Otherwise, insert a new review.
+                        string insertSql = "INSERT INTO Reviews (ProductID, UserID, StarRating, ReviewMessage) " +
+                                           "VALUES (@ProductID, @UserID, @StarRating, @ReviewMessage)";
+                        using (SqlCommand insertCmd = new SqlCommand(insertSql, conn))
+                        {
+                            insertCmd.Parameters.AddWithValue("@ProductID", _productId);
+                            insertCmd.Parameters.AddWithValue("@UserID", userId);
+                            insertCmd.Parameters.AddWithValue("@StarRating", starRating);
+                            insertCmd.Parameters.AddWithValue("@ReviewMessage", reviewMessage);
+                            insertCmd.ExecuteNonQuery();
+                        }
+                    }
                 }
             }
 

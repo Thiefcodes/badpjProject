@@ -139,17 +139,32 @@ namespace badpjProject
             }
             else if (e.CommandName == "Remove")
             {
-                // This handles both "Reject" (for Pending) and "Remove" (for Approved), 
-                // as you're reusing the same command
+                // Attempt to delete the Coach record (RejectCoach in your logic).
                 bool coachDeleted = coachManager.RejectCoach(coachID);
-                bool coachStatusDeleted = false;
                 if (coachDeleted)
                 {
+                    // Then remove the CoachStatus record.
                     CoachStatus cs = new CoachStatus();
-                    coachStatusDeleted = cs.DeleteCoachStatus(coachID);
+                    bool coachStatusDeleted = cs.DeleteCoachStatus(coachID);
+
+                    if (coachStatusDeleted)
+                    {
+                        // Both the coach record and coach status record are removed.
+                        ShowMessage("Coach removed successfully!", "success");
+                    }
+                    else
+                    {
+                        // Coach record is removed, but status record failed to delete.
+                        ShowMessage("Coach removed, but failed to remove coach status record.", "error");
+                    }
                 }
-                ShowMessage((coachDeleted && coachStatusDeleted) ? "Coach removed successfully!" : "Error removing coach.",
-                            (coachDeleted && coachStatusDeleted) ? "success" : "error");
+                else
+                {
+                    // The coach record itself failed to remove.
+                    ShowMessage("Error removing coach.", "error");
+                }
+
+                // Refresh the list of coaches.
                 BindCoaches();
             }
         }

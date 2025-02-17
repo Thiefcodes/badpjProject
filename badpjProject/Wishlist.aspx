@@ -10,6 +10,7 @@
       <thead>
         <tr>
           <th>Product</th>
+          <th>Category</th>
           <th>Notes</th>
           <th>Actions</th>
         </tr>
@@ -22,6 +23,9 @@
             <tr>
               <td>
                 <%# Eval("ProductName") %>
+              </td>
+              <td>
+                <%# Eval("Category") %>
               </td>
               <td>
                 <asp:PlaceHolder ID="phView" runat="server">

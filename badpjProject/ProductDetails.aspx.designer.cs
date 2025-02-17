@@ -33,6 +33,15 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.Label lblName;
 
         /// <summary>
+        /// lblCategory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCategory;
+
+        /// <summary>
         /// lblPrice control.
         /// </summary>
         /// <remarks>
