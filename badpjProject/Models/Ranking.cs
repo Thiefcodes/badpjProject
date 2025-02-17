@@ -22,7 +22,7 @@ namespace badpjProject
         {
             _rankingID = Guid.NewGuid();
             _totalPoints = 0;
-            _rank = "Beginner";
+            _rank = "Unranked";
             _lastUpdated = DateTime.Now;
         }
 
@@ -79,15 +79,20 @@ namespace badpjProject
             _totalPoints += additionalPoints;
             _lastUpdated = DateTime.Now;
 
-            // Example rank thresholds (customize as needed)
-            if (_totalPoints >= 1000)
-                _rank = "Elite";
+            if (_totalPoints >= 5000)
+                _rank = "Grandmaster Grinder";
+            else if (_totalPoints >= 2500)
+                _rank = "Platinum Pumper";
+            else if (_totalPoints >= 1000)
+                _rank = "Emerald Exerciser";
             else if (_totalPoints >= 500)
-                _rank = "Advanced";
+                _rank = "Golden Gainer";
+            else if (_totalPoints >= 200)
+                _rank = "Silver Squatter";
             else if (_totalPoints >= 100)
-                _rank = "Intermediate";
+                _rank = "Bronze Barbeller";
             else
-                _rank = "Beginner";
+                _rank = "Unranked";
 
             int result = 0;
             string queryStr = "UPDATE Ranking SET TotalPoints = @TotalPoints, Rank = @Rank, LastUpdated = @LastUpdated " +
@@ -396,6 +401,32 @@ namespace badpjProject
                 }
             }
             return submission;
+        }
+
+        public static bool HasPendingSubmission(int userId)
+        {
+            bool hasPending = false;
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            string queryStr = "SELECT COUNT(*) FROM RankingVideoSubmission WHERE UserID = @UserID AND Status = 'Pending'";
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            using (SqlCommand cmd = new SqlCommand(queryStr, conn))
+            {
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                try
+                {
+                    conn.Open();
+                    int count = (int)cmd.ExecuteScalar();
+                    hasPending = (count > 0);
+                }
+                catch (SqlException ex)
+                {
+                    // Log or handle error
+                    Debug.WriteLine("SQL Error in HasPendingSubmission: " + ex.Message);
+                    throw;
+                }
+            }
+            return hasPending;
         }
 
         public int ApproveSubmission(int points)

@@ -42,6 +42,42 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.Repeater rptMessages;
 
         /// <summary>
+        /// pnlUserResponse control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlUserResponse;
+
+        /// <summary>
+        /// lblOfferAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOfferAmount;
+
+        /// <summary>
+        /// btnAcceptOffer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAcceptOffer;
+
+        /// <summary>
+        /// btnRejectOffer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRejectOffer;
+
+        /// <summary>
         /// txtMessage control.
         /// </summary>
         /// <remarks>

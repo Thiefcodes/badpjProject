@@ -1,60 +1,76 @@
-﻿using System;
-using System.IO;
-using System.Web.UI;
+﻿    using System;
+    using System.IO;
+    using System.Web.UI;
 
-namespace badpjProject
-{
-    public partial class SignUpCoachesDetails : Page
+    namespace badpjProject
     {
-        protected void Page_Load(object sender, EventArgs e)
+        public partial class SignUpCoachesDetails : Page
         {
-            if (!IsPostBack)
+            protected void Page_Load(object sender, EventArgs e)
             {
-                string coachID = Request.QueryString["Id"];
-                if (!string.IsNullOrEmpty(coachID))
+                if (!IsPostBack)
                 {
-                    
-                    Coaches coach = new Coaches().getCoaches(coachID);
-                    if (coach != null)
+                    // Retrieve the coach ID from the query string.
+                    string coachID = Request.QueryString["Id"];
+                    if (string.IsNullOrEmpty(coachID))
                     {
-                        lbl_CoachName.Text = coach.Coach_Name;
-                        lbl_CoachEmail.Text = coach.Coach_Email;
-                        lbl_CoachHp.Text = coach.Coach_Hp.ToString();
-                        lbl_CoachDesc.Text = coach.Coach_Desc;
-                        lbl_CoachQualification.Text = coach.Coach_Qualification;
-                        lbl_CoachStatus.Text = coach.Coach_Status;
+                        Response.Redirect("ViewCoaches.aspx");
+                        return;
+                    }
 
-                        string videoPath = $"~/Uploads/{coach.Coach_Video}";
+                    Coaches coach = new Coaches().getCoaches(coachID);
+                    if (coach == null)
+                    {
+                        Response.Redirect("ViewCoaches.aspx");
+                        return;
+                    }
 
-                        // Debugging: Show the resolved video path in an alert
-                        string resolvedVideoPath = Server.MapPath(videoPath);
-                        if (File.Exists(resolvedVideoPath))
-                        {
-                            videoSource.Attributes["src"] = ResolveUrl(videoPath);
-                            videoContainer.Visible = true;
-                            videoPlayer.Visible = true;
-                            videoPlayer.DataBind();
-                        }
-                        else
-                        {
-                            videoContainer.Visible = false;
-                        }
+                    // Set coach details into labels.
+                    lbl_CoachName.Text = coach.Coach_Name;
+                    lbl_CoachEmail.Text = coach.Coach_Email;
+                    lbl_CoachHp.Text = coach.Coach_Hp.ToString();
+                    lbl_CoachDesc.Text = coach.Coach_Desc;
+                    lbl_CoachQualification.Text = coach.Coach_Qualification;
+                    lbl_CoachStatus.Text = coach.Coach_Status;
+
+                    // Setup the video player if the video file exists.
+                    string videoPath = $"~/Uploads/{coach.Coach_Video}";
+                    string resolvedVideoPath = Server.MapPath(videoPath);
+                    if (File.Exists(resolvedVideoPath))
+                    {
+                        videoSource.Attributes["src"] = ResolveUrl(videoPath);
+                        videoContainer.Visible = true;
+                        videoPlayer.Visible = true;
                     }
                     else
                     {
-                      Response.Redirect("ViewCoaches.aspx");
+                        videoContainer.Visible = false;
                     }
-                }
-                else
-                {
-                   Response.Redirect("ViewCoaches.aspx");
-                }
+
+                    string certPath = $"~/Uploads/{coach.Coach_CertificationFile}";
+                    string resolvedCertPath = Server.MapPath(certPath);
+                    if (!string.IsNullOrEmpty(coach.Coach_CertificationFile) && File.Exists(resolvedCertPath))
+                    {
+                        pnlCertDoc.Visible = true;
+
+                        // Set the link text and URL
+                        lnkCertDoc.Text = "View Certificate";
+                        lnkCertDoc.NavigateUrl = ResolveUrl(certPath);
+
+                        // Open the certificate in a new pop-up window
+                        lnkCertDoc.Attributes["onclick"] = "window.open('" + ResolveUrl(certPath) +
+                            "', 'popupwindow', 'width=800,height=600,scrollbars=yes,resizable=yes'); return false;";
+                    }
+                    else
+                    {
+                        pnlCertDoc.Visible = false;
+                    }
             }
         }
 
-        protected void Btn_Back_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("ViewCoaches.aspx");
+            protected void Btn_Back_Click(object sender, EventArgs e)
+            {
+                Response.Redirect("ViewCoaches.aspx");
+            }
         }
     }
-}

@@ -87,6 +87,24 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.Label lbl_CoachQualification;
 
         /// <summary>
+        /// pnlCertDoc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlCertDoc;
+
+        /// <summary>
+        /// lnkCertDoc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkCertDoc;
+
+        /// <summary>
         /// lbl_CoachStatus control.
         /// </summary>
         /// <remarks>

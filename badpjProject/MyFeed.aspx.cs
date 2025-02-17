@@ -46,7 +46,8 @@ namespace badpjProject
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             string query = @"
             SELECT t.ThreadID, t.Title, t.CreatedAt, t.Views,
-            COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount
+            COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount,
+            t.ImagePath
             FROM Threads t
             WHERE t.CreatedBy = @UserID
             ORDER BY t.CreatedAt DESC"; // Order by date created (latest first)
@@ -103,12 +104,12 @@ namespace badpjProject
             int userId = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"]) : 0; // Ensure the user is logged in
             string query = @"
         SELECT 
-            COALESCE(SUM(t.Views), 0) AS TotalViews,
-            COALESCE(COUNT(pl.PostID), 0) AS TotalLikes
-        FROM Threads t
-        LEFT JOIN Posts p ON t.ThreadID = p.ThreadID
-        LEFT JOIN PostLikes pl ON p.PostID = pl.PostID
-        WHERE t.CreatedBy = @UserID;
+    COALESCE((SELECT COUNT(pl.PostID) FROM PostLikes pl WHERE pl.UserID = @UserID), 0) AS TotalLikes,
+    COALESCE((SELECT SUM(t.Views) FROM Threads t WHERE t.CreatedBy = @UserID), 0) AS TotalViews,
+    COALESCE((SELECT COUNT(p.PostID) 
+              FROM Posts p 
+              INNER JOIN Threads t ON p.ThreadID = t.ThreadID
+              WHERE t.CreatedBy = @UserID), 0) AS TotalThreadPosts;
     ";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString))
@@ -122,6 +123,8 @@ namespace badpjProject
                     if (reader.Read())
                     {
                         lblTotalLikes.Text = reader["TotalLikes"].ToString();
+                        lblTotalViews.Text = reader["TotalViews"].ToString(); // Assuming you have this label
+                        lblTotalThreadPosts.Text = reader["TotalThreadPosts"].ToString();
                     }
                 }
             }
@@ -259,7 +262,8 @@ namespace badpjProject
               SELECT TOP 3 t.ThreadID, 
               t.Views, 
               t.Title, 
-              COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount
+              COALESCE((SELECT COUNT(*) FROM Posts p WHERE p.ThreadID = t.ThreadID AND p.IsDeleted = 0), 0) AS PostCount,
+              t.ImagePath
               FROM Threads t
               ORDER BY t.Views DESC, PostCount DESC;"; // Select one random thread
 

@@ -11,7 +11,6 @@ namespace badpjProject
         private string _connString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
         private int _currentUserID;
 
-        // Property to track which product is currently being edited.
         protected int? EditingProductID
         {
             get { return (int?)ViewState["EditingProductID"]; }
@@ -46,7 +45,7 @@ namespace badpjProject
         private void LoadWishlist()
         {
             string sql = @"
-                SELECT p.ProductID, p.ProductName, p.ImageUrl, p.Price, w.Notes
+                SELECT p.ProductID, p.ProductName, p.ImageUrl, p.Price, p.Category, w.Notes
                 FROM dbo.Wishlist w
                 INNER JOIN dbo.Products p ON w.ProductID = p.ProductID
                 WHERE w.UserID = @UserID";
@@ -68,6 +67,7 @@ namespace badpjProject
                             ProductName = rdr.GetString(1),
                             ImageUrl = rdr.GetString(2),
                             Price = rdr.GetDecimal(3),
+                            Category = rdr["Category"] == DBNull.Value ? "" : rdr["Category"].ToString(),
                             Notes = rdr["Notes"] == DBNull.Value ? "" : rdr["Notes"].ToString()
                         });
                     }
@@ -139,7 +139,6 @@ namespace badpjProject
                     break;
                 case "AddToCart":
                     AddToCart(productId);
-                    Response.Write("<script>alert('Item added to cart!');</script>");
                     break;
             }
         }

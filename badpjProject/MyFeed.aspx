@@ -11,6 +11,9 @@
         
         <Columns>
           <asp:BoundField DataField="ThreadID" HeaderText="ID   " />
+          <asp:ImageField DataImageUrlField="ImagePath" HeaderText="">
+          <ControlStyle Width="100px" Height="100px" />
+          </asp:ImageField>
           <asp:BoundField DataField="Title" HeaderText="Random Thread   " />
           <asp:BoundField DataField="Views" HeaderText="Views   " />
           <asp:BoundField DataField="PostCount" HeaderText="Posts   " />
@@ -41,14 +44,21 @@
     <asp:Label ID="lblMessage" runat="server" ForeColor="Red" Font-Bold="true"></asp:Label>
     <br />
     <h3>Your Stats</h3>
-    <h5>How Many Posts you Liked</h5>
+    <h5>How Many Posts you Liked:</h5>
     <asp:Label ID="lblTotalLikes" runat="server" CssClass="stat-label" Style="font-size: 24px; font-weight: bold;"></asp:Label>
+    <h5>Your Thread Views:</h5>
+    <asp:Label ID="lblTotalViews" runat="server" CssClass="stat-label" Style="font-size: 24px; font-weight: bold;"></asp:Label>
+    <h5>Posts on your threads:</h5>
+    <asp:Label ID="lblTotalThreadPosts" runat="server" CssClass="stat-label" Style="font-size: 24px; font-weight: bold;"></asp:Label>
     <br />
     <!-- Threads Section -->
     <h3>Your Threads</h3>
     <asp:GridView ID="gvThreads" runat="server" CellPadding="10" AutoGenerateColumns="False" OnRowCommand="gvThreads_RowCommand">
         <Columns>
            <asp:BoundField DataField="ThreadID" HeaderText="ID   " />
+           <asp:ImageField DataImageUrlField="ImagePath" HeaderText="">
+           <ControlStyle Width="100px" Height="100px" />
+           </asp:ImageField>
            <asp:BoundField DataField="Title" HeaderText="Title   " />
            <asp:BoundField DataField="CreatedAt" HeaderText="Date Created   " DataFormatString="{0:yyyy-MM-dd}" />
            <asp:BoundField DataField="Views" HeaderText="Views   " />

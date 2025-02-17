@@ -18,6 +18,11 @@
             <asp:Label AssociatedControlID="txtDescription" Text="Description:" runat="server" CssClass="form-label" />
             <asp:TextBox ID="txtDescription" runat="server" TextMode="MultiLine" Rows="3" Columns="40" CssClass="form-control" />
         </div>
+        
+        <div class="mb-3">
+            <asp:Label AssociatedControlID="txtCategory" Text="Category:" runat="server" CssClass="form-label" />
+            <asp:TextBox ID="txtCategory" runat="server" CssClass="form-control" />
+        </div>
 
         <div class="mb-3">
             <asp:Label AssociatedControlID="fuProductImage" Text="Upload Image:" runat="server" CssClass="form-label" />

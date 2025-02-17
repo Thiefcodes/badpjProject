@@ -14,11 +14,35 @@
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         /* Custom styling for the Sign Up button */
         .signup-button {
             margin-left: 10px;
         }
+        .chatbot-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.chatbot-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
     </style>
 </head>
 <body>
@@ -60,11 +84,35 @@
         <!-- Main Content Placeholder -->
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+            <asp:Button ID="btnOpenChatbot" runat="server" Text="💬 Chat" CssClass="chatbot-button" OnClientClick="toggleChatbot(); return false;" />
         </div>
 
         <footer class="text-center py-4">
             <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
         </footer>
     </form>
+    <script type="text/javascript">
+        var chatbotWindow = null;
+        var chatbotMinimized = false;
+
+        function toggleChatbot() {
+            if (chatbotWindow === null || chatbotWindow.closed) {
+                chatbotWindow = window.open('Chatbot.aspx', 'ChatbotWindow', 'width=400,height=500,resizable=no');
+
+                // Position at bottom-right
+                chatbotWindow.moveTo(screen.width - 420, screen.height - 560);
+            } else {
+                if (!chatbotMinimized) {
+                    chatbotWindow.resizeTo(400, 50); // Minimize to a small bar
+                    chatbotMinimized = true;
+                } else {
+                    chatbotWindow.resizeTo(400, 500); // Restore to full size
+                    chatbotMinimized = false;
+                }
+            }
+        }
+    </script>
+
+
 </body>
 </html>

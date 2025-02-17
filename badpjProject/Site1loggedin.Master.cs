@@ -119,6 +119,7 @@ namespace badpjProject
             List<Control> userOnlyTabs = new List<Control>
             {
                 liUserBecomeACoach,
+                liPublicCoaches,
                 liUserOrders,
                 liUserLeaderboard
             };
