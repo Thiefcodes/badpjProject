@@ -15,15 +15,6 @@ namespace badpjProject
     {
 
         /// <summary>
-        /// gvOrderSummary control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvOrderSummary;
-
-        /// <summary>
         /// ValidationSummary1 control.
         /// </summary>
         /// <remarks>
@@ -114,15 +105,6 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCardNumber;
 
         /// <summary>
-        /// revCardNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator revCardNumber;
-
-        /// <summary>
         /// txtCardName control.
         /// </summary>
         /// <remarks>
@@ -159,15 +141,6 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvExpiryDate;
 
         /// <summary>
-        /// revExpiryDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator revExpiryDate;
-
-        /// <summary>
         /// txtCVV control.
         /// </summary>
         /// <remarks>
@@ -186,15 +159,6 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCVV;
 
         /// <summary>
-        /// revCVV control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator revCVV;
-
-        /// <summary>
         /// lblTotalAmount control.
         /// </summary>
         /// <remarks>
@@ -211,5 +175,14 @@ namespace badpjProject
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnPlaceOrder;
+
+        /// <summary>
+        /// gvOrderSummary control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvOrderSummary;
     }
 }

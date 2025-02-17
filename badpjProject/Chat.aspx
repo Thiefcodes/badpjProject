@@ -8,16 +8,14 @@
                 if (chatBox) {
                     chatBox.scrollTop = chatBox.scrollHeight;
                 }
-            }, 500); // Small delay ensures the messages load first
+            }, 500);
         }
 
-        // ✅ Ensure chat scrolls to bottom after AJAX updates
         var prm = Sys.WebForms.PageRequestManager.getInstance();
         prm.add_endRequest(function () {
             scrollToBottom();
         });
 
-        // ✅ Call scrollToBottom when the page loads
         window.onload = function () {
             scrollToBottom();
         };
@@ -33,7 +31,7 @@
                    <asp:Repeater ID="rptMessages" runat="server">
     <ItemTemplate>
         <div class="message-container">
-            <div class="chat-message">
+            <div class='<%# Eval("Sender").ToString() == "Coach" ? "chat-message message-coach" : "chat-message message-user" %>'>
                 <div class="message-sender">
                     <strong><%# Eval("SenderName") %></strong>
                 </div>
@@ -44,7 +42,6 @@
                     <%# Eval("Timestamp", "{0:dd/MM/yyyy HH:mm}") %>
                 </div>
 
-                <%-- ✅ Ensure Accept/Reject Buttons Only Appear for Users and Pending Offers --%>
                 <%# Convert.ToInt32(Session["UserId"]) == Convert.ToInt32(Request.QueryString["userId"]) 
                        && Container.DataItem != DBNull.Value 
                        && DataBinder.Eval(Container.DataItem, "Status").ToString() == "Pending" ? 
@@ -72,13 +69,11 @@
                     <asp:TextBox ID="txtMessage" runat="server" CssClass="message-input" placeholder="Type a message..."></asp:TextBox>
                     <asp:Button ID="btnSend" runat="server" Text="Send" CssClass="chat-button" OnClick="btnSend_Click" />
 
-                    <%-- ✅ Move the Offer Section OUTSIDE the Repeater, so it only shows once for Coaches --%>
                     <% if (Convert.ToInt32(Session["UserId"]) != Convert.ToInt32(Request.QueryString["userId"])) { %>
                         <asp:Panel ID="pnlOfferSection" runat="server">
                             <asp:TextBox ID="txtOfferPriceField" runat="server" CssClass="offer-input" placeholder="Enter Offer Price"></asp:TextBox>
                             <asp:Button ID="btnSendOffer" runat="server" Text="Send Offer" CssClass="btn btn-warning" OnClick="btnSendOffer_Click" />
                         </asp:Panel>
-                    <%-- ✅ Show Accept/Reject Offer buttons ONLY if User is logged in and an offer is pending --%>
                     <% } %>
                 </div>
 
@@ -87,79 +82,93 @@
     </div>
 
     <style>
-        .chat-container {
-            width: 50%;
-            margin: auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            background-color: white;
-            text-align: center;
-        }
+.chat-container {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    text-align: center;
+}
 
-        .chat-box {
-            width: 100%;
-            height: 300px;
-            overflow-y: scroll;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-        }
+.chat-box {
+    width: 100%;
+    height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+}
 
-        .message-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 10px;
-            width: 100%;
-        }
+.message-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 10px;
+}
 
-        .chat-message {
-            max-width: 70%;
-            padding: 8px 12px;
-            border-radius: 10px;
-            word-wrap: break-word;
-            font-size: 16px;
-            background-color: #d4f8c6;
-        }
+.chat-message {
+    max-width: 60%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    word-wrap: break-word;
+    font-size: 16px;
+    position: relative;
+}
 
-        .message-sender {
-            font-weight: bold;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 5px;
-        }
+.message-coach {
+    align-self: flex-start;
+    background-color: #e1eafc;
+    text-align: left;
+}
 
-        .message-timestamp {
-            font-size: 12px;
-            color: gray;
-            margin-top: 5px;
-            text-align: right;
-        }
+.message-user {
+    align-self: flex-end;
+    background-color: #d4f8c6;
+    text-align: right;
+}
 
-        .chat-input-container {
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
+.message-sender {
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
 
-        .chat-input {
-            width: 80%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
+.message-timestamp {
+    font-size: 12px;
+    color: gray;
+    margin-top: 5px;
+    text-align: right;
+}
 
-        .chat-button {
-            padding: 10px 15px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+.chat-input-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.chat-button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
     </style>
 </asp:Content>

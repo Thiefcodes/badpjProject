@@ -14,11 +14,10 @@ namespace badpjProject
         {
             if (!IsPostBack)
             {
-                // Check if coachId is in the URL
                 if (Request.QueryString["coachId"] != null)
                 {
                     CoachId = Guid.Parse(Request.QueryString["coachId"]);
-                    Session["CoachId"] = CoachId.ToString(); // Store in session
+                    Session["CoachId"] = CoachId.ToString();
                     LoadUserChats();
                 }
                 else if (Session["CoachId"] != null)
@@ -28,7 +27,7 @@ namespace badpjProject
                 }
                 else
                 {
-                    Response.Redirect("Login.aspx"); // Redirect if no CoachId found
+                    Response.Redirect("Login.aspx"); 
                 }
             }
         }

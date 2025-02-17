@@ -13,7 +13,7 @@ namespace badpjProject
 {
     public partial class Chatbot : System.Web.UI.Page
     {
-        // Dictionary for predefined training data
+        //training data
         private static Dictionary<string, string> trainingData = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             {"hello", "Hi there! How can I assist you today?"},
@@ -38,27 +38,24 @@ namespace badpjProject
 
             string botResponse;
 
-            // Check if the user's question exists in training data
             if (trainingData.ContainsKey(userMessage))
             {
                 botResponse = trainingData[userMessage];
             }
             else
             {
-                // If not found, call Gemini API for AI-generated response
                 botResponse = await GetGeminiResponse(userMessage);
             }
 
-            // Show the response in chat box
             litChatbotResponse.Text += $"<p><strong>You:</strong> {userMessage}</p>";
             litChatbotResponse.Text += $"<p><strong>AI:</strong> {botResponse}</p>";
 
-            txtChatbotInput.Text = ""; // Clear input field
+            txtChatbotInput.Text = ""; 
         }
 
         private async Task<string> GetGeminiResponse(string prompt)
         {
-            string apiKey = "AIzaSyB_L06Lzlh_TQ7Of_JFd4_eyasMJgc1deA"; // Replace with your actual API key
+            string apiKey = "AIzaSyB_L06Lzlh_TQ7Of_JFd4_eyasMJgc1deA";
             string apiUrl = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={apiKey}";
 
             using (HttpClient client = new HttpClient())
