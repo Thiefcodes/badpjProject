@@ -31,31 +31,44 @@
             <ContentTemplate>
                 <div class="chat-box" id="chatBox">
                    <asp:Repeater ID="rptMessages" runat="server">
-                        <ItemTemplate>
-                            <div class="message-container">
-                                <div class="chat-message">
-                                    <div class="message-sender">
-                                        <strong><%# Eval("SenderName") %></strong>
-                                    </div>
-                                    <div class="message-text">
-                                        <%# Eval("Message") %>
-                                    </div>
-                                    <div class="message-timestamp">
-                                        <%# Eval("Timestamp", "{0:dd/MM/yyyy HH:mm}") %>
-                                    </div>
-                                </div>
-                            </div>
-                        </ItemTemplate>
-                   </asp:Repeater>
+    <ItemTemplate>
+        <div class="message-container">
+            <div class="chat-message">
+                <div class="message-sender">
+                    <strong><%# Eval("SenderName") %></strong>
                 </div>
-                <asp:Panel ID="pnlUserResponse" runat="server"
-    Visible='<%# Convert.ToInt32(Session["UserId"]) == Convert.ToInt32(Request.QueryString["userId"]) && Eval("Status") != DBNull.Value && Eval("Status").ToString() == "Pending" %>'>
-    <strong>Offer: $<%# Eval("OfferAmount") %></strong>
+                <div class="message-text">
+                    <%# Eval("Message") %>
+                </div>
+                <div class="message-timestamp">
+                    <%# Eval("Timestamp", "{0:dd/MM/yyyy HH:mm}") %>
+                </div>
+
+                <%-- ✅ Ensure Accept/Reject Buttons Only Appear for Users and Pending Offers --%>
+                <%# Convert.ToInt32(Session["UserId"]) == Convert.ToInt32(Request.QueryString["userId"]) 
+                       && Container.DataItem != DBNull.Value 
+                       && DataBinder.Eval(Container.DataItem, "Status").ToString() == "Pending" ? 
+                "<div class='offer-buttons'>"
+                + "<strong>Offer: $" + Eval("OfferAmount") + "</strong>"
+                + "<asp:Button ID='btnAcceptOffer' runat='server' Text='Accept' CssClass='btn btn-primary'"
+                + " CommandArgument='" + Eval("PaymentId").ToString() + "' OnClick='btnAcceptOffer_Click' />"
+                + "<asp:Button ID='btnRejectOffer' runat='server' Text='Reject' CssClass='btn btn-danger'"
+                + " CommandArgument='" + Eval("PaymentId").ToString() + "' OnClick='btnRejectOffer_Click' />"
+                + "</div>" : "" %>
+            </div>
+        </div>
+    </ItemTemplate>
+</asp:Repeater>
+
+                </div>
+               <asp:Panel ID="pnlUserResponse" runat="server" Visible="false">
+    <asp:Label ID="lblOfferAmount" runat="server" CssClass="offer-label"></asp:Label>
     <asp:Button ID="btnAcceptOffer" runat="server" Text="Accept" CssClass="btn btn-primary"
-        CommandArgument='<%# Eval("PaymentId") %>' OnClick="btnAcceptOffer_Click" />
+        OnClick="btnAcceptOffer_Click" />
     <asp:Button ID="btnRejectOffer" runat="server" Text="Reject" CssClass="btn btn-danger"
-        CommandArgument='<%# Eval("PaymentId") %>' OnClick="btnRejectOffer_Click" />
+        OnClick="btnRejectOffer_Click" />
 </asp:Panel>
+
                 <div class="message-input-container">
                     <asp:TextBox ID="txtMessage" runat="server" CssClass="message-input" placeholder="Type a message..."></asp:TextBox>
                     <asp:Button ID="btnSend" runat="server" Text="Send" CssClass="chat-button" OnClick="btnSend_Click" />
