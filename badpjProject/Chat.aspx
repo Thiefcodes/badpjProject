@@ -49,7 +49,6 @@
                        && Container.DataItem != DBNull.Value 
                        && DataBinder.Eval(Container.DataItem, "Status").ToString() == "Pending" ? 
                 "<div class='offer-buttons'>"
-                + "<strong>Offer: $" + Eval("OfferAmount") + "</strong>"
                 + "<asp:Button ID='btnAcceptOffer' runat='server' Text='Accept' CssClass='btn btn-primary'"
                 + " CommandArgument='" + Eval("PaymentId").ToString() + "' OnClick='btnAcceptOffer_Click' />"
                 + "<asp:Button ID='btnRejectOffer' runat='server' Text='Reject' CssClass='btn btn-danger'"

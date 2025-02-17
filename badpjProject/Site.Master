@@ -14,6 +14,9 @@
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         /* Custom styling for the Sign Up button */
         .signup-button {
@@ -60,11 +63,19 @@
         <!-- Main Content Placeholder -->
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+            <asp:Button ID="btnOpenChatbot" runat="server" Text="Open Chatbot" CssClass="chatbot-button" OnClientClick="openChatbot(); return false;" />
         </div>
 
         <footer class="text-center py-4">
             <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
         </footer>
     </form>
+    <script type="text/javascript">
+    function openChatbot() {
+        var chatbotWindow = window.open('Chatbot.aspx', 'ChatbotWindow', 'width=400,height=500,resizable=no');
+        chatbotWindow.focus();
+    }
+    </script>
+
 </body>
 </html>

@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
 using badpjProject.Models;
+using System.Web.UI;
 
 namespace badpjProject
 {
@@ -47,7 +48,6 @@ namespace badpjProject
 
         private void LoadProduct(int productId)
         {
-            // Updated query to include Category.
             string sql = @"SELECT ProductName, Description, ImageUrl, Price, Category
                            FROM dbo.Products
                            WHERE ProductID = @ProductID";
@@ -86,7 +86,8 @@ namespace badpjProject
             decimal price;
             if (!decimal.TryParse(txtPrice.Text, out price))
             {
-                lblMessage.Text = "Invalid price. Please enter a valid number.";
+                string script = "Swal.fire({ icon: 'warning', title: 'Invalid Field', text: Invalid price. Please enter a valid number.\"}); ";
+                ScriptManager.RegisterStartupScript(this, GetType(), "loginAlert", script, true);
                 return;
             }
 
@@ -121,6 +122,13 @@ namespace badpjProject
             else
             {
                 InsertProduct(name, description, category, finalImageUrl, price);
+                string script = "Swal.fire({ " +
+                "icon: 'success', " +
+                "title: 'Product Saved', " +
+                "text: 'Product created/edited successfully!' " +
+                "});";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ProductSavedAlert", script, true);
+
             }
 
             Response.Redirect("ManageProduct.aspx");
@@ -143,6 +151,7 @@ namespace badpjProject
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
+
         }
 
         private void UpdateProduct(int productId, string name, string description, string category, string imageUrl, decimal price)

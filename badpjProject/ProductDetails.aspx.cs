@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Collections.Generic;
 using System.Web.UI.WebControls;
 using System.Linq;
+using System.Web.UI;
 
 namespace badpjProject
 {
@@ -102,7 +103,8 @@ namespace badpjProject
         {
             if (Session["UserID"] == null)
             {
-                Response.Write("<script>alert('Please log in first!'); window.location='Login.aspx';</script>");
+                string script = "Swal.fire({ icon: 'warning', title: 'Not Logged In', text: 'Please log in first!' }).then(() => { window.location='Login.aspx'; });";
+                ScriptManager.RegisterStartupScript(this, GetType(), "loginAlert", script, true);
                 return;
             }
             int productId;
@@ -153,7 +155,8 @@ namespace badpjProject
 
                         Session["Cart"] = cart;
                         UpdateCartCount();
-                        Response.Write("<script>alert('Item added to cart!');</script>");
+                        string script = $"Swal.fire({{ icon: 'info', title: 'Added To Cart', text: 'Product successfully added to cart!' }});";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "discountAlert", script, true);
                     }
                     else
                     {
