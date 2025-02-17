@@ -15,11 +15,10 @@ namespace badpjProject
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (!IsPostBack) // ✅ Prevent double loading
             {
                 if (Session["CoachId"] != null && Request.QueryString["userId"] != null)
                 {
-                    // Coach is viewing messages from a user
                     CoachId = Guid.Parse(Session["CoachId"].ToString());
                     UserId = Convert.ToInt32(Request.QueryString["userId"]);
                     IsCoach = true;
@@ -27,7 +26,6 @@ namespace badpjProject
                 }
                 else if (Session["UserId"] != null && Request.QueryString["coachId"] != null)
                 {
-                    // User is messaging a coach
                     UserId = Convert.ToInt32(Session["UserId"]);
                     CoachId = Guid.Parse(Request.QueryString["coachId"]);
                     IsCoach = false;
@@ -35,13 +33,50 @@ namespace badpjProject
                 }
                 else
                 {
-                    Response.Redirect("Login.aspx"); // Redirect to login if not authenticated
+                    Response.Redirect("Login.aspx");
                 }
-                 int sessionUserId = Convert.ToInt32(Session["UserId"]);
-        int userId = Convert.ToInt32(Request.QueryString["userId"]);
-        Guid coachId = Guid.Parse(Request.QueryString["coachId"]);
-                pnlOfferSection.Visible = (sessionUserId != userId);
-                LoadMessages();
+
+                LoadMessages();  // ✅ Call only ONCE
+                LoadOfferDetails();
+            }
+        }
+
+        private void LoadOfferDetails()
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = @"
+            SELECT PaymentId, OfferAmount 
+            FROM Payments 
+            WHERE UserId = @UserId AND CoachId = @CoachId AND Status = 'Pending' 
+            ORDER BY CreatedAt DESC"; // ✅ Get latest pending offer
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@UserId", UserId);
+                cmd.Parameters.AddWithValue("@CoachId", CoachId);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    // ✅ Show the panel only if the logged-in user is the one who should accept/reject
+                    bool isUser = Convert.ToInt32(Session["UserId"]) == UserId;
+                    pnlUserResponse.Visible = isUser;
+
+                    if (isUser)
+                    {
+                        lblOfferAmount.Text = "Offer: $" + reader["OfferAmount"].ToString();
+                        btnAcceptOffer.CommandArgument = reader["PaymentId"].ToString();
+                        btnRejectOffer.CommandArgument = reader["PaymentId"].ToString();
+                    }
+                }
+                else
+                {
+                    pnlUserResponse.Visible = false;
+                }
+                conn.Close();
             }
         }
 
@@ -73,36 +108,31 @@ namespace badpjProject
 
         private void LoadMessages()
         {
-            if (Request.QueryString["userId"] == null || Request.QueryString["coachId"] == null)
-            {
-                Response.Write("<script>alert('Invalid chat parameters. Please try again.');</script>");
-                return;
-            }
-
             int userId = Convert.ToInt32(Request.QueryString["userId"]);
             Guid coachId = Guid.Parse(Request.QueryString["coachId"]);
 
             string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                // ✅ Fix: Ensure correct sender name (User or Coach) & include Offer Status & Amount
                 string query = @"
-            SELECT 
-                c.UserId, 
-                c.Message, 
-                c.Timestamp, 
-                c.Sender, 
-                p.Status, 
-                p.OfferAmount, 
-                p.PaymentId, -- Include PaymentId for Accept/Reject
-                CASE 
-                    WHEN c.Sender = 'User' THEN (SELECT Login_Name FROM [Table] WHERE Id = c.UserId)
-                    WHEN c.Sender = 'Coach' THEN (SELECT Name FROM Coach WHERE Id = c.CoachId)
-                END AS SenderName
-            FROM Chat c
-            LEFT JOIN Payments p ON c.UserId = p.UserId AND c.CoachId = p.CoachId AND p.Status IN ('Pending', 'Accepted') 
-            WHERE c.UserId = @UserId AND c.CoachId = @CoachId
-            ORDER BY c.Timestamp ASC";
+        SELECT 
+            c.UserId, 
+            c.Message, 
+            c.Timestamp, 
+            c.Sender, 
+            p.Status, 
+            p.OfferAmount, 
+            p.PaymentId, 
+            CASE 
+                WHEN c.Sender = 'User' THEN (SELECT Login_Name FROM [Table] WHERE Id = c.UserId)
+                WHEN c.Sender = 'Coach' THEN (SELECT Name FROM Coach WHERE Id = c.CoachId)
+            END AS SenderName
+        FROM Chat c
+        LEFT JOIN Payments p ON c.UserId = p.UserId 
+            AND c.CoachId = p.CoachId 
+            AND p.Status IN ('Pending', 'Accepted') 
+        WHERE c.UserId = @UserId AND c.CoachId = @CoachId
+        ORDER BY c.Timestamp ASC";
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@UserId", userId);
@@ -112,9 +142,14 @@ namespace badpjProject
                 SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
                 dt.Load(reader);
+                conn.Close();
 
-                rptMessages.DataSource = dt;
-                rptMessages.DataBind();
+                // ✅ Ensure binding only happens ONCE
+                if (rptMessages.DataSource == null)
+                {
+                    rptMessages.DataSource = dt;
+                    rptMessages.DataBind();
+                }
             }
         }
 
@@ -220,12 +255,28 @@ namespace badpjProject
             string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connStr))
             {
+                // ✅ Check if a pending offer already exists
+                string checkQuery = "SELECT COUNT(*) FROM Payments WHERE CoachId = @CoachId AND UserId = @UserId AND Status = 'Pending'";
+                SqlCommand checkCmd = new SqlCommand(checkQuery, conn);
+                checkCmd.Parameters.AddWithValue("@CoachId", Guid.Parse(Request.QueryString["coachId"]));
+                checkCmd.Parameters.AddWithValue("@UserId", Convert.ToInt32(Request.QueryString["userId"]));
+
+                conn.Open();
+                int pendingOffers = (int)checkCmd.ExecuteScalar();
+                conn.Close();
+
+                if (pendingOffers > 0)
+                {
+                    Response.Write("<script>alert('Error: An offer is already pending. Please wait for the user to accept or reject.');</script>");
+                    return;
+                }
+
+                // ✅ Insert new offer if no pending offer exists
                 string insertQuery = "INSERT INTO Payments (CoachId, UserId, OfferAmount, Status) VALUES (@CoachId, @UserId, @OfferAmount, 'Pending')";
                 SqlCommand cmd = new SqlCommand(insertQuery, conn);
 
-                // ✅ Convert CoachId from QueryString (not from session)
-                cmd.Parameters.AddWithValue("@CoachId", Guid.Parse(Request.QueryString["coachId"])); // ✅ Correct
-                cmd.Parameters.AddWithValue("@UserId", Convert.ToInt32(Request.QueryString["userId"])); // ✅ Correct
+                cmd.Parameters.AddWithValue("@CoachId", Guid.Parse(Request.QueryString["coachId"]));
+                cmd.Parameters.AddWithValue("@UserId", Convert.ToInt32(Request.QueryString["userId"]));
                 cmd.Parameters.AddWithValue("@OfferAmount", offerAmount);
 
                 conn.Open();
@@ -252,6 +303,7 @@ namespace badpjProject
 
             // ✅ Reload chat to reflect the new offer
             LoadMessages();
+            LoadOfferDetails();  // ✅ Refresh Offer Panel
             ScriptManager.RegisterStartupScript(this, GetType(), "scrollToBottom", "scrollToBottom();", true);
         }
 
@@ -259,11 +311,10 @@ namespace badpjProject
         {
             try
             {
-                string paymentId = ((Button)sender).CommandArgument;
+                string paymentIdStr = ((Button)sender).CommandArgument;
                 string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
-                // ✅ Validate Payment ID before parsing
-                if (!Guid.TryParse(paymentId, out Guid paymentGuid))
+                if (!Guid.TryParse(paymentIdStr, out Guid paymentGuid))
                 {
                     Response.Write("<script>alert('Error: Invalid Payment ID format.');</script>");
                     return;
@@ -271,7 +322,12 @@ namespace badpjProject
 
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    string updateQuery = "UPDATE Payments SET Status = 'Accepted', PaymentHoldAmount = OfferAmount WHERE PaymentId = @PaymentId";
+                    string updateQuery = @"
+                UPDATE Payments 
+                SET Status = 'Accepted', 
+                    PaymentHoldAmount = OfferAmount 
+                WHERE PaymentId = @PaymentId AND Status = 'Pending'";
+
                     SqlCommand cmd = new SqlCommand(updateQuery, conn);
                     cmd.Parameters.AddWithValue("@PaymentId", paymentGuid);
 
@@ -281,12 +337,12 @@ namespace badpjProject
 
                     if (rowsAffected == 0)
                     {
-                        Response.Write("<script>alert('Error: No matching offer found to accept.');</script>");
+                        Response.Write("<script>alert('Error: No matching offer found to accept or already accepted.');</script>");
                         return;
                     }
                 }
 
-                // ✅ Add chat indicator message
+                // ✅ Add system message in chat
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
                     string insertQuery = "INSERT INTO Chat (UserId, CoachId, Message, Timestamp, Sender) VALUES (@UserId, @CoachId, 'Offer Accepted! Payment is on hold.', GETDATE(), 'System')";
@@ -299,8 +355,9 @@ namespace badpjProject
                     conn.Close();
                 }
 
-                // ✅ Ensure UI refreshes properly
+                // ✅ Refresh UI
                 LoadMessages();
+                LoadOfferDetails();
                 UpdatePanelChat.Update();
                 ScriptManager.RegisterStartupScript(this, GetType(), "scrollToBottom", "scrollToBottom();", true);
             }
