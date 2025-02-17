@@ -16,7 +16,7 @@ namespace badpjProject
         protected void btn_BackToHome_Click(object sender, EventArgs e)
         {
             // Redirect to the home page
-            Response.Redirect("~/About.aspx");
+            Response.Redirect("~/BecomeACoach.aspx");
         }
     }
 }

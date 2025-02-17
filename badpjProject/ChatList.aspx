@@ -17,28 +17,41 @@
     </div>
 
     <style>
-        .chat-container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background: #f9f9f9;
-        }
+     .chat-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+}
 
-        .chat-user {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+.chat-user {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
 
-        .chat-user a {
-            text-decoration: none;
-            font-size: 1.2rem;
-            color: #007bff;
-        }
+.chat-user:hover {
+    background-color: #e9f5ff;
+}
 
-        .chat-user a:hover {
-            text-decoration: underline;
-        }
+.chat-user a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: #007bff;
+    text-align: center;
+    width: 100%;
+}
+
+.chat-user a:hover {
+    text-decoration: none;
+    color: #0056b3;
+}
+
     </style>
 </asp:Content>

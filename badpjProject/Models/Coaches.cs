@@ -56,7 +56,7 @@ namespace badpjProject
         }
 
         public Coaches(string coachID)
-            : this(coachID, "", "", 0, "", "", "", "", "", "","")
+            : this(coachID, "", "", 0, "", "", "", "", "", "", "")
         {
         }
 
@@ -493,8 +493,8 @@ namespace badpjProject
         {
             int result = 0;
 
-            string queryStr = "INSERT INTO Coach (Id, [Name], Email, Hp, [Desc], Qualification, File_URL, Status, ProfileImage, AreaOfExpertise) " +
-                              "VALUES (@Coaches_ID, @Coaches_Name, @Coaches_Email, @Coaches_Hp, @Coaches_Desc, @Coaches_Qualification, @Coaches_Video, @Coaches_Status, @ProfileImage, @AreaOfExpertise)";
+            string queryStr = "INSERT INTO Coach (Id, [Name], Email, Hp, [Desc], Qualification, File_URL, Status, ProfileImage, AreaOfExpertise, CertificationFile) " +
+                              "VALUES (@Coaches_ID, @Coaches_Name, @Coaches_Email, @Coaches_Hp, @Coaches_Desc, @Coaches_Qualification, @Coaches_Video, @Coaches_Status, @ProfileImage, @AreaOfExpertise, @CertificationFile)";
 
             using (SqlConnection conn = new SqlConnection(_connStr))
             using (SqlCommand cmd = new SqlCommand(queryStr, conn))
@@ -509,6 +509,7 @@ namespace badpjProject
                 cmd.Parameters.AddWithValue("@Coaches_Status", this.Coach_Status);
                 cmd.Parameters.AddWithValue("@ProfileImage", this.Coach_ProfileImage);
                 cmd.Parameters.AddWithValue("@AreaOfExpertise", this.Coach_AreaOfExpertise);
+                cmd.Parameters.AddWithValue("@CertificationFile", string.IsNullOrEmpty(this.Coach_CertificationFile) ? (object)DBNull.Value : this.Coach_CertificationFile);
 
                 try
                 {

@@ -38,6 +38,11 @@
                             <dt class="col-sm-4">Qualification:</dt>
                             <dd class="col-sm-8">
                                 <asp:Label ID="lbl_CoachQualification" runat="server" Text=""></asp:Label>
+
+                                <!-- Certification Link (Only Visible if Exists) -->
+                                <asp:Panel ID="pnlCertDoc" runat="server" visible="false" CssClass="ms-2">
+                                    <asp:HyperLink ID="lnkCertDoc" runat="server" CssClass="text-primary" Target="_blank">View Certificate</asp:HyperLink>
+                                </asp:Panel>
                             </dd>
                             <dt class="col-sm-4">Status:</dt>
                             <dd class="col-sm-8">

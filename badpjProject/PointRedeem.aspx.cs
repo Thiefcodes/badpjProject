@@ -16,7 +16,8 @@ namespace badpjProject
             // Ensure the user is logged in and has the 'User' role.
             if (Session["UserId"] == null || Session["Role"] == null || Session["Role"].ToString() != "User")
             {
-                Response.Redirect("Login.aspx");
+                Response.Write("<script>alert('Access Denied: Only users can log workout sessions.');window.location='Login.aspx';</script>");
+                Response.End();
             }
             if (!IsPostBack)
             {
