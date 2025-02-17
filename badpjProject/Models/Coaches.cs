@@ -716,7 +716,7 @@ namespace badpjProject
                 {
                     conn.Open();
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    deleted = rowsAffected > 0;
+                    deleted = (rowsAffected >= 0);
                 }
                 catch (SqlException ex)
                 {
