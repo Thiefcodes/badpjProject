@@ -103,13 +103,6 @@
                             runat="server" 
                             CssClass="d-block mb-4" />
 
-                        <asp:Label 
-                            ID="lblWishlistIndicator" 
-                            runat="server" 
-                            CssClass="text-success fw-bold" 
-                            Visible="false" 
-                            Text="(On your Wishlist!)" />
-
                         <asp:HiddenField ID="hfProductID" runat="server" />
 
                         <!-- If you want black styling to match your site -->
@@ -119,6 +112,13 @@
                             CssClass="btn btn-black btn-sm" 
                             OnClick="btnAddToCart_Click" 
                             Text="Add to Cart" />
+
+                        <asp:Label 
+                            ID="lblWishlistIndicator" 
+                            runat="server" 
+                            CssClass="text-success fw-bold" 
+                            Visible="false" 
+                            Text="(On your Wishlist!)" />
                     </div>
                 </div>
             </div>
