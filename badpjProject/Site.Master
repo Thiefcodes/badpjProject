@@ -60,11 +60,19 @@
         <!-- Main Content Placeholder -->
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+            <asp:Button ID="btnOpenChatbot" runat="server" Text="Open Chatbot" CssClass="chatbot-button" OnClientClick="openChatbot(); return false;" />
         </div>
 
         <footer class="text-center py-4">
             <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
         </footer>
     </form>
+    <script type="text/javascript">
+    function openChatbot() {
+        var chatbotWindow = window.open('Chatbot.aspx', 'ChatbotWindow', 'width=400,height=500,resizable=no');
+        chatbotWindow.focus();
+    }
+    </script>
+
 </body>
 </html>
