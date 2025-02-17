@@ -55,7 +55,7 @@ namespace badpjProject
                             }
                             else
                             {
-                                ProfilePicture.ImageUrl = "~/default-profile.png"; // Default profile picture
+                                ProfilePicture.ImageUrl = "~/Uploads/default-profile.png"; // Default profile picture
                             }
                         }
                     }
