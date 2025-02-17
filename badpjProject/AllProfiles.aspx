@@ -3,6 +3,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-5">
         <h2 class="text-center">All User Profiles</h2>
+        <div class="row mb-3">
+    <div class="col-md-8 offset-md-2">
+        <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control" Placeholder="Search for users..."></asp:TextBox>
+        <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn btn-primary mt-2" OnClick="btnSearch_Click" />
+    </div>
+</div>
+
         <div class="card shadow-sm p-4 mt-4" style="width: 100%; max-width: 800px; margin: 0 auto;">
             <asp:Repeater ID="ProfilesRepeater" runat="server">
                 <HeaderTemplate>

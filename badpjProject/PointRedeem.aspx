@@ -2,10 +2,10 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
   <div class="container mt-5">
-    <h2 class="text-center">Redeem Your Points</h2>
+    <h2 class="text-center">Redeem Your Streak Points</h2>
     <div class="row">
       <div class="col-md-12 text-center">
-        <asp:Label ID="lblUserPoints" runat="server" Text="Your Points: 0" CssClass="h4"></asp:Label>
+        <asp:Label ID="lblUserPoints" runat="server" Text="Your Streak Points: 0" CssClass="h4"></asp:Label>
         <br /><br />
       </div>
     </div>
@@ -18,7 +18,7 @@
               <img src='<%# ResolveUrl(Eval("ProductImage").ToString()) %>' class="card-img-top" alt="Product Image" style="height: 200px; object-fit: cover;">
               <div class="card-body">
                 <h5 class="card-title"><%# Eval("ProductName") %></h5>
-                <p class="card-text">Cost: <%# Eval("CostPoints") %> points</p>
+                <p class="card-text">Cost: <%# Eval("CostPoints") %> Streak points</p>
                 <asp:Button ID="btnRedeem" runat="server" Text="Redeem" CssClass="btn btn-primary w-100" 
                             CommandArgument='<%# Eval("ProductId") %>' OnCommand="btnRedeem_Command" />
               </div>
