@@ -53,7 +53,14 @@
           <td>
               <%# Eval("Category") %>
            </td>
-          <td><%# Eval("Price", "{0:C}") %></td>
+           <td>
+            <%# Convert.ToInt32(Eval("DiscountPercent")) > 0 
+                ? String.Format("<del>{0:C}</del> {1:C} <span class='text-success'>({2}% OFF)</span>", 
+                    Eval("Price"), 
+                    Convert.ToDecimal(Eval("Price")) * (1 - Convert.ToInt32(Eval("DiscountPercent")) / 100m), 
+                    Eval("DiscountPercent"))
+                : String.Format("{0:C}", Eval("Price")) %>
+          </td>
           <td>
             <%# Eval("AverageRating") != DBNull.Value ? String.Format("{0:F1}", Eval("AverageRating")) : "N/A" %>
           </td>

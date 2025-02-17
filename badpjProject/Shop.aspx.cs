@@ -36,7 +36,7 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 string sql = @"
-                  SELECT ProductID, ProductName, Description, ImageUrl, Price, Category,
+                  SELECT ProductID, ProductName, Description, ImageUrl, Price, Category, DiscountPercent,
                   (SELECT AVG(CAST(StarRating AS DECIMAL(10,2))) FROM Reviews r WHERE r.ProductID = p.ProductID) AS AverageRating
                   FROM dbo.Products p";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -54,7 +54,8 @@ namespace badpjProject
                                 ImageUrl = rdr.GetString(3),
                                 Price = rdr.GetDecimal(4),
                                 AverageRating = rdr["AverageRating"] != DBNull.Value ? Convert.ToDecimal(rdr["AverageRating"]) : (decimal?)null,
-                                Category = rdr.IsDBNull(5) ? "" : rdr.GetString(5)
+                                Category = rdr.IsDBNull(5) ? "" : rdr.GetString(5),
+                                DiscountPercent = rdr.IsDBNull(6) ? 0 : rdr.GetInt32(6)
                             };
                             productList.Add(p);
                         }
@@ -73,8 +74,7 @@ namespace badpjProject
             }
             else
             {
-                ScriptManager.RegisterStartupScript(this, GetType(), "alert",
-                  "alert('You need to be logged in to view your wishlist!');", true);
+                Response.Redirect("Login.aspx?returnUrl=Shop.aspx");
             }
         }
 
@@ -116,33 +116,45 @@ namespace badpjProject
                 Response.Write("<script>alert('Please log in first!'); window.location='Login.aspx';</script>");
                 return;
             }
-            if (!int.TryParse(e.CommandArgument.ToString(), out int productId))
+
+            int productId;
+            if (!int.TryParse(e.CommandArgument.ToString(), out productId))
             {
                 Response.Write("<script>alert('Invalid product selection.');</script>");
                 return;
             }
-            using (SqlConnection conn = new SqlConnection(_connString))
+
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price, DiscountPercent FROM Products WHERE ProductID = @ProductID";
+
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
+                conn.Open();
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@ProductID", productId);
-                    conn.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
+
                     if (reader.Read())
                     {
+                        decimal originalPrice = Convert.ToDecimal(reader["Price"]);
+                        int discount = reader["DiscountPercent"] != DBNull.Value ? Convert.ToInt32(reader["DiscountPercent"]) : 0;
+                        decimal finalPrice = discount > 0 ? originalPrice * (1 - discount / 100m) : originalPrice;
+
                         CartItem newItem = new CartItem
                         {
                             ProductID = (int)reader["ProductID"],
                             ProductName = reader["ProductName"].ToString(),
                             Description = reader["Description"].ToString(),
                             ImageUrl = reader["ImageUrl"].ToString(),
-                            Price = Convert.ToDecimal(reader["Price"]),
+                            Price = finalPrice,
                             Quantity = 1
                         };
 
                         List<CartItem> cart = (List<CartItem>)Session["Cart"] ?? new List<CartItem>();
+
                         CartItem existingItem = cart.Find(item => item.ProductID == newItem.ProductID);
+
                         if (existingItem != null)
                         {
                             existingItem.Quantity++;
@@ -151,6 +163,7 @@ namespace badpjProject
                         {
                             cart.Add(newItem);
                         }
+
                         Session["Cart"] = cart;
                         UpdateCartCount();
                     }

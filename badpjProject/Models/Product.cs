@@ -14,5 +14,6 @@ namespace badpjProject.Models
         public decimal Price { get; set; }
         public decimal? AverageRating { get; set; }
         public string Category { get; set; }
+        public int DiscountPercent { get; set; }
     }
 }

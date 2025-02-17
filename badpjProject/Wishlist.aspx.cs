@@ -11,7 +11,6 @@ namespace badpjProject
         private string _connString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
         private int _currentUserID;
 
-        // Property to track which product is currently being edited.
         protected int? EditingProductID
         {
             get { return (int?)ViewState["EditingProductID"]; }
@@ -140,7 +139,6 @@ namespace badpjProject
                     break;
                 case "AddToCart":
                     AddToCart(productId);
-                    Response.Write("<script>alert('Item added to cart!');</script>");
                     break;
             }
         }
