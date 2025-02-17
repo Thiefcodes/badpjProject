@@ -4,6 +4,9 @@ using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 using badpjProject.Models;
 using System.Configuration;
+using System.Net.Mail;
+using System.Net;
+using System.Web.UI;
 
 namespace badpjProject
 {
@@ -90,6 +93,12 @@ namespace badpjProject
                     conn.Open();
                     cmd.ExecuteNonQuery();
                     conn.Close();
+                    string script = "Swal.fire({ " +
+                        "icon: 'success', " +
+                        "title: 'Product Deleted', " +
+                        "text: 'Product deleted successfully!' " +
+                        "});";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ProductDeletedAlert", script, true);
                 }
             }
             LoadProducts();
@@ -106,8 +115,13 @@ namespace badpjProject
                 if (int.TryParse(txtDiscount.Text, out discount))
                 {
                     UpdateProductDiscount(productId, discount);
-                    Response.Write("<script>alert('Discount updated successfully!');</script>");
-                    LoadProducts(); 
+                    string script = "Swal.fire({ " +
+                        "icon: 'success', " +
+                        "title: 'Discount Applied', " +
+                        "text: 'Discount of " + discount + "% applied successfully!' " +
+                        "});";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "DiscountAlert", script, true);
+                    LoadProducts();
                 }
                 else
                 {
@@ -125,6 +139,82 @@ namespace badpjProject
                 cmd.Parameters.AddWithValue("@ProductID", productId);
                 conn.Open();
                 cmd.ExecuteNonQuery();
+            }
+
+            NotifyUsersOfDiscount(productId, discount);
+        }
+
+        private void NotifyUsersOfDiscount(int productId, int discount)
+        {
+            string productName = GetProductName(productId);
+
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                string sql = @"SELECT DISTINCT t.Email 
+                       FROM Wishlist w 
+                       INNER JOIN [Table] t ON w.UserID = t.Id 
+                       WHERE w.ProductID = @ProductID";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+                    conn.Open();
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        while (rdr.Read())
+                        {
+                            string email = rdr["Email"].ToString();
+                            SendDiscountEmail(email, productName, discount, productId);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        private string GetProductName(int productId)
+        {
+            string productName = "";
+            using (SqlConnection conn = new SqlConnection(_connString))
+            {
+                string sql = "SELECT ProductName FROM Products WHERE ProductID = @ProductID";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ProductID", productId);
+                    conn.Open();
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        productName = result.ToString();
+                    }
+                }
+            }
+            return productName;
+        }
+
+        private void SendDiscountEmail(string email, string productName, int discount, int productId)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
+
+                mail.From = new MailAddress("ruihernh@gmail.com"); 
+                mail.To.Add(email);
+                mail.Subject = "Discount Alert!";
+
+                string productLink = "http://localhost:44300/ProductDetails.aspx?productID=" + productId;
+                mail.Body = $"Good news! The product '{productName}' is now on sale with a discount of {discount}%!\n\n" +
+                            $"Check it out here: {productLink}";
+
+                smtpServer.Port = 587;
+                smtpServer.Credentials = new NetworkCredential("ruihernh@gmail.com", "yqqh pwcr byeq sseo"); 
+                smtpServer.EnableSsl = true;
+
+                smtpServer.Send(mail);
+            }
+            catch (Exception ex)
+            {
+                
             }
         }
 
