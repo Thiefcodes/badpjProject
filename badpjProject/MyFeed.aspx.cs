@@ -104,12 +104,9 @@ namespace badpjProject
             int userId = Session["UserID"] != null ? Convert.ToInt32(Session["UserID"]) : 0; // Ensure the user is logged in
             string query = @"
         SELECT 
-            COALESCE(SUM(t.Views), 0) AS TotalViews,
             COALESCE(COUNT(pl.PostID), 0) AS TotalLikes
-        FROM Threads t
-        LEFT JOIN Posts p ON t.ThreadID = p.ThreadID
-        LEFT JOIN PostLikes pl ON p.PostID = pl.PostID
-        WHERE t.CreatedBy = @UserID;
+        FROM PostLikes pl
+        WHERE pl.UserID = @UserID;
     ";
 
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString))
