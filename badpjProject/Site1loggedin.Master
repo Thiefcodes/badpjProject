@@ -16,6 +16,30 @@
     
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <style>
+        .chatbot-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+}
+
+.chatbot-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+    </style>
 </head>
 <body>
     <form runat="server">
@@ -69,7 +93,7 @@
         <!-- Main Content Placeholder -->
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
-            <asp:Button ID="btnOpenChatbot" runat="server" Text="Open Chatbot" CssClass="chatbot-button" OnClientClick="openChatbot(); return false;" />
+            <asp:Button ID="btnOpenChatbot" runat="server" Text="💬 Chat" CssClass="chatbot-button" OnClientClick="toggleChatbot(); return false;" />
         </div>
 
         <footer class="text-center py-4">
@@ -77,16 +101,25 @@
         </footer>
     </form>
     <!-- Start of ChatBot (www.chatbot.com) code -->
-<script>
-  window.__ow = window.__ow || {};
-  window.__ow.organizationId = "dee62c2d-14c0-4b07-a938-46dda57f4523";
-  window.__ow.template_id = "f5944cf0-2060-47c1-96f8-c63c0929ca0e";
-  window.__ow.integration_name = "manual_settings";
-  window.__ow.product_name = "chatbot";   
-  ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[OpenWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.openwidget.com/openwidget.js",t.head.appendChild(n)}};!n.__ow.asyncInit&&e.init(),n.OpenWidget=n.OpenWidget||e}(window,document,[].slice))
-    function openChatbot() {
-        var chatbotWindow = window.open('Chatbot.aspx', 'ChatbotWindow', 'width=400,height=500,resizable=no');
-        chatbotWindow.focus();
+<script type="text/javascript">
+    var chatbotWindow = null;
+    var chatbotMinimized = false;
+
+    function toggleChatbot() {
+        if (chatbotWindow === null || chatbotWindow.closed) {
+            chatbotWindow = window.open('Chatbot.aspx', 'ChatbotWindow', 'width=400,height=500,resizable=no');
+
+            // Position at bottom-right
+            chatbotWindow.moveTo(screen.width - 420, screen.height - 560);
+        } else {
+            if (!chatbotMinimized) {
+                chatbotWindow.resizeTo(400, 50); // Minimize to a small bar
+                chatbotMinimized = true;
+            } else {
+                chatbotWindow.resizeTo(400, 500); // Restore to full size
+                chatbotMinimized = false;
+            }
+        }
     }
 </script>
 <noscript>You need to <a href="https://www.chatbot.com/help/chat-widget/enable-javascript-in-your-browser/" rel="noopener nofollow">enable JavaScript</a> in order to use the AI chatbot tool powered by <a href="https://www.chatbot.com/" rel="noopener nofollow" target="_blank">ChatBot</a></noscript>

@@ -14,7 +14,7 @@
 
     <style>
         .chat-container {
-            width: 50%;
+            width: 100%;
             margin: auto;
             padding: 20px;
             border-radius: 10px;
