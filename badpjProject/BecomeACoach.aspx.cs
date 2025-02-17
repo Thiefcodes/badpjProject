@@ -64,6 +64,7 @@ namespace badpjProject
             int userId = int.Parse(Session["UserID"].ToString());
             string generatedCoachId = GenerateCoachId();
 
+            // 1. If user chooses "Rank", ensure they have ≥ 3000 points
             if (ddl_Qualification.SelectedValue == "Rank")
             {
                 int userPoints = GetUserTotalPoints(userId);
@@ -72,7 +73,26 @@ namespace badpjProject
                     return;
                 }
             }
-            // Validate the coach video file upload.
+
+            // 2. If user chooses "Certified-PT", ensure they upload a cert doc
+            string certDocFileName = "";
+            if (ddl_Qualification.SelectedValue == "Certified-PT")
+            {
+                if (!fu_CertDoc.HasFile)
+                {
+                    return;
+                }
+                string[] allowedCertExtensions = { ".pdf", ".jpg", ".jpeg", ".png" };
+                string certExtension = Path.GetExtension(fu_CertDoc.FileName).ToLower();
+                if (!allowedCertExtensions.Contains(certExtension))
+                {
+                    return;
+                }
+                // Generate unique file name
+                certDocFileName = Guid.NewGuid().ToString() + certExtension;
+            }
+
+            // 3. Validate the coach video file upload.
             string[] allowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
             string videoExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
             if (!allowedVideoExtensions.Contains(videoExtension))
@@ -82,11 +102,8 @@ namespace badpjProject
             string uniqueVideoFileName = Guid.NewGuid().ToString() + videoExtension;
             string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueVideoFileName;
 
-            // Since Profile Picture is removed, we won't handle fu_ProfilePic logic here.
-
+            // 4. Create the coach object. (Assuming your Coaches class can handle a certificationFile param)
             string status = "Pending";
-
-            // Create the coach object with an empty profilePicFileName (or remove the parameter if not needed).
             Coaches coach = new Coaches(
                 generatedCoachId,
                 tb_Name.Text.Trim(),
@@ -96,8 +113,9 @@ namespace badpjProject
                 ddl_Qualification.SelectedValue,
                 uniqueVideoFileName,
                 status,
-                "",
-                ddl_AreaOfExpertise.SelectedValue
+                "",                         
+                ddl_AreaOfExpertise.SelectedValue,
+                certDocFileName           
             );
 
             try
@@ -111,6 +129,13 @@ namespace badpjProject
                     {
                         // Save the coach video file
                         fu_Coach.SaveAs(saveVideoPath);
+
+                        // If there's a cert doc file, save it
+                        if (!string.IsNullOrEmpty(certDocFileName) && fu_CertDoc.HasFile)
+                        {
+                            string certDocSavePath = Server.MapPath("~/Uploads/") + certDocFileName;
+                            fu_CertDoc.SaveAs(certDocSavePath);
+                        }
 
                         // After successful submission, redirect to a confirmation page.
                         Response.Redirect("~/CoachSubmitted.aspx");
@@ -176,6 +201,25 @@ namespace badpjProject
             }
         }
 
+        protected void cvCertDoc_ServerValidate(object source, ServerValidateEventArgs e)
+        {
+            // If user didn't select "Certified-PT", pass
+            if (ddl_Qualification.SelectedValue != "Certified-PT")
+            {
+                e.IsValid = true;
+                return;
+            }
+            // If they did, ensure fu_CertDoc.HasFile
+            if (!fu_CertDoc.HasFile)
+            {
+                e.IsValid = false;
+            }
+            else
+            {
+                e.IsValid = true;
+            }
+        }
+
 
         private void ClearErrorStyles()
         {
@@ -187,6 +231,7 @@ namespace badpjProject
             ddl_Qualification.CssClass = ddl_Qualification.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             ddl_AreaOfExpertise.CssClass = ddl_AreaOfExpertise.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
             fu_Coach.CssClass = fu_Coach.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
+            fu_CertDoc.CssClass = fu_CertDoc.CssClass.Replace(" input-validation-error", "").Replace(" input-validation-success", "");
         }
 
         private void ApplyErrorStyles()
@@ -230,6 +275,10 @@ namespace badpjProject
             if (!cvRank.IsValid)
             {
                 ddl_Qualification.CssClass += " input-validation-error";
+            }
+            if (!cvCertDoc.IsValid)
+            {
+                fu_CertDoc.CssClass += " input-validation-error";
             }
         }
     }
