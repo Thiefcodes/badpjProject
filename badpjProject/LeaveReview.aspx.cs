@@ -12,7 +12,6 @@ namespace badpjProject
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Always parse the productID from the query string, even on postback.
             if (!int.TryParse(Request.QueryString["productID"], out _productId))
             {
                 Response.Write("<script>alert('Invalid product.'); window.location='Orders.aspx';</script>");
@@ -47,7 +46,6 @@ namespace badpjProject
         {
             int userId = Convert.ToInt32(Session["UserID"]);
 
-            // Ensure _productId is valid.
             if (_productId <= 0)
             {
                 Response.Write("<script>alert('Invalid product selected for review.');</script>");
@@ -60,7 +58,6 @@ namespace badpjProject
             using (SqlConnection conn = new SqlConnection(_connString))
             {
                 conn.Open();
-                // Check if a review already exists for this product by this user.
                 string checkSql = "SELECT COUNT(*) FROM Reviews WHERE ProductID = @ProductID AND UserID = @UserID";
                 using (SqlCommand cmd = new SqlCommand(checkSql, conn))
                 {
@@ -70,7 +67,6 @@ namespace badpjProject
 
                     if (count > 0)
                     {
-                        // If a review exists, update it.
                         string updateSql = "UPDATE Reviews SET StarRating = @StarRating, ReviewMessage = @ReviewMessage, ReviewDate = GETDATE() " +
                                            "WHERE ProductID = @ProductID AND UserID = @UserID";
                         using (SqlCommand updateCmd = new SqlCommand(updateSql, conn))
@@ -84,7 +80,6 @@ namespace badpjProject
                     }
                     else
                     {
-                        // Otherwise, insert a new review.
                         string insertSql = "INSERT INTO Reviews (ProductID, UserID, StarRating, ReviewMessage) " +
                                            "VALUES (@ProductID, @UserID, @StarRating, @ReviewMessage)";
                         using (SqlCommand insertCmd = new SqlCommand(insertSql, conn))
@@ -99,7 +94,12 @@ namespace badpjProject
                 }
             }
 
-            Response.Redirect("ProductDetails.aspx?productID=" + _productId);
+            string script = "Swal.fire({ " +
+                "icon: 'success', " +
+                "title: 'Review Posted', " +
+                "text: 'Your review has been posted successfully!' " +
+                "}).then(() => { window.location = 'ProductDetails.aspx?productID=" + _productId + "'; });";
+            ScriptManager.RegisterStartupScript(this, GetType(), "ReviewPostedAlert", script, true);
         }
     }
 }
