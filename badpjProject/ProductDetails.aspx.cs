@@ -21,7 +21,6 @@ namespace badpjProject
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Always set _productId from the query string, even on postback.
             if (!int.TryParse(Request.QueryString["productID"], out _productId))
             {
                 Response.Write("<script>alert('Invalid product.'); window.location='Shop.aspx';</script>");
@@ -45,7 +44,7 @@ namespace badpjProject
         {
             using (SqlConnection conn = new SqlConnection(_connString))
             {
-                string sql = @"SELECT ProductName, Description, ImageUrl, Price 
+                string sql = @"SELECT ProductName, Description, ImageUrl, Price, Category, DiscountPercent
                                FROM dbo.Products
                                WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -59,8 +58,21 @@ namespace badpjProject
                             lblName.Text = rdr["ProductName"].ToString();
                             lblDescription.Text = rdr["Description"].ToString();
                             imgProduct.ImageUrl = rdr["ImageUrl"].ToString();
-                            decimal price = Convert.ToDecimal(rdr["Price"]);
-                            lblPrice.Text = price.ToString("C");
+                            lblCategory.Text = "Category: " + rdr["Category"].ToString();
+
+                            decimal originalPrice = Convert.ToDecimal(rdr["Price"]);
+                            int discount = rdr["DiscountPercent"] != DBNull.Value ? Convert.ToInt32(rdr["DiscountPercent"]) : 0;
+
+                            if (discount > 0)
+                            {
+                                decimal discountedPrice = originalPrice * (1 - discount / 100m);
+                                lblPrice.Text = string.Format("<del>{0:C}</del> {1:C} <span class='text-success'>({2}% OFF)</span>",
+                                                              originalPrice, discountedPrice, discount);
+                            }
+                            else
+                            {
+                                lblPrice.Text = originalPrice.ToString("C");
+                            }
                         }
                     }
                 }
@@ -93,32 +105,42 @@ namespace badpjProject
                 Response.Write("<script>alert('Please log in first!'); window.location='Login.aspx';</script>");
                 return;
             }
-            if (!int.TryParse(hfProductID.Value, out int productId))
+            int productId;
+            if (!int.TryParse(hfProductID.Value, out productId))
             {
                 Response.Write("<script>alert('Invalid product selection.');</script>");
                 return;
             }
-            using (SqlConnection conn = new SqlConnection(_connString))
+
+            string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price, DiscountPercent FROM Products WHERE ProductID = @ProductID";
+
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT ProductID, ProductName, Description, ImageUrl, Price FROM Products WHERE ProductID = @ProductID";
+                conn.Open();
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@ProductID", productId);
-                    conn.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
+
                     if (reader.Read())
                     {
+                        decimal originalPrice = Convert.ToDecimal(reader["Price"]);
+                        int discount = reader["DiscountPercent"] != DBNull.Value ? Convert.ToInt32(reader["DiscountPercent"]) : 0;
+                        decimal finalPrice = discount > 0 ? originalPrice * (1 - discount / 100m) : originalPrice;
+
                         CartItem newItem = new CartItem
                         {
                             ProductID = (int)reader["ProductID"],
                             ProductName = reader["ProductName"].ToString(),
                             Description = reader["Description"].ToString(),
                             ImageUrl = reader["ImageUrl"].ToString(),
-                            Price = Convert.ToDecimal(reader["Price"]),
+                            Price = finalPrice,
                             Quantity = 1
                         };
 
                         List<CartItem> cart = (List<CartItem>)Session["Cart"] ?? new List<CartItem>();
+
                         CartItem existingItem = cart.Find(item => item.ProductID == newItem.ProductID);
                         if (existingItem != null)
                         {
@@ -128,6 +150,7 @@ namespace badpjProject
                         {
                             cart.Add(newItem);
                         }
+
                         Session["Cart"] = cart;
                         UpdateCartCount();
                         Response.Write("<script>alert('Item added to cart!');</script>");
@@ -139,6 +162,7 @@ namespace badpjProject
                 }
             }
         }
+
 
         private void UpdateCartCount()
         {

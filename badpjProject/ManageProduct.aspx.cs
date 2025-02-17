@@ -33,7 +33,7 @@ namespace badpjProject
             List<Product> productList = new List<Product>();
             using (SqlConnection conn = new SqlConnection(_connString))
             {
-                string sql = "SELECT ProductID, ProductName, Price FROM dbo.Products ORDER BY ProductID";
+                string sql = "SELECT ProductID, ProductName, Price, DiscountPercent FROM dbo.Products ORDER BY ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     conn.Open();
@@ -45,7 +45,8 @@ namespace badpjProject
                             {
                                 ProductID = rdr.GetInt32(0),
                                 ProductName = rdr.GetString(1),
-                                Price = rdr.GetDecimal(2)
+                                Price = rdr.GetDecimal(2),
+                                DiscountPercent = rdr.IsDBNull(3) ? 0 : rdr.GetInt32(3)
                             });
                         }
                     }
@@ -66,7 +67,6 @@ namespace badpjProject
             int productId = (int)gvProducts.DataKeys[e.RowIndex].Value;
             using (SqlConnection conn = new SqlConnection(_connString))
             {
-                // Delete associated reviews first to avoid FK conflicts.
                 string deleteReviewsQuery = "DELETE FROM Reviews WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(deleteReviewsQuery, conn))
                 {
@@ -75,7 +75,6 @@ namespace badpjProject
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
-                // Delete associated wishlist entries.
                 string deleteWishlistQuery = "DELETE FROM Wishlist WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(deleteWishlistQuery, conn))
                 {
@@ -84,7 +83,6 @@ namespace badpjProject
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
-                // Now delete the product.
                 string sql = "DELETE FROM dbo.Products WHERE ProductID = @ProductID";
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -96,5 +94,40 @@ namespace badpjProject
             }
             LoadProducts();
         }
+        protected void gvProducts_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "UpdateDiscount")
+            {
+                int productId = Convert.ToInt32(e.CommandArgument);
+
+                GridViewRow row = ((LinkButton)e.CommandSource).NamingContainer as GridViewRow;
+                TextBox txtDiscount = row.FindControl("txtDiscount") as TextBox;
+                int discount;
+                if (int.TryParse(txtDiscount.Text, out discount))
+                {
+                    UpdateProductDiscount(productId, discount);
+                    Response.Write("<script>alert('Discount updated successfully!');</script>");
+                    LoadProducts(); 
+                }
+                else
+                {
+                    Response.Write("<script>alert('Failed to Update!');</script>");
+                }
+            }
+        }
+        private void UpdateProductDiscount(int productId, int discount)
+        {
+            string sql = "UPDATE dbo.Products SET DiscountPercent = @Discount WHERE ProductID = @ProductID";
+            using (SqlConnection conn = new SqlConnection(_connString))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Discount", discount);
+                cmd.Parameters.AddWithValue("@ProductID", productId);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+
     }
 }
