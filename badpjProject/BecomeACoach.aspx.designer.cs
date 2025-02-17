@@ -132,6 +132,15 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_Qualification;
 
         /// <summary>
+        /// cvRank control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvRank;
+
+        /// <summary>
         /// ddl_AreaOfExpertise control.
         /// </summary>
         /// <remarks>
@@ -166,15 +175,6 @@ namespace badpjProject
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_Coach;
-
-        /// <summary>
-        /// fu_ProfilePic control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fu_ProfilePic;
 
         /// <summary>
         /// btn_Submit control.

@@ -64,34 +64,29 @@ namespace badpjProject
             int userId = int.Parse(Session["UserID"].ToString());
             string generatedCoachId = GenerateCoachId();
 
+            if (ddl_Qualification.SelectedValue == "Rank")
+            {
+                int userPoints = GetUserTotalPoints(userId);
+                if (userPoints < 3000)
+                {
+                    return;
+                }
+            }
             // Validate the coach video file upload.
             string[] allowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv" };
             string videoExtension = Path.GetExtension(fu_Coach.FileName).ToLower();
             if (!allowedVideoExtensions.Contains(videoExtension))
             {
-                // Optionally, display an error message here.
                 return;
             }
             string uniqueVideoFileName = Guid.NewGuid().ToString() + videoExtension;
             string saveVideoPath = Server.MapPath("~/Uploads/") + uniqueVideoFileName;
 
-            string profilePicFileName = "";
-            string profilePicSavePath = "";
-            if (fu_ProfilePic.HasFile)
-            {
-                string[] allowedImageExtensions = { ".jpg", ".jpeg", ".png" };
-                string imageExtension = Path.GetExtension(fu_ProfilePic.FileName).ToLower();
-                if (!allowedImageExtensions.Contains(imageExtension))
-                {
-                    // Optionally, display an error message.
-                    return;
-                }
-                profilePicFileName = Guid.NewGuid().ToString() + imageExtension;
-                profilePicSavePath = Server.MapPath("~/Uploads/") + profilePicFileName;
-            }
+            // Since Profile Picture is removed, we won't handle fu_ProfilePic logic here.
 
             string status = "Pending";
 
+            // Create the coach object with an empty profilePicFileName (or remove the parameter if not needed).
             Coaches coach = new Coaches(
                 generatedCoachId,
                 tb_Name.Text.Trim(),
@@ -101,7 +96,7 @@ namespace badpjProject
                 ddl_Qualification.SelectedValue,
                 uniqueVideoFileName,
                 status,
-                profilePicFileName,
+                "",
                 ddl_AreaOfExpertise.SelectedValue
             );
 
@@ -114,11 +109,9 @@ namespace badpjProject
                     bool insertStatus = cs.InsertCoachStatus(userId, generatedCoachId);
                     if (insertStatus)
                     {
+                        // Save the coach video file
                         fu_Coach.SaveAs(saveVideoPath);
-                        if (fu_ProfilePic.HasFile)
-                        {
-                            fu_ProfilePic.SaveAs(profilePicSavePath);
-                        }
+
                         // After successful submission, redirect to a confirmation page.
                         Response.Redirect("~/CoachSubmitted.aspx");
                     }
@@ -143,6 +136,46 @@ namespace badpjProject
                 divPendingStatus.Style["display"] = "block";
             }
         }
+
+        private int GetUserTotalPoints(int userId)
+        {
+            Ranking userRank = Ranking.GetRankingByUserId(userId);
+            if (userRank != null)
+                return userRank.TotalPoints;
+            return 0;
+        }
+
+        protected void cvRank_ServerValidate(object source, ServerValidateEventArgs e)
+        {
+            // If user didn't select "Placeholder Rank", pass validation.
+            if (ddl_Qualification.SelectedValue != "Rank")
+            {
+                e.IsValid = true;
+                return;
+            }
+
+            // If user *did* select "Placeholder Rank", check their points
+            if (Session["UserID"] == null)
+            {
+                // Not logged in => can't validate rank properly. Mark invalid or handle differently.
+                e.IsValid = false;
+                return;
+            }
+
+            int userId = int.Parse(Session["UserID"].ToString());
+            int userPoints = GetUserTotalPoints(userId); // Implement this method as needed
+
+            if (userPoints < 3000)
+            {
+                // Not enough points
+                e.IsValid = false;
+            }
+            else
+            {
+                e.IsValid = true;
+            }
+        }
+
 
         private void ClearErrorStyles()
         {
@@ -193,6 +226,10 @@ namespace badpjProject
             if (!rfv_Coach.IsValid)
             {
                 fu_Coach.CssClass += " input-validation-error";
+            }
+            if (!cvRank.IsValid)
+            {
+                ddl_Qualification.CssClass += " input-validation-error";
             }
         }
     }
