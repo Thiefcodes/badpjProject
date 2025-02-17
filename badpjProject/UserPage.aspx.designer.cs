@@ -78,6 +78,42 @@ namespace badpjProject
         protected global::System.Web.UI.WebControls.Button EnableFacialAuthButton;
 
         /// <summary>
+        /// hlShareRank control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hlShareRank;
+
+        /// <summary>
+        /// hlShareFacebook control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hlShareFacebook;
+
+        /// <summary>
+        /// hlShareLinkedIn control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hlShareLinkedIn;
+
+        /// <summary>
+        /// hlShareInstagram control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hlShareInstagram;
+
+        /// <summary>
         /// CommentsRepeater control.
         /// </summary>
         /// <remarks>
