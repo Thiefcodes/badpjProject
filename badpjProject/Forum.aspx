@@ -2,6 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <link href="ForumStyles.css" rel="stylesheet" type="text/css" />
     <div class="container mt-4">
+        <asp:Button ID="btnMyFeed" runat="server" CssClass="btn-custom" Text="My Feed" OnClick="btnMyFeed_Click" />
         <h1>Forum Threads</h1>
     <asp:GridView ID="gvThreads" runat="server" CellPadding="10" AutoGenerateColumns="False"
     OnRowCommand="gvThreads_RowCommand">

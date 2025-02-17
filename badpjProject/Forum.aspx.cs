@@ -139,5 +139,20 @@ namespace badpjProject
             }
         }
 
+        protected void btnMyFeed_Click(object sender, EventArgs e)
+        {
+            // Check if the user is logged in
+            if (Session["UserId"] == null || Session["Username"] == null || Session["Role"] == null)
+            {
+                // Redirect to the login page if user is not logged in
+                Response.Write("<script>alert('Please log in first!'); window.location='Login.aspx';</script>");
+            }
+            else
+            {
+                // Proceed with the current page as user is logged in
+                // Continue with your page logic here
+                Response.Redirect("MyFeed.aspx");
+            }
+        }
     }
 }

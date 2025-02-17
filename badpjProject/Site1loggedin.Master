@@ -74,7 +74,6 @@
                         <li class="nav-item" runat="server" id="liUserLeaderboard"><a class="nav-link" runat="server" href="~/Leaderboard.aspx">Leaderboard</a></li>
                         <li class="nav-item" runat="server" id="liStaffManageRank"><a class="nav-link" runat="server" href="~/ManageRank.aspx">Manage Rank</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Forum.aspx">Forum</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/MyFeed.aspx">MyFeed</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Shop.aspx">Shop</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/LogSession.aspx">Log Sessions</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/PointRedeem.aspx">Redeem Point</a></li>
