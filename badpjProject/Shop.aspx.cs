@@ -40,7 +40,7 @@ namespace badpjProject
                 int discountedCount = GetDiscountedWishlistCount();
                 if (discountedCount > 0)
                 {
-                    litWishlistBadge.Text = $" <span class='badge bg-danger'>{discountedCount} Discounted</span>";
+                    litWishlistBadge.Text = $" <span class='badge-discount'>{discountedCount} Discounted</span>";
 
                     if (Session["DiscountNotified"] == null)
                     {
@@ -58,6 +58,9 @@ namespace badpjProject
             List<Product> productList = new List<Product>();
             string search = txtSearch.Text.Trim();
             string category = ddlCategory.SelectedValue;
+            string minPriceStr = txtMinPrice.Text.Trim();
+            string maxPriceStr = txtMaxPrice.Text.Trim();
+            string sortOrder = ddlSort.SelectedValue;
 
             using (SqlConnection conn = new SqlConnection(_connString))
             {
@@ -65,19 +68,37 @@ namespace badpjProject
             SELECT ProductID, ProductName, Description, ImageUrl, Price, Category, DiscountPercent,
                    (SELECT AVG(CAST(StarRating AS DECIMAL(10,2))) FROM Reviews r WHERE r.ProductID = p.ProductID) AS AverageRating
             FROM dbo.Products p
-            WHERE 1=1 ";
+            WHERE 1=1";
 
                 if (!string.IsNullOrEmpty(search))
                 {
-                    sql += " AND ProductName LIKE @Search ";
+                    sql += " AND ProductName LIKE @Search";
                 }
-
                 if (!string.IsNullOrEmpty(category))
                 {
-                    sql += " AND Category = @Category ";
+                    sql += " AND Category = @Category";
+                }
+                if (!string.IsNullOrEmpty(minPriceStr))
+                {
+                    sql += " AND Price >= @MinPrice";
+                }
+                if (!string.IsNullOrEmpty(maxPriceStr))
+                {
+                    sql += " AND Price <= @MaxPrice";
                 }
 
-                sql += " ORDER BY ProductID";
+                if (sortOrder == "asc")
+                {
+                    sql += " ORDER BY Price ASC";
+                }
+                else if (sortOrder == "desc")
+                {
+                    sql += " ORDER BY Price DESC";
+                }
+                else
+                {
+                    sql += " ORDER BY ProductID";
+                }
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
@@ -88,6 +109,20 @@ namespace badpjProject
                     if (!string.IsNullOrEmpty(category))
                     {
                         cmd.Parameters.AddWithValue("@Category", category);
+                    }
+                    if (!string.IsNullOrEmpty(minPriceStr))
+                    {
+                        if (decimal.TryParse(minPriceStr, out decimal minPrice))
+                        {
+                            cmd.Parameters.AddWithValue("@MinPrice", minPrice);
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(maxPriceStr))
+                    {
+                        if (decimal.TryParse(maxPriceStr, out decimal maxPrice))
+                        {
+                            cmd.Parameters.AddWithValue("@MaxPrice", maxPrice);
+                        }
                     }
 
                     conn.Open();
@@ -116,8 +151,20 @@ namespace badpjProject
             rptProducts.DataBind();
         }
 
+
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            decimal minPrice, maxPrice;
+            bool hasMin = decimal.TryParse(txtMinPrice.Text.Trim(), out minPrice);
+            bool hasMax = decimal.TryParse(txtMaxPrice.Text.Trim(), out maxPrice);
+
+            if (hasMin && hasMax && minPrice > maxPrice)
+            {
+                string script = "Swal.fire({ icon: 'error', title: 'Invalid Price Range', text: 'Minimum price cannot be greater than maximum price!' });";
+                ScriptManager.RegisterStartupScript(this, GetType(), "InvalidPriceRange", script, true);
+                return;
+            }
+
             LoadProducts();
         }
 
@@ -224,6 +271,8 @@ namespace badpjProject
 
                         Session["Cart"] = cart;
                         UpdateCartCount();
+                        string script = "Swal.fire({ icon: 'success', title: 'Added to Cart', text: 'You have successfully added the product to your cart!' });";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "discountAlert", script, true);
                     }
                     else
                     {

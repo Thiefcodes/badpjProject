@@ -61,7 +61,6 @@ namespace badpjProject
         }
         protected void btnPlaceOrder_Click(object sender, EventArgs e)
         {
-            // Check if the Page is valid
             if (!Page.IsValid)
             {
                 return;
@@ -84,7 +83,6 @@ namespace badpjProject
                 {
                     try
                     {
-                        // Generate a unique OrderID
                         int orderId = new Random().Next(1000, 9999);
 
                         string insertQuery = @"

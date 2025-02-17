@@ -1,21 +1,63 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site1loggedin.Master" AutoEventWireup="true" CodeBehind="Payment.aspx.cs" Inherits="badpjProject.Payment" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="HeaderContent" runat="server">
-     <div class="container">
-        <h2>Complete Your Payment</h2>
-        <form method="post" action="Payment.aspx">
-            <input type="hidden" name="paymentId" value="<%= Request.QueryString["paymentId"] %>" />
-            <input type="text" name="cardNumber" placeholder="Card Number" required />
-            <input type="text" name="cardName" placeholder="Name on Card" required />
-            <input type="text" name="expiryDate" placeholder="Expiry Date (MM/YY)" required />
-            <input type="text" name="cvv" placeholder="CVV" required />
-            <button type="submit">Pay Now</button>
-        </form>
-    </div>
-        <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background: #f9f9f9; }
-        input { width: 100%; padding: 10px; margin: 10px 0; }
-        button { width: 100%; padding: 10px; background: green; color: white; border: none; cursor: pointer; }
-    </style>
-</asp:Content>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Payment.aspx.cs" Inherits="badpjProject.Payment" %>
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Page</title>
+    <script type="text/javascript">
+        function closePaymentWindow() {
+            alert("Payment Submitted!");
+            window.close();
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .payment-container {
+            width: 100%;
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .payment-input {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .payment-button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="payment-container">
+            <h2>Payment Processing</h2>
+            <p>Enter your payment details below.</p>
+
+            <asp:Panel ID="pnlPaymentForm" runat="server">
+                <asp:TextBox ID="txtCardNumber" runat="server" CssClass="payment-input" Placeholder="Card Number"></asp:TextBox><br>
+                <asp:TextBox ID="txtCardholderName" runat="server" CssClass="payment-input" Placeholder="Cardholder Name"></asp:TextBox><br>
+                <asp:TextBox ID="txtExpiryDate" runat="server" CssClass="payment-input" Placeholder="Expiry Date (MM/YY)"></asp:TextBox><br>
+                <asp:TextBox ID="txtCVV" runat="server" CssClass="payment-input" Placeholder="CVV"></asp:TextBox><br>
+
+                <asp:Button ID="btnSubmitPayment" runat="server" Text="Submit Payment" CssClass="payment-button" OnClientClick="closePaymentWindow(); return false;" />
+            </asp:Panel>
+        </div>
+    </form>
+</body>
+</html>

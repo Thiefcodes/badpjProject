@@ -2,7 +2,6 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
   <div class="container mt-4">
-    <h2 class="text-center">My Orders</h2>
     <asp:Repeater ID="rptOrders" runat="server" OnItemCommand="rptOrders_ItemCommand">
       <HeaderTemplate>
         <table class="table table-bordered">
@@ -68,4 +67,61 @@
       </FooterTemplate>
     </asp:Repeater>
   </div>
+    <style>
+        .orders-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table th {
+    background: #f8f9fa;
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+}
+
+.table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-id {
+    font-weight: bold;
+    color: #343a40;
+}
+
+.status-refund {
+    font-size: 0.9rem;
+    color: #dc3545;
+}
+
+.status-pending {
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.status-shipping {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.status-refund {
+    color: #dc354
+
+    </style>
 </asp:Content>

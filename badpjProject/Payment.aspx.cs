@@ -33,7 +33,6 @@ namespace badpjProject
                 string connStr = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    // ✅ Only update status to "Accepted" after payment is made
                     string updateQuery = "UPDATE Payments SET Status = 'Accepted' WHERE PaymentId = @PaymentId AND Status = 'Pending'";
                     SqlCommand cmd = new SqlCommand(updateQuery, conn);
                     cmd.Parameters.AddWithValue("@PaymentId", Guid.Parse(paymentIdStr));
@@ -44,7 +43,6 @@ namespace badpjProject
 
                     if (rowsAffected > 0)
                     {
-                        // ✅ Add system message in chat after payment is accepted
                         using (SqlConnection chatConn = new SqlConnection(connStr))
                         {
                             string chatQuery = "INSERT INTO Chat (UserId, CoachId, Message, Timestamp, Sender) VALUES " +
