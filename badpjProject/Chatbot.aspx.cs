@@ -18,11 +18,9 @@ namespace badpjProject
         {
             {"hello", "Hi there! How can I assist you today?"},
             {"how do I reset my password?", "To reset your password, go to the login page and click 'Forgot Password'."},
-            {"what is machine learning?", "Machine learning is a subset of AI that enables computers to learn from data."},
-            {"how can I fix a C# null reference exception?", "A null reference exception occurs when an object is not initialized. Check if it's null before using it."},
-            {"tell me a joke", "Why don’t programmers like nature? Because it has too many bugs!"},
-            {"what is the capital of france?", "The capital of France is Paris."},
-            {"who created c#?", "C# was developed by Microsoft and led by Anders Hejlsberg."}
+            {"What is for sale?", "Gym shorts-women, Gym shorts-men, Towel, Weights" },
+            {"How do I refund?", "Press the refund button on my order page, we will help you refund if it is not shipped or shipping." }
+
         };
 
         protected void Page_Load(object sender, EventArgs e)
@@ -48,7 +46,7 @@ namespace badpjProject
             }
 
             litChatbotResponse.Text += $"<p><strong>You:</strong> {userMessage}</p>";
-            litChatbotResponse.Text += $"<p><strong>AI:</strong> {botResponse}</p>";
+            litChatbotResponse.Text += $"<p><strong>Chatbot:</strong> {botResponse}</p>";
 
             txtChatbotInput.Text = ""; 
         }

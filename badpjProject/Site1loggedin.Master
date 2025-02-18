@@ -58,7 +58,7 @@
 
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" runat="server" href="~/">Application Name</a>
+                <a class="navbar-brand" runat="server" href="~/">Gym League</a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -76,8 +76,8 @@
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Forum.aspx">Forum</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Shop.aspx">Shop</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/LogSession.aspx">Log Sessions</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/PointRedeem.aspx">Redeem Point</a></li>
-                        <li class="nav-item" runat="server" id="liUserOrders"><a class="nav-link" runat="server" href="~/Orders.aspx">My orders</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/PointRedeem.aspx">Redeem</a></li>
+                        <li class="nav-item" runat="server" id="liUserOrders"><a class="nav-link" runat="server" href="~/Orders.aspx">Orders</a></li>
                         <li class="nav-item" runat="server" id="liStaffManageProduct"><a class="nav-link" runat="server" href="~/ManageProduct.aspx">Manage Products</a></li>
                         <li class="nav-item" runat="server" id="liStaffAllorders"><a class="nav-link" runat="server" href="Allorders.aspx">All orders</a></li>
                     </ul>

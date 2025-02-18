@@ -153,6 +153,7 @@
     <Content Include="CoachProfile.aspx" />
     <Content Include="EnableFacialAuthentication.aspx" />
     <Content Include="FacialLogin.aspx" />
+    <Content Include="home.aspx" />
     <Content Include="Leaderboard.aspx" />
     <Content Include="LeaveReview.aspx" />
     <Content Include="ForumStyles.css" />
@@ -395,6 +396,13 @@
     </Compile>
     <Compile Include="FacialLogin.aspx.designer.cs">
       <DependentUpon>FacialLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="home.aspx.cs">
+      <DependentUpon>home.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="home.aspx.designer.cs">
+      <DependentUpon>home.aspx</DependentUpon>
     </Compile>
     <Compile Include="Leaderboard.aspx.cs">
       <DependentUpon>Leaderboard.aspx</DependentUpon>

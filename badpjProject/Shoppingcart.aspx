@@ -117,7 +117,7 @@
 }
 
 .checkout-btn {
-    background-color: #28a745;
+    background-color: black;
     border: none;
     color: white;
     padding: 12px 18px;
