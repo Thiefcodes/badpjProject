@@ -19,7 +19,27 @@
             <asp:Button ID="EditProfileButton" runat="server" Text="Edit Profile" CssClass="btn btn-success mt-3 mb-2" OnClick="EditProfileButton_Click" />
             <!-- New button for enabling facial authentication -->
             <asp:Button ID="EnableFacialAuthButton" runat="server" Text="Enable Facial Authentication" CssClass="btn btn-warning mt-2 mb-4" OnClick="EnableFacialAuthButton_Click" />
-        </div>
+            <!-- New HyperLink for sharing rank -->
+      <div class="social-share text-center mt-3">
+    <asp:HyperLink ID="hlShareRank" runat="server" CssClass="btn">
+    <i class="fab fa-twitter fa-2x"></i>
+</asp:HyperLink>
+
+<asp:HyperLink ID="hlShareFacebook" runat="server" CssClass="btn">
+    <i class="fab fa-facebook fa-2x"></i>
+</asp:HyperLink>
+
+<asp:HyperLink ID="hlShareLinkedIn" runat="server" CssClass="btn">
+    <i class="fab fa-linkedin fa-2x"></i>
+</asp:HyperLink>
+
+<asp:HyperLink ID="hlShareInstagram" runat="server" CssClass="btn">
+    <i class="fab fa-instagram fa-2x"></i>
+</asp:HyperLink>
+
+</div>
+
+            </div>
 
         <div class="card shadow-sm p-4 mt-3" style="width: 100%; max-width: 600px; border-radius: 10px;">
             <h4>Comments</h4>

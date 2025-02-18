@@ -11,7 +11,7 @@
                 <asp:Button 
                     ID="btn_BackToHome" 
                     runat="server" 
-                    Text="Back to Home" 
+                    Text="Back" 
                     CssClass="btn btn-primary" 
                     OnClick="btn_BackToHome_Click" />
             </div>

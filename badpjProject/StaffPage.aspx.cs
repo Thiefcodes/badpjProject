@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Text;
+using System.Web.UI;
 
 namespace badpjProject
 {
@@ -35,7 +37,7 @@ namespace badpjProject
             {
                 conn.Open();
 
-                string query = "SELECT Login_Name, Email, Role, ProfilePicture FROM [Table] WHERE Login_Name = @Login_Name AND Role = 'Staff'";
+                string query = "SELECT Login_Name, Email, Role, ProfilePicture FROM [dbo].[Table] WHERE Login_Name = @Login_Name AND Role = 'Staff'";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@Login_Name", username);
@@ -93,6 +95,51 @@ namespace badpjProject
         protected void EnableFacialAuthButton_Click(object sender, EventArgs e)
         {
             Response.Redirect("EnableFacialAuthentication.aspx");
+        }
+
+        // New event handler to export transactional ledger data to CSV
+        protected void ExportTransactionsButton_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            StringBuilder csvData = new StringBuilder();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = @"SELECT TransactionId, UserId, TransactionType, PointsChanged, TransactionDate, PreviousHash, CurrentHash 
+                                 FROM PointsTransactionLedger 
+                                 ORDER BY TransactionId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // Write CSV header
+                        csvData.AppendLine("TransactionId,UserId,TransactionType,PointsChanged,TransactionDate,PreviousHash,CurrentHash");
+
+                        while (reader.Read())
+                        {
+                            // Build a CSV row
+                            string transactionId = reader["TransactionId"].ToString();
+                            string userId = reader["UserId"].ToString();
+                            string transactionType = reader["TransactionType"].ToString();
+                            string pointsChanged = reader["PointsChanged"].ToString();
+                            string transactionDate = Convert.ToDateTime(reader["TransactionDate"]).ToString("yyyy-MM-dd HH:mm:ss");
+                            string previousHash = reader["PreviousHash"].ToString();
+                            string currentHash = reader["CurrentHash"].ToString();
+
+                            string row = $"{transactionId},{userId},{transactionType},{pointsChanged},{transactionDate},{previousHash},{currentHash}";
+                            csvData.AppendLine(row);
+                        }
+                    }
+                }
+            }
+
+            // Set up the response to download the CSV file
+            Response.Clear();
+            Response.ContentType = "text/csv";
+            Response.AddHeader("Content-Disposition", "attachment; filename=Transactions.csv");
+            Response.Write(csvData.ToString());
+            Response.End();
         }
     }
 }

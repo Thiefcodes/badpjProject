@@ -128,14 +128,29 @@ namespace badpjProject
 
         private void DeleteStaffAccount(int staffId)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+            // Assume that the logged-in user's ID is stored in Session["UserId"]
+            if (Session["UserId"] != null)
+            {
+                int currentUserId = Convert.ToInt32(Session["UserId"]);
+                if (staffId == currentUserId)
+                {
+                    Response.Write("<script>alert('You cannot delete your own account!');</script>");
+                    return;
+                }
+            }
+            else
+            {
+                // Alternatively, you might use Session["Username"] and query for the ID if needed.
+                Response.Write("<script>alert('User session expired. Please log in again.');</script>");
+                return;
+            }
 
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-
                     string deleteQuery = "DELETE FROM [Table] WHERE Id = @Id AND Role = 'Staff'";
                     using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
                     {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Web.UI;
 
 namespace badpjProject
@@ -7,7 +9,7 @@ namespace badpjProject
     public partial class Site1loggedin : System.Web.UI.MasterPage
     {
         protected void Page_Load(object sender, EventArgs e)
-        {
+        {   
             // Check if user is logged in
             if (Session["UserId"] != null)
             {
@@ -54,6 +56,43 @@ namespace badpjProject
                 // Redirect to login page if not logged in
                 Response.Redirect("Login.aspx");
             }
+            if (!IsPostBack)
+            {
+                // Check if the user is logged in and if a profile picture is available
+                if (Session["Username"] != null)
+                {
+                    // Option 1: Use a session variable that holds the profile picture path
+                    string profilePicturePath = Session["ProfilePicture"]?.ToString();
+
+                    // Option 2: If not stored in session, you can query the DB to get the path
+                    if (string.IsNullOrEmpty(profilePicturePath))
+                    {
+                        string username = Session["Username"].ToString();
+                        string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+                        using (SqlConnection conn = new SqlConnection(connectionString))
+                        {
+                            conn.Open();
+                            string query = "SELECT ProfilePicture FROM [Table] WHERE Login_Name = @Login_Name";
+                            using (SqlCommand cmd = new SqlCommand(query, conn))
+                            {
+                                cmd.Parameters.AddWithValue("@Login_Name", username);
+                                object result = cmd.ExecuteScalar();
+                                profilePicturePath = result != null ? result.ToString() : "";
+                            }
+                        }
+                    }
+
+                    // Set the ImageUrl. If no profile picture, use a default image.
+                    ProfilePicture.ImageUrl = !string.IsNullOrEmpty(profilePicturePath)
+                        ? profilePicturePath
+                        : "~/Images/default-profile.png";
+                }
+                else
+                {
+                    // If the user is not logged in, you might want to set a default image.
+                    ProfilePicture.ImageUrl = "~/Images/default-profile.png";
+                }
+            }
         }
 
         private void HideStaffOnlyTabs()
@@ -63,7 +102,8 @@ namespace badpjProject
             {
                 liStaffManageProduct,
                 liStaffViewCoaches,
-                liStaffAllorders
+                liStaffAllorders,
+                liStaffManageRank
             };
 
             foreach (var tab in staffOnlyTabs)
@@ -79,7 +119,9 @@ namespace badpjProject
             List<Control> userOnlyTabs = new List<Control>
             {
                 liUserBecomeACoach,
-                liUserOrders
+                liPublicCoaches,
+                liUserOrders,
+                liUserLeaderboard
             };
 
             foreach (var tab in userOnlyTabs)

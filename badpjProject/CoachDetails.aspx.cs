@@ -46,8 +46,26 @@ namespace badpjProject
 
         protected void btnChat_Click(object sender, EventArgs e)
         {
-            string coachId = Request.QueryString["id"];
-            Response.Redirect("Chat.aspx?coachId=" + coachId);
+            if (Session["UserId"] == null)
+            {
+                Response.Write("<script>alert('Session expired. Please log in again.');</script>");
+                return;
+            }
+
+            int userId = Convert.ToInt32(Session["UserId"]); // Get UserId from session
+            string coachId = Request.QueryString["id"]; // Get CoachId from URL
+
+            if (!string.IsNullOrEmpty(coachId))
+            {
+                string redirectUrl = "Chat.aspx?userId=" + userId + "&coachId=" + coachId;
+                Response.Write("<script>console.log('Redirecting to: " + redirectUrl + "');</script>");
+                Response.Redirect(redirectUrl);
+            }
+            else
+            {
+                Response.Write("<script>alert('Error: No CoachId found.');</script>");
+            }
         }
+
     }
 }

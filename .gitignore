@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /badpjProject/Web.config
+/badpjProject/App_Data/Database1.mdf
+/badpjProject/App_Data/Database1_log.ldf

@@ -12,6 +12,10 @@
     transition: all 0.3s ease;
 }
 
+    .btn-custom:hover {
+    background-color: white;
+}
+
 .btn-read {
     background-color: #007bff;
     padding: 8px 16px;
@@ -56,3 +60,11 @@
     .btn-delete:hover {
         background-color: #c82333;
     }
+
+.grid-padding {
+    padding: 10px; /* You can adjust this value as needed */
+}
+
+.grid-cell-padding {
+    padding: 10px; /* Adjust padding value as needed */
+}
