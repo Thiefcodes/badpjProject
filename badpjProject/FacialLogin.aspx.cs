@@ -64,7 +64,7 @@ namespace badpjProject
 
                 // Compute Euclidean distance between the new and stored descriptors
                 float distance = EuclideanDistance(newDescriptor, storedDescriptor);
-                float threshold = 0.6f; // Typical threshold for 128D face descriptors
+                float threshold = 0.3f; // Typical threshold for 128D face descriptors
 
                 if (distance < threshold)
                 {
