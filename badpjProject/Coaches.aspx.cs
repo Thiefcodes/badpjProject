@@ -16,6 +16,9 @@ namespace badpjProject
                 imgHeader.ImageUrl = Page.ResolveUrl("~/Uploads/Coach-Header.jpg");
                 BindCoaches();
             }
+        //Name : Coach
+        //Password: Password
+           
         }
 
         private void BindCoaches()

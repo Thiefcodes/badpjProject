@@ -8,7 +8,10 @@ namespace badpjProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Optionally add page load logic here
+        // Optionally add page load logic here
+        //User:test1 Password:1
+        //admin: admin1 Password:1
+     //for more accounts check the data in table[Table]
         }
         
         protected void btnFacialLogin_Click(object sender, EventArgs e)
